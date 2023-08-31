@@ -1,5 +1,6 @@
 package com.green.campingsmore.sign;
 
+import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.config.security.model.MyUserDetails;
 import com.green.campingsmore.config.security.model.SearchUserDto;
 import com.green.campingsmore.config.security.model.SignUpDto;
@@ -23,6 +24,7 @@ import java.io.IOException;
 @RequestMapping("/api")
 public class SignController {
     private final SignService SERVICE;
+    private final AuthenticationFacade FACADE;
 
     //ApiParam은 문서 자동화를 위한 Swagger에서 쓰이는 어노테이션이고
     //RequestParam은 http 로부터 요청 온 정보를 받아오기 위한 스프링 어노테이션이다.
@@ -34,7 +36,7 @@ public class SignController {
                     "password : 비밀번호 \n\n "
     )
     public SignInResultDto signIn(HttpServletRequest req
-                                  ,@RequestBody UserLogin userLogin){
+            ,@RequestBody UserLogin userLogin){
         String id = userLogin.getUid();
         String password = userLogin.getUpw();
         String ip = req.getRemoteAddr();
@@ -144,7 +146,12 @@ public class SignController {
             ,@RequestPart UpdateUserInfoDto updateUserInfoDto
             ,@RequestPart(required = false) MultipartFile pic) throws Exception {
         // 로그인 했을때만 수정할 수 있도록 해야함  // 본인 자신만 수정할 수 있도록 해야함..
-        log.info("controller-iuser {}", user.getIuser());
+//        log.info("controller-iuser {}", user.getIuser());
+        System.out.println("실행되고 있나??");
+        System.out.println("MyUserDetails = {}"+user);
+        System.out.println("controller-iuser {}"+user.getIuser());
+        boolean test = FACADE.isLogin();
+        System.out.println("isLogin = "+test);
         SERVICE.test();
 
         System.out.println(updateUserInfoDto);
@@ -154,9 +161,9 @@ public class SignController {
     @PostMapping("/search/pw")
     @Operation(summary = "비밀번호 찾기 - 이메일로 임시 비밀번호 제공",
             description = "Try it out -> Execute 눌러주세요 \n\n " +
-                        "user_id :  아이디 \n\n "+
-                        "name :  이름 \n\n "+
-                        "email :  이메일 \n\n "
+                    "user_id :  아이디 \n\n "+
+                    "name :  이름 \n\n "+
+                    "email :  이메일 \n\n "
     )
     public int searchPW(@RequestBody SearchUserDto searchUserDto) {
         return SERVICE.searchPW(searchUserDto);

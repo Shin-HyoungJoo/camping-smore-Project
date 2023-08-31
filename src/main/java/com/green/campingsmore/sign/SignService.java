@@ -81,9 +81,10 @@ public class SignService {
         log.info("[getSignInResult] signDataHandler로 회원 정보 요청");
 
         LoginDto user = MAPPER.getByUid(id);
-        System.out.println("로그인 확인 = " + FACADE.isLogin());
+        System.out.println("MAPPER.getByUid(id) = "+MAPPER.getByUid(id));
 
-        System.out.println("LoginDto = " + user);
+        // 로그인을 하면 LoginDto에 담김..담기기만하고 유지가 안되는듯..?
+        System.out.println("LoginDto = " + user); //여기 저장되면 계속 유지되어야하는데...  MyUserDetails...
         if(user == null){
             throw new RuntimeException("없는 회원이거나 탈퇴한 회원입니다.");
         }
@@ -93,6 +94,16 @@ public class SignService {
             throw new RuntimeException("비밀번호 다름"); // return문 대신에 throw 예욍처리해도 된다.
         }
         log.info("[getSignInResult] 패스워드 일치");
+
+        MyUserDetails myUserDetails = MyUserDetails.builder()
+                .iuser(user.getIuser())
+                .uid(user.getUid())
+                .upw(user.getUpw())
+                .name(user.getName())
+                .roles(Collections.singletonList(user.getRole()))
+                .build();
+
+        System.out.println("로그인 유지되고 있어야하는데...myUserDetails = " + myUserDetails);
 
         // RT가 이미 있을 경우
         String redisKey = String.format("RT(%s):%s:%s", "Server", user.getIuser(), ip);
@@ -120,9 +131,9 @@ public class SignService {
 
         log.info("[getSignInResult] SignInResultDto 객체 생성");
         SignInResultDto dto = SignInResultDto.builder()
-                                .accessToken(redisJwtVo.getAccessToken())
-                                .refreshToken(redisJwtVo.getRefreshToken())
-                                .build();
+                .accessToken(redisJwtVo.getAccessToken())
+                .refreshToken(redisJwtVo.getRefreshToken())
+                .build();
 
         log.info("[getSignInResult] SignInResultDto 객체 값 주입");
         setSuccessResult(dto);
@@ -247,7 +258,7 @@ public class SignService {
         finalUpdateUserInfo.setPhone(updateUserInfoDto.getPhone());
         finalUpdateUserInfo.setUser_address(updateUserInfoDto.getUser_address());
         finalUpdateUserInfo.setUser_address_detail(updateUserInfoDto.getUser_address_detail());
-        
+
         if (pic != null) {
             String centerPath = "user/" + FACADE.getLoginUserPk() + "/profile/";
             String targetPath = String.format("%s/%s", FileUtils.getAbsolutePath(fileDir), centerPath);
@@ -315,9 +326,7 @@ public class SignService {
 
     public UserInfo getmyInfo(){
         System.out.println("로그인 상태 유뮤 = " + FACADE.getLoginUserPk());
-
         return MAPPER.getmyInfo(Math.toIntExact(FACADE.getLoginUserPk()));
     }
 
 }
-
