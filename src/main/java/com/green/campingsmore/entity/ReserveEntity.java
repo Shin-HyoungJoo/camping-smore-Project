@@ -1,6 +1,7 @@
 package com.green.campingsmore.entity;
 
-import com.green.campingsmore.common.config.jpa.BaseEntity;
+
+import com.green.campingsmore.jpa.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

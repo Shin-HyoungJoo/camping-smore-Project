@@ -2,7 +2,7 @@ package com.green.campingsmore.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.green.campingsmore.common.config.jpa.BaseEntity;
+import com.green.campingsmore.jpa.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
