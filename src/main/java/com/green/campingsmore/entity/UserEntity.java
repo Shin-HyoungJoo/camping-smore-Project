@@ -1,9 +1,9 @@
 package com.green.campingsmore.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.green.campingsmore.common.config.jpa.BaseEntity;
-import com.green.campingsmore.common.security.ProviderType;
-import com.green.campingsmore.common.security.RoleType;
+import com.green.campingsmore.jpa.BaseEntity;
+import com.green.campingsmore.security.ProviderType;
+import com.green.campingsmore.security.RoleType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
