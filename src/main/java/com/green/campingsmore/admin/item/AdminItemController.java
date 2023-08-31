@@ -2,7 +2,7 @@ package com.green.campingsmore.admin.item;
 
 import com.green.campingsmore.admin.item.model.ItemCategoryInsDto;
 import com.green.campingsmore.admin.item.model.ItemCategoryVo;
-import com.green.campingsmore.item.model.ItemInsDto;
+import com.green.campingsmore.admin.item.model.ItemInsDto;
 import com.green.campingsmore.item.model.ItemVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@Tag(name = "아이템 관리자")
+@Tag(name = "관리자 아이템")
 @RequestMapping("/api/admin/item")
 @RequiredArgsConstructor
 public class AdminItemController {

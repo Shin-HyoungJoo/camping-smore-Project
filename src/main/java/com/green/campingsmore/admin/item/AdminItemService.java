@@ -4,7 +4,7 @@ import com.green.campingsmore.admin.item.model.ItemCategoryInsDto;
 import com.green.campingsmore.admin.item.model.ItemCategoryVo;
 import com.green.campingsmore.entity.ItemCategoryEntity;
 import com.green.campingsmore.entity.ItemEntity;
-import com.green.campingsmore.item.model.ItemInsDto;
+import com.green.campingsmore.admin.item.model.ItemInsDto;
 import com.green.campingsmore.item.model.ItemVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +37,12 @@ public class AdminItemService {
                 .price(dto.getPrice())
                 .build();
         adminItemRep.save(itemEntity);
+
+        if(dto.getPicUrl().size() > 0) {
+
+        }
+
+
 
         return null;
     }

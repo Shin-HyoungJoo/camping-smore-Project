@@ -1,4 +1,4 @@
-package com.green.campingsmore.item.model;
+package com.green.campingsmore.admin.item.model;
 
 import lombok.Data;
 

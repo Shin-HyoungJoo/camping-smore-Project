@@ -1,6 +1,6 @@
 package com.green.campingsmore.item;
 
-import com.green.campingsmore.config.security.AuthenticationFacade;
+import com.green.campingsmore.admin.item.model.ItemInsDto;
 import com.green.campingsmore.item.model.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalLong;
 
 @RestController
 @Tag(name="아이템")
