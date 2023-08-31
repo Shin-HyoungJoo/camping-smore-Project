@@ -7,9 +7,9 @@ import java.util.List;
 
 @Mapper
 public interface CommentMapper {
-    Long insComment(CommentEntity entity);
-    Long updComment(CommentEntity entity);
-    Long delComment(CommentEntity entity);
+    Long insComment(CommentEntity2 entity);
+    Long updComment(CommentEntity2 entity);
+    Long delComment(CommentEntity2 entity);
     List<CommentVo> selComment(CommentPageDto dto);
     Long maxComment(CommentPageDto dto);
 }

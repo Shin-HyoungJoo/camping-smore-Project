@@ -3,7 +3,6 @@ package com.green.campingsmore.review;
 import com.green.campingsmore.community.board.utils.FileUtils;
 import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.review.model.*;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +24,7 @@ public class ReviewService {
 
 
     public String insReview(ReviewInsDto dto, MultipartFile pic) {
-        ReviewEntity entity = new ReviewEntity();
+        ReviewEntity2 entity = new ReviewEntity2();
         entity.setIuser(FACADE.getLoginUserPk());
         entity.setIorder(dto.getIorder());
         entity.setIitem(dto.getIitem());
@@ -109,7 +108,7 @@ public class ReviewService {
 
     public String updReview(ReviewUpdDto dto, MultipartFile pic) {
 
-        ReviewEntity entity = new ReviewEntity();
+        ReviewEntity2 entity = new ReviewEntity2();
         entity.setIuser(FACADE.getLoginUserPk());
         entity.setIreview(dto.getIreview());
         entity.setReviewCtnt(dto.getReviewCtnt());

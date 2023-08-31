@@ -16,10 +16,10 @@ public interface ItemMapper {
     Long selIcate(String categoryName);
 
     // 아이템 추가
-    Long insItem(ItemEntity entity);
+    Long insItem(ItemEntity2 entity);
     int selLastItem(ItemSearchDto dto);
     List<ItemVo> searchItem(ItemSearchDto dto);
-    int updItem(ItemEntity entity);
+    int updItem(ItemEntity2 entity);
     // 아이템 삭제
     int delItem(Long item);
     // 아이템 상세페이지

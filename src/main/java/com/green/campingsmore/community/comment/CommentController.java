@@ -1,17 +1,11 @@
 package com.green.campingsmore.community.comment;
 
-import com.green.campingsmore.community.board.model.BoardSelRes;
 import com.green.campingsmore.community.comment.model.*;
 import com.green.campingsmore.config.security.AuthenticationFacade;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Min;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @Tag(name = "댓글")
@@ -30,7 +24,7 @@ public class CommentController {
     @PutMapping
     @Operation(summary = "댓글 수정")
     public Long updComment(@RequestBody CommentUpdDto dto){
-        CommentEntity entity = new CommentEntity();
+        CommentEntity2 entity = new CommentEntity2();
         entity.setIcomment(dto.getIcomment());
         entity.setCtnt(dto.getCtnt());
         return service.updComment(entity);
@@ -39,7 +33,7 @@ public class CommentController {
     @PutMapping("/comment")
     @Operation(summary = "댓글 삭제")
     public Long delComment(@RequestBody CommentDelDto dto){
-        CommentEntity entity = new CommentEntity();
+        CommentEntity2 entity = new CommentEntity2();
         entity.setIcomment(dto.getIcomment());
         return service.delComment(entity);
 

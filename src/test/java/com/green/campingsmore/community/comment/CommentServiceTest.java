@@ -2,7 +2,6 @@ package com.green.campingsmore.community.comment;
 
 import com.green.campingsmore.community.comment.model.*;
 import com.green.campingsmore.config.security.AuthenticationFacade;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Import({CommentService.class})
@@ -37,7 +36,7 @@ class CommentServiceTest {
     void insComment() {
         given(mapper.insComment(any())).willReturn(2L);
         CommentInsDto dto = new CommentInsDto();
-        CommentEntity entity = new CommentEntity();
+        CommentEntity2 entity = new CommentEntity2();
         dto.setIboard(1L);
         dto.setCtnt("hi");
         entity.setIuser(FACADE.getLoginUserPk());
@@ -52,7 +51,7 @@ class CommentServiceTest {
     @Test
     void updComment() {
         given(mapper.updComment(any())).willReturn(1L);
-        CommentEntity entity = new CommentEntity();
+        CommentEntity2 entity = new CommentEntity2();
         entity.setIuser(FACADE.getLoginUserPk());
         entity.setCtnt("hi");
         Long result = service.updComment(entity);
@@ -64,7 +63,7 @@ class CommentServiceTest {
     @Test
     void delComment() {
 
-        CommentEntity entity = new CommentEntity();
+        CommentEntity2 entity = new CommentEntity2();
         entity.setIuser(FACADE.getLoginUserPk());
         given(mapper.delComment(any())).willReturn(1L);
         Long result = service.delComment(entity);

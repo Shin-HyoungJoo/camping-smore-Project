@@ -3,13 +3,10 @@ package com.green.campingsmore.community.comment;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.green.campingsmore.MockMvcConfig;
 import com.green.campingsmore.community.comment.model.CommentDelDto;
-import com.green.campingsmore.community.comment.model.CommentEntity;
+import com.green.campingsmore.community.comment.model.CommentEntity2;
 import com.green.campingsmore.community.comment.model.CommentInsDto;
 import com.green.campingsmore.community.comment.model.CommentUpdDto;
 import com.green.campingsmore.config.security.AuthenticationFacade;
-import com.green.campingsmore.config.security.model.MyUserDetails;
-import com.green.campingsmore.order.cart.CartController;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,21 +15,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -98,7 +85,7 @@ class CommentControllerTest {
         dto.setIcomment(1L);
         dto.setCtnt("Updated comment content");
 
-        CommentEntity entity = new CommentEntity();
+        CommentEntity2 entity = new CommentEntity2();
         entity.setIcomment(dto.getIcomment());
         entity.setCtnt(dto.getCtnt());
 

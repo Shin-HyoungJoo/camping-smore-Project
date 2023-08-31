@@ -7,10 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +42,7 @@ class ItemMapperTest {
     @Test
     @DisplayName("Item - 아이템 추가")
     void insItem() {
-        ItemEntity entity = new ItemEntity();
+        ItemEntity2 entity = new ItemEntity2();
         entity.setIitemCategory(11L);
         entity.setName("상품명");
         entity.setPic("main.jpg");
