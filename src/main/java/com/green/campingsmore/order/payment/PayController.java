@@ -6,10 +6,12 @@ import com.green.campingsmore.order.payment.model.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/payment")
@@ -37,15 +39,8 @@ public class PayController {
     )
     public Long postPayInfo(@AuthenticationPrincipal MyUserDetails user,
                             @RequestBody InsPayInfoDto dto) {
-        InsPayInfoDto1 dto1 = new InsPayInfoDto1();
-        dto1.setIuser(user.getIuser());
-        dto1.setAddress(dto.getAddress());
-        dto1.setAddressDetail(dto.getAddressDetail());
-        dto1.setTotalPrice(dto.getTotalPrice());
-        dto1.setShippingMemo(dto.getShippingMemo());
-        dto1.setShippingPrice(dto.getShippingPrice());
-        dto1.setPurchaseList(dto.getPurchaseList());
-        return SERVICE.insPayInfo(dto1);
+        dto.setIuser(user.getIuser());
+        return SERVICE.insPayInfo(dto);
     }
 
     @GetMapping("/{iorder}")
@@ -59,8 +54,8 @@ public class PayController {
 
 
     )    //유저 결제시 띄움(결제창에서 바로 띄움)
-    public PaymentCompleteDto getPaymentComplete(@PathVariable Long iorder) {
-        return SERVICE.selPaymentComplete(iorder);
+    public ResponseEntity<Optional<PaymentCompleteDto>> getPaymentComplete(@PathVariable Long iorder) {
+        return ResponseEntity.ok(SERVICE.selPaymentComplete(iorder));
     }
 
     @GetMapping("/paymentList")

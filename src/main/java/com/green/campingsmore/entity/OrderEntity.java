@@ -29,6 +29,11 @@ public class OrderEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity userEntity;
 
+    @JoinColumn(name = "ireserve")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @ColumnDefault("0")
+    private CampEntity campEntity;
+
     @Column(length = 100)
     @NotNull
     private String address;

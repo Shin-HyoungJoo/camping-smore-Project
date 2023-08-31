@@ -2,7 +2,6 @@ package com.green.campingsmore.order.cart;
 
 import com.green.campingsmore.order.cart.model.CartRes;
 import com.green.campingsmore.order.cart.model.InsCartDto;
-import com.green.campingsmore.order.cart.model.InsCartDto1;
 import com.green.campingsmore.order.cart.model.SelCartVo;
 
 import java.util.List;
