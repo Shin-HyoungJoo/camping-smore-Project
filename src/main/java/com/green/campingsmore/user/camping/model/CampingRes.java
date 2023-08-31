@@ -1,9 +1,11 @@
 package com.green.campingsmore.user.camping.model;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
-public class CampingDto {
+@Getter
+@Builder
+public class CampingRes {
     private Long icamp;
     private Integer capacity;
     private Integer quantity;
