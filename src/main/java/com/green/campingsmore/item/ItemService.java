@@ -8,7 +8,6 @@ import com.green.campingsmore.review.model.ReviewPageDto;
 import com.green.campingsmore.review.model.ReviewRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public class ItemService {
     public Long insItem(ItemInsDto dto) {
 
         log.info(" List<String> picUrl: {}", dto.getPicUrl());
-        ItemEntity entity = new ItemEntity();
+        ItemEntity2 entity = new ItemEntity2();
         entity.setIitemCategory(dto.getIitemCategory());
         entity.setName(dto.getName());
         entity.setPic(dto.getPic());
@@ -135,7 +134,7 @@ public class ItemService {
     }
 
     public int updItem(ItemUpdDto dto) {
-        ItemEntity entity = new ItemEntity();
+        ItemEntity2 entity = new ItemEntity2();
         entity.setIitem(dto.getIitem());
         entity.setIitemCategory(dto.getIitemCategory());
         entity.setName(dto.getName());

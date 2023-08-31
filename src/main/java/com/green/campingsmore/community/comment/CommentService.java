@@ -1,10 +1,8 @@
 package com.green.campingsmore.community.comment;
 
-import com.green.campingsmore.community.board.model.BoardListVo;
 import com.green.campingsmore.community.comment.model.*;
 import com.green.campingsmore.config.security.AuthenticationFacade;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,17 +16,17 @@ public class CommentService {
     private final AuthenticationFacade FACADE;
 
     public Long insComment(CommentInsDto dto){
-        CommentEntity entity = new CommentEntity();
+        CommentEntity2 entity = new CommentEntity2();
         entity.setIboard(dto.getIboard());
         entity.setIuser(FACADE.getLoginUserPk());
         entity.setCtnt(dto.getCtnt());
         return mapper.insComment(entity);
     }
-    public Long updComment(CommentEntity entity){
+    public Long updComment(CommentEntity2 entity){
         entity.setIuser(FACADE.getLoginUserPk());
         return mapper.updComment(entity);
     }
-    public Long delComment(CommentEntity entity){
+    public Long delComment(CommentEntity2 entity){
         entity.setIuser(FACADE.getLoginUserPk());
         return mapper.delComment(entity);
     }

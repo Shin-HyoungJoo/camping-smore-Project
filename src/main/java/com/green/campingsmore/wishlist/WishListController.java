@@ -1,7 +1,7 @@
 package com.green.campingsmore.wishlist;
 
 import com.green.campingsmore.config.security.AuthenticationFacade;
-import com.green.campingsmore.review.model.ReviewEntity;
+import com.green.campingsmore.review.model.ReviewEntity2;
 import com.green.campingsmore.wishlist.model.WishDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -44,7 +44,7 @@ public class WishListController {
     @Operation(summary = "유저별로 리뷰 목록 불러오기",
             description = "Try it out -> Execute 눌러주세요 \n\n "
     )
-    public List<ReviewEntity> getReviewlist(){
+    public List<ReviewEntity2> getReviewlist(){
         return SERVICE.getReviewlist(Math.toIntExact(FACADE.getLoginUserPk()));
     }
 

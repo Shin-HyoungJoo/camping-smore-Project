@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class AdminEntity {
+public class AdminEntity2 {
     private Long iuser;
     private String uid;
     private String password;

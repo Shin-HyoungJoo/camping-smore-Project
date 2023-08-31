@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class ItemEntity {
+public class ItemEntity2 {
     private Long iitem;
     private Long iitemCategory;
     private String name;

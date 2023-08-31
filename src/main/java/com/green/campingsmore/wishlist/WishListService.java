@@ -1,6 +1,6 @@
 package com.green.campingsmore.wishlist;
 
-import com.green.campingsmore.review.model.ReviewEntity;
+import com.green.campingsmore.review.model.ReviewEntity2;
 import com.green.campingsmore.wishlist.model.WishDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class WishListService {
         return MAPPER.getWishlist(iuser);
     }
 
-    public List<ReviewEntity> getReviewlist(int iuser){
+    public List<ReviewEntity2> getReviewlist(int iuser){
         return MAPPER.getReviewlist(iuser);
     }
 
