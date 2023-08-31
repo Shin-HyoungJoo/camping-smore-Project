@@ -14,6 +14,8 @@ import java.util.List;
 public class CartServiceImpl implements CartService {
 
     private final CartMapper MAPPER;
+    private final CartRepository repo;
+    private final CartRepositoryImpl dslRepo;
 
     @Override
     public Long insCart(InsCartDto1 dto) {
@@ -31,7 +33,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public List<SelCartVo> selCart(Long iuser) {
-        return MAPPER.selCart(iuser);
+        return dslRepo.selCart(iuser);
     }
 
     @Override
