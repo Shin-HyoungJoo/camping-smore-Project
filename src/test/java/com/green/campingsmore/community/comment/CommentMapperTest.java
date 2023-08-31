@@ -2,7 +2,6 @@ package com.green.campingsmore.community.comment;
 
 import com.green.campingsmore.community.comment.model.*;
 import com.green.campingsmore.config.security.AuthenticationFacade;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,7 +29,7 @@ class CommentMapperTest {
     @WithMockUser(username = "1", roles = "USER")
 
     void insComment() {
-        CommentEntity entity = new CommentEntity();
+        CommentEntity2 entity = new CommentEntity2();
         entity.setIboard(9L);
         entity.setIuser(1L);
         entity.setCtnt("테스트1");
@@ -45,7 +43,7 @@ class CommentMapperTest {
     }
     @Test
     void updComment() {
-        CommentEntity entity = new CommentEntity();
+        CommentEntity2 entity = new CommentEntity2();
         entity.setIcomment(1L);
         entity.setIuser(1L);
         entity.setCtnt("수정됨");
@@ -61,7 +59,7 @@ class CommentMapperTest {
     @Test
     @WithMockUser(username = "testUser", roles = "USER")
     void delComment() {
-        CommentEntity entity = new CommentEntity();
+        CommentEntity2 entity = new CommentEntity2();
         entity.setIcomment(3L);
         entity.setIuser(2L);
         Long delComment = mapper.delComment(entity);

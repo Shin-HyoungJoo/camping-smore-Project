@@ -2,10 +2,8 @@ package com.green.campingsmore.community.board.model;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
-public class BoardEntity {
+public class BoardEntity2 {
     private Long iboard;
     private Long iuser;
     private Long icategory;

@@ -1,28 +1,22 @@
 package com.green.campingsmore.community.board;
 
 import com.green.campingsmore.community.board.model.*;
-import com.green.campingsmore.community.comment.CommentMapper;
 import com.green.campingsmore.community.comment.CommentService;
 import com.green.campingsmore.community.comment.model.CommentPageDto;
 import com.green.campingsmore.community.comment.model.CommentRes;
-import com.green.campingsmore.community.comment.model.CommentVo;
 import com.green.campingsmore.config.security.AuthenticationFacade;
-import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import com.green.campingsmore.community.board.utils.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.ZipException;
 
 import static java.lang.Math.ceil;
 import static java.lang.Math.decrementExact;
@@ -94,7 +88,7 @@ public class BoardService {
 
     public Long postboard() throws NullPointerException {
             try {
-                BoardEntity entity = new BoardEntity();
+                BoardEntity2 entity = new BoardEntity2();
                 if (FACADE.isLogin()) {
                 }
                 entity.setIuser(FACADE.getLoginUserPk());
@@ -113,7 +107,7 @@ public class BoardService {
     public List<String> postPic(Long iboard, List<MultipartFile> pics) throws Exception {
         List<String> fileUrls = new ArrayList<>();
         if (pics != null) {
-            BoardEntity entity = new BoardEntity();
+            BoardEntity2 entity = new BoardEntity2();
             entity.setIboard(iboard);
             String centerPath = String.format("boardPics/%d", entity.getIboard());
             String targetPath = String.format("%s/%s", FileUtils.getAbsolutePath(fileDir), centerPath);
@@ -146,7 +140,7 @@ public class BoardService {
     @Transactional(rollbackFor = Exception.class)
     public String postOnePic(Long iboard, MultipartFile pic) throws Exception {
         if (pic != null) {
-            BoardEntity entity = new BoardEntity();
+            BoardEntity2 entity = new BoardEntity2();
             entity.setIboard(iboard);
             String centerPath = String.format("boardPics/%d", entity.getIboard());
             String targetPath = String.format("%s/%s", FileUtils.getAbsolutePath(fileDir), centerPath);
@@ -176,7 +170,7 @@ public class BoardService {
 
     public Long updContent(BoardInsDto dto) {
         try {
-            BoardEntity entity = new BoardEntity();
+            BoardEntity2 entity = new BoardEntity2();
             entity.setIboard(dto.getIboard());
             entity.setIuser(FACADE.getLoginUserPk());
             entity.setTitle(dto.getTitle());
@@ -384,7 +378,7 @@ public class BoardService {
 //    }
     public Long delOnePic(BoardPicDelDto dto) {
         try {
-            BoardEntity entity = new BoardEntity();
+            BoardEntity2 entity = new BoardEntity2();
             entity.setIboard(dto.getIboard());
             entity.setIboardpic(dto.getIboardpic());
             entity.setIuser(FACADE.getLoginUserPk());

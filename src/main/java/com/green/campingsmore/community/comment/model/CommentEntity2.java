@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class CommentEntity {
+public class CommentEntity2 {
     private Long icomment;
     private Long iboard;
     private Long iuser;
