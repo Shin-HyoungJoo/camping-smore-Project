@@ -32,7 +32,7 @@ public class ItemEntity extends BaseEntity {
     private String name;
 
     @Column(nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
-    private Long price;
+    private Integer price;
 
     @Column
     private String info;
