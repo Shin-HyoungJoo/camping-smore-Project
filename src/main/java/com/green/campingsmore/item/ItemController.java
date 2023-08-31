@@ -1,6 +1,6 @@
 package com.green.campingsmore.item;
 
-import com.green.campingsmore.config.security.AuthenticationFacade;
+import com.green.campingsmore.admin.item.model.ItemInsDto;
 import com.green.campingsmore.item.model.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.OptionalLong;
 
 @RestController
 @Tag(name="아이템")
@@ -26,7 +24,7 @@ public class ItemController {
         return SERVICE.selCategory();
     }
 
-    @PostMapping("/itempost")
+    @PostMapping
     @Operation(summary = "아이템 추가 - 관리자페이지"
             , description = "" +
             "\"iitemCategory\": [-] 아이템 카테고리 PK,<br>" +
@@ -112,7 +110,7 @@ public class ItemController {
         return SERVICE.insDetailPic(dto);
     }
 
-    @DeleteMapping("/detail/deletepic")
+    @DeleteMapping("/detail/{iitem}")
     @Operation(summary = "아이템 상세이미지 삭제 - 관리자페이지"
             , description = "" +
             "\"iitem\": [-] 아이템 PK<br>")

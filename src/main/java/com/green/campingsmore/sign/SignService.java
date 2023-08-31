@@ -11,6 +11,7 @@ import com.green.campingsmore.config.security.UserDetailsMapper;
 import com.green.campingsmore.config.security.model.*;
 import com.green.campingsmore.config.security.redis.RedisService;
 import com.green.campingsmore.config.security.redis.model.RedisJwtVo;
+import com.green.campingsmore.config.utils.MyFileUtils;
 import com.green.campingsmore.sign.model.*;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -262,6 +263,7 @@ public class SignService {
         if (pic != null) {
             String centerPath = "user/" + FACADE.getLoginUserPk() + "/profile/";
             String targetPath = String.format("%s/%s", FileUtils.getAbsolutePath(fileDir), centerPath);
+
             File file = new File(targetPath);
             if (!file.exists()) {
                 file.mkdirs();
