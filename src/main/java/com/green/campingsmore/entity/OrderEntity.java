@@ -3,11 +3,13 @@ package com.green.campingsmore.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.green.campingsmore.jpa.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Check;
 import org.hibernate.annotations.ColumnDefault;
 
 @Entity
@@ -20,31 +22,45 @@ import org.hibernate.annotations.ColumnDefault;
 public class OrderEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
+    @Column(updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
     private Long iorder;
 
     @JoinColumn(name = "iuser")
     @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity userEntity;
 
-    @Column(nullable = false, length = 100)
-    private Long address;
+    @Column(length = 100)
+    @NotNull
+    private String address;
 
     @Column(length = 100)
-    private Long addressDetail;
+    private String addressDetail;
 
-    @Column(nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 11)
+    @Column(columnDefinition = "BIGINT UNSIGNED", length = 11)
+    @NotNull
     private Long totalPrice;
 
     @Column(length = 10, columnDefinition = "INT UNSIGNED")
     @ColumnDefault("3000")
+    @NotNull
     private Long shippingPrice;
 
-    @Column(length = 10, columnDefinition = "INT UNSIGNED")
-    private Long shippingMemo;
+    @Column(length = 10)
+    private String shippingMemo;
 
-    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
+    @Column(columnDefinition = "TINYINT", length = 1)
     @ColumnDefault("1")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Long delYn;
+    @NotNull
+    private Integer delYn;
+
+    //KAKAO, CARD
+    @Column(columnDefinition = "TINYINT", length = 1)
+    @NotNull
+    private PayType type;
+
+    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
+    @Check(constraints = "shipping IN (0, 1, 2)")
+    @NotNull
+    private Integer shipping;
 }

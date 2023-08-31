@@ -3,6 +3,7 @@ package com.green.campingsmore.entity;
 
 import com.green.campingsmore.jpa.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,8 @@ import lombok.experimental.SuperBuilder;
 public class CartEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
+    @Column(updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
+    @NotNull
     private Long icart;
 
     @JoinColumn(name = "iuser")
@@ -32,6 +34,7 @@ public class CartEntity extends BaseEntity {
     @ToString.Exclude
     private ItemEntity itemEntity;
 
-    @Column(nullable = false, columnDefinition = "TINYINT", length = 2)
+    @Column(columnDefinition = "TINYINT", length = 2)
+    @NotNull
     private Long quantity;
 }
