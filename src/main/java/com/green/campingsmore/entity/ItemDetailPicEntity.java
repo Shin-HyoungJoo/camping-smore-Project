@@ -27,7 +27,8 @@ public class ItemDetailPicEntity extends BaseEntity {
     @ToString.Exclude
     private ItemEntity itemEntity;
 
-    @Column(length = 500)
+
+    @Column(columnDefinition="TEXT")
     @NotNull
     private String pic;
 }
