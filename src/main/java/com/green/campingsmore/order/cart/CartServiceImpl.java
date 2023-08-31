@@ -1,13 +1,15 @@
 package com.green.campingsmore.order.cart;
 
-import com.green.campingsmore.order.cart.model.InsCartDto1;
-import com.green.campingsmore.order.cart.model.InsCartDto2;
-import com.green.campingsmore.order.cart.model.SelCartVo;
+import com.green.campingsmore.entity.CartEntity;
+import com.green.campingsmore.entity.ItemEntity;
+import com.green.campingsmore.entity.UserEntity;
+import com.green.campingsmore.order.cart.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -17,28 +19,39 @@ public class CartServiceImpl implements CartService {
     private final CartRepository repo;
     private final CartRepositoryImpl dslRepo;
 
-    @Override
-    public Long insCart(InsCartDto1 dto) {
-        InsCartDto2 dto2 = new InsCartDto2();
-        dto2.setIuser(dto.getIuser());
-        dto2.setIitem(dto.getIitem());
-        dto2.setQuantity(dto.getQuantity());
-        Long userExistCheck = MAPPER.checkCartUser(dto2.getIuser(), dto2.getIitem());
-        if (userExistCheck == null) {
-            return MAPPER.insCart(dto2);
-        } else {
-            return MAPPER.plusCart(dto2.getIuser(), dto2.getQuantity(), dto2.getIitem());
-        }
+    @Override   //jpa
+    public CartRes insCart(InsCartDto dto) {
+
+        CartEntity entity = CartEntity.builder()
+                .userEntity(UserEntity.builder().iuser(dto.getIuser()).build())
+                .itemEntity(ItemEntity.builder().iitem(dto.getIitem()).build())
+                .quantity(dto.getQuantity())
+                .build();
+
+        repo.save(entity);
+
+        return CartRes.builder()
+                .icart(entity.getIcart())
+                .iuser(entity.getItemEntity().getIitem())
+                .iitem(entity.getItemEntity().getIitem())
+                .build();
     }
 
-    @Override
-    public List<SelCartVo> selCart(Long iuser) {
+    @Override   //querydsl
+    public Optional<List<SelCartVo>> selCart(Long iuser) {
         return dslRepo.selCart(iuser);
     }
 
     @Override
     public Long delCart(Long icart) {
-        return MAPPER.delCart(icart);
+        Optional<CartEntity> existCheck = repo.findById(icart);
+
+        if(existCheck.isEmpty()) {
+            return 0L;
+        }
+
+        repo.deleteById(icart);
+        return 1L;
     }
 
     @Override

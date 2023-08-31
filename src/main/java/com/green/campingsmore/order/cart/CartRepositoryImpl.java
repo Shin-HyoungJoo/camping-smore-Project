@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import static com.green.campingsmore.entity.QCartEntity.cartEntity;
 
@@ -16,8 +17,8 @@ public class CartRepositoryImpl implements CartRepositoryCustom {
     private JPAQueryFactory queryFactory;
 
     @Override
-    public List<SelCartVo> selCart(Long iuser) {
-        return queryFactory
+    public Optional<List<SelCartVo>> selCart(Long iuser) {
+        return Optional.ofNullable(queryFactory
                 .select(Projections.fields(SelCartVo.class,
                         cartEntity.icart,
                         cartEntity.itemEntity.pic,
@@ -26,6 +27,6 @@ public class CartRepositoryImpl implements CartRepositoryCustom {
                         cartEntity.quantity))
                 .from(cartEntity)
                 .where(cartEntity.userEntity.iuser.eq(iuser))
-                .fetch();
+                .fetch());
     }
 }
