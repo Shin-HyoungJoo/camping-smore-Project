@@ -15,10 +15,7 @@ public class CampingService {
     private final CampingRepositoryImpl IMPL;
 
     public CampingRes InsCamp(CampingDto dto){
-        CampEntity campEntity = REP.findById(dto.getIcamp()).get();
-
-        REP.save(campEntity);
-        return CampingRes.builder().icamp(dto.getIcamp())
+        CampEntity campEntity = CampEntity.builder()
                 .campPhone(dto.getCampPhone())
                 .name(dto.getName())
                 .city(dto.getCity())
@@ -27,6 +24,18 @@ public class CampingService {
                 .mainPic(dto.getMainPic())
                 .note(dto.getNote())
                 .quantity(dto.getQuantity())
+                .build();
+
+        REP.save(campEntity);
+        return CampingRes.builder().icamp(campEntity.getIcamp())
+                .campPhone(campEntity.getCampPhone())
+                .name(campEntity.getName())
+                .city(campEntity.getCity())
+                .address(campEntity.getAddress())
+                .capacity(campEntity.getCapacity())
+                .mainPic(campEntity.getMainPic())
+                .note(campEntity.getNote())
+                .quantity(campEntity.getQuantity())
                 .build();
     }
 }

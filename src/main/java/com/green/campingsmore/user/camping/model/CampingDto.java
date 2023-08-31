@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class CampingDto {
-    private Long icamp;
     private Integer capacity;
     private Integer quantity;
     private String address;
