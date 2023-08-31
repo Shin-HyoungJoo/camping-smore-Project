@@ -14,7 +14,8 @@ import static com.green.campingsmore.entity.QCartEntity.cartEntity;
 @Repository
 @RequiredArgsConstructor
 public class CartRepositoryImpl implements CartRepositoryCustom {
-    private JPAQueryFactory queryFactory;
+
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public Optional<List<SelCartVo>> selCart(Long iuser) {

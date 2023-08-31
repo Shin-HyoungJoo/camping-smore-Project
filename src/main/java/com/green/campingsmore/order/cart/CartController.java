@@ -43,7 +43,7 @@ public class CartController {
                     "<h3>==========================\n" +
                     "<h3>CODE 1 : 저장 성공\n"
     )
-    private ResponseEntity<CartRes> postCart(@AuthenticationPrincipal MyUserDetails user,
+    private ResponseEntity<Optional<CartRes>> postCart(@AuthenticationPrincipal MyUserDetails user,
                                             @RequestBody InsCartDto dto) {
         dto.setIuser(user.getIuser());
         return ResponseEntity.ok(SERVICE.insCart(dto));
@@ -66,6 +66,6 @@ public class CartController {
                     "<h3>CODE number : number 갯수만큼 삭제성공\n"
     )
     private ResponseEntity<Long> delCartAll(@RequestParam List<Long> icart) {
-        return ResponseEntity.ok(delCartAll(icart));
+        return ResponseEntity.ok(SERVICE.delCartAll(icart));
     }
 }

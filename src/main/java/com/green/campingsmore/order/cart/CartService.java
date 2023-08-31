@@ -10,7 +10,7 @@ import java.util.Optional;
 
 
 public interface CartService {
-    CartRes insCart(InsCartDto dto);
+    Optional<CartRes> insCart(InsCartDto dto);
     Optional<List<SelCartVo>> selCart(Long iuser);    //dsl
     Long delCart(Long icart);
     Long delCartAll(List<Long> icart);

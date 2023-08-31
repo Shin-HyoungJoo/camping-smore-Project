@@ -15,12 +15,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
 
-    private final CartMapper MAPPER;
     private final CartRepository repo;
     private final CartRepositoryImpl dslRepo;
 
     @Override   //jpa
-    public CartRes insCart(InsCartDto dto) {
+    public Optional<CartRes> insCart(InsCartDto dto) {
 
         CartEntity entity = CartEntity.builder()
                 .userEntity(UserEntity.builder().iuser(dto.getIuser()).build())
@@ -30,11 +29,11 @@ public class CartServiceImpl implements CartService {
 
         repo.save(entity);
 
-        return CartRes.builder()
+        return Optional.ofNullable(CartRes.builder()
                 .icart(entity.getIcart())
                 .iuser(entity.getItemEntity().getIitem())
                 .iitem(entity.getItemEntity().getIitem())
-                .build();
+                .build());
     }
 
     @Override   //querydsl
@@ -42,7 +41,7 @@ public class CartServiceImpl implements CartService {
         return dslRepo.selCart(iuser);
     }
 
-    @Override
+    @Override   //jpa
     public Long delCart(Long icart) {
         Optional<CartEntity> existCheck = repo.findById(icart);
 
@@ -54,18 +53,19 @@ public class CartServiceImpl implements CartService {
         return 1L;
     }
 
-    @Override
+    @Override   //jpa
     @Transactional(rollbackFor = {Exception.class})
     public Long delCartAll(List<Long> icart) {
         Long count = 0L;
-        try {
-            for (Long aLong : icart) {
-                MAPPER.delCart(aLong);
-                count++;
+
+        for (Long search : icart) {
+            Optional<CartEntity> existCheck = repo.findById(search);
+            if(existCheck.isEmpty()) {
+                return 0L;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            count++;
         }
+        repo.deleteAllById(icart);
         return count;
     }
 }
