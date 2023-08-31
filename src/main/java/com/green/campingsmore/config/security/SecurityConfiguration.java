@@ -29,6 +29,7 @@ public class SecurityConfiguration {
                                     , "/swagger-ui/**"
                                     , "/v3/api-docs/**"
 
+
                                     ,"/api/oauth/authorize" //로그인
                                     , "/api/oauth/logout" // 로그아웃
                                     , "/api/user" // 회원가입
