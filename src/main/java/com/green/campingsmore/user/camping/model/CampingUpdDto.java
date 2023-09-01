@@ -10,6 +10,7 @@ public class CampingUpdDto {
     private String address;
     private String campPhone;
     private Long inationwide;
+    private Integer price;
     private String name;
     private String note;
 }

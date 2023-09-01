@@ -1,5 +1,6 @@
 package com.green.campingsmore.user.camping.model;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 public class CampingDto {
     private Integer capacity;
     private Integer quantity;
+    private Integer price;
     private String address;
     private String campPhone;
     private Long inationwide;
