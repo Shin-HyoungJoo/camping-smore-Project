@@ -25,12 +25,12 @@ public class CampingService {
     private final CityRepository CITYREP;
     private final CampingRepositoryImpl IMPL;
     private final CampingPicRepository PICREP;
+    private final ReserveRepository RESREP;
 
     @Value("${file.dir}")
     private String fileDir;
 
     public CampingRes InsCamp(MultipartFile pic, CampingDto dto) throws Exception {
-        CampEntity entity = new CampEntity();
 
         if (pic != null) {
             String originFile = pic.getOriginalFilename();
@@ -59,8 +59,7 @@ public class CampingService {
                 file.mkdirs();
             }
             File fileTarget = new File(targetPath + "/" + saveName);
-            entity.setIcamp(campEntity.getIcamp());
-            entity.setMainPic(centerPath + "/" + saveName);
+            campEntity.setIcamp(campEntity.getIcamp());
             try {
                 pic.transferTo(fileTarget);
             } catch (IOException e) {
@@ -68,6 +67,8 @@ public class CampingService {
             }
             campEntity.setMainPic("campPic/" + campEntity.getIcamp() + "/" + saveName);
             REP.save(campEntity);
+
+            log.info("{}", campEntity);
 
             return CampingRes.builder().icamp(campEntity.getIcamp())
                     .campPhone(campEntity.getCampPhone())
@@ -153,7 +154,6 @@ public class CampingService {
 
     public CampingRes delCamping(CampingDelDto dto) {
         Optional<CampEntity> opt = REP.findById(dto.getIcamp());
-
         if (!opt.isPresent()) {
             return null;
         }
@@ -188,19 +188,18 @@ public class CampingService {
     }
 
 
-    public CampingPicRes InsPic(List<MultipartFile> pics, CampingPicDto dto) throws Exception {
+    public List<String> InsPic(List<MultipartFile> pics, CampingPicDto dto) throws Exception {
+        List<String> fileUrls = new ArrayList<>();
         CampEntity campEntity = new CampEntity();
         if (pics != null) {
             campEntity.setIcamp(dto.getIcamp());
             String centerPath = String.format("campPics/%d", campEntity.getIcamp());
             String targetPath = String.format("%s/%s", FileUtils.getAbsolutePath(fileDir), centerPath);
             File file = new File(targetPath);
-
-
             if (!file.exists()) {
                 file.mkdirs();
             }
-            List<CampPicEntity> picEntities = new ArrayList<>();
+
             for (MultipartFile pic : pics) {
                 String originFile = pic.getOriginalFilename();
                 String saveName = FileUtils.makeRandomFileNm(originFile);
@@ -211,21 +210,55 @@ public class CampingService {
                 } catch (IOException e) {
                     throw new Exception("파일저장을 실패했습니다");
                 }
-                CampPicEntity campPicEntity = new CampPicEntity();
-                campPicEntity.setCampEntity(campEntity);
-                campPicEntity.setPic("campPics/" + campEntity.getIcamp() + "/" + saveName);
-                picEntities.add(campPicEntity);
-                CampingPicRes.builder().pic(saveName)
-                                .build();
-                PICREP.save(campPicEntity);
-                return CampingPicRes.builder()
-                        .icampPic(campEntity.getIcamp())
-                        .pic(saveName)
+                CampPicEntity campPicEntity = CampPicEntity.builder()
+                        .campEntity(campEntity)
+                        .pic("campPics/" + campEntity.getIcamp() + "/" + saveName)
                         .build();
+//                campPicEntity.setCampEntity(campEntity);
+//                campPicEntity.setPic();
+                PICREP.save(campPicEntity);
+
+                fileUrls.add("campPics/" + campEntity.getIcamp() + "/" + saveName);
             }
+
         }
-        return null;
+        return fileUrls;
     }
+
+    public Long delPic(CampingPicDelDto dto) {
+        Optional<CampPicEntity> opt = PICREP.findById(dto.getIcampPic());
+        if (!opt.isPresent()) {
+            return null;
+        }
+        CampPicEntity entity = opt.get();
+
+        // 파일을 삭제할 디렉토리 경로
+        String centerPath = String.format("campPics/%d", dto.getIcamp());
+        String targetPath = String.format("%s/%s", FileUtils.getAbsolutePath(fileDir), centerPath);
+        String result = entity.getPic();
+        String picName = result.substring(result.lastIndexOf('/') + 1);
+        File fileToDelete = new File(targetPath, picName);
+
+        // 파일 삭제
+        if (fileToDelete.exists()) {
+            if (fileToDelete.delete()) {
+                // 파일 삭제에 성공하면 엔티티를 영구적으로 삭제
+                PICREP.delete(entity);
+                return entity.getIcampPic();
+            } else {
+                // 파일 삭제 실패 처리
+                return null;
+            }
+        } else {
+            // 파일이 존재하지 않는 경우 처리
+            return null;
+        }
+    }
+//    public ReserveRes InsReserve(ReserveDto dto){
+//        Optional<CampEntity> entity = REP.findById(dto.getIcamp());
+//
+//
+//    }
 }
 
 
