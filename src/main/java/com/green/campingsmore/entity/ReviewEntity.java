@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.green.campingsmore.jpa.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -47,14 +48,16 @@ public class ReviewEntity extends BaseEntity {
 
     @Column(columnDefinition = "TINYINT", length = 1)
     @NotNull
+    @Size(min = 0, max = 5)
     @ColumnDefault("5")
     private Integer starRating;
 
     @Column(columnDefinition = "INT UNSIGNED", length = 10)
-    private Long reviewLike;
+    private Integer reviewLike;
 
     @Column(columnDefinition = "TINYINT", length = 1)
     @NotNull
+    @Size(min = 0, max = 1)
     @ColumnDefault("1")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer delYn;
