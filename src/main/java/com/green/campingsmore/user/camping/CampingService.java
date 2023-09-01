@@ -2,6 +2,7 @@ package com.green.campingsmore.user.camping;
 
 import com.green.campingsmore.community.board.utils.FileUtils;
 import com.green.campingsmore.entity.CampEntity;
+import com.green.campingsmore.entity.CampPicEntity;
 import com.green.campingsmore.entity.NationwideEntity;
 import com.green.campingsmore.user.camping.model.*;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -21,6 +24,7 @@ public class CampingService {
     private final CampingRepository REP;
     private final CityRepository CITYREP;
     private final CampingRepositoryImpl IMPL;
+    private final CampingPicRepository PICREP;
 
     @Value("${file.dir}")
     private String fileDir;
@@ -79,10 +83,11 @@ public class CampingService {
         }
         return null;
     }
+
     public CampingRes updCamping(MultipartFile pic, CampingUpdDto dto) throws Exception {
         Optional<CampEntity> opt = REP.findById(dto.getIcamp());
 
-        if(!opt.isPresent()) {
+        if (!opt.isPresent()) {
             return null;
         }
         CampEntity entity = opt.get();
@@ -145,6 +150,7 @@ public class CampingService {
         }
         return null;
     }
+
     public CampingRes delCamping(CampingDelDto dto) {
         Optional<CampEntity> opt = REP.findById(dto.getIcamp());
 
@@ -180,4 +186,69 @@ public class CampingService {
                 .delyn(entity.getDelyn())
                 .build();
     }
+
+
+    public CampingPicRes InsPic(List<MultipartFile> pics, CampingPicDto dto) throws Exception {
+        CampEntity campEntity = new CampEntity();
+        if (pics != null) {
+            campEntity.setIcamp(dto.getIcamp());
+            String centerPath = String.format("campPics/%d", campEntity.getIcamp());
+            String targetPath = String.format("%s/%s", FileUtils.getAbsolutePath(fileDir), centerPath);
+            File file = new File(targetPath);
+
+
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            List<CampPicEntity> picEntities = new ArrayList<>();
+            for (MultipartFile pic : pics) {
+                String originFile = pic.getOriginalFilename();
+                String saveName = FileUtils.makeRandomFileNm(originFile);
+
+                File fileTarget = new File(targetPath + "/" + saveName);
+                try {
+                    pic.transferTo(fileTarget);
+                } catch (IOException e) {
+                    throw new Exception("파일저장을 실패했습니다");
+                }
+                CampPicEntity campPicEntity = new CampPicEntity();
+                campPicEntity.setCampEntity(campEntity);
+                campPicEntity.setPic("campPics/" + campEntity.getIcamp() + "/" + saveName);
+                picEntities.add(campPicEntity);
+                CampingPicRes.builder().pic(saveName)
+                                .build();
+                PICREP.save(campPicEntity);
+                return CampingPicRes.builder()
+                        .icampPic(campEntity.getIcamp())
+                        .pic(saveName)
+                        .build();
+            }
+        }
+        return null;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

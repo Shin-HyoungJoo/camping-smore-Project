@@ -1,9 +1,6 @@
 package com.green.campingsmore.user.camping;
 
-import com.green.campingsmore.user.camping.model.CampingDelDto;
-import com.green.campingsmore.user.camping.model.CampingDto;
-import com.green.campingsmore.user.camping.model.CampingRes;
-import com.green.campingsmore.user.camping.model.CampingUpdDto;
+import com.green.campingsmore.user.camping.model.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,5 +33,9 @@ public class CampingController {
     @PutMapping("/delcamp")
     public ResponseEntity<CampingRes> delCamp(@RequestBody CampingDelDto dto){
         return ResponseEntity.ok(SERVICE.delCamping(dto));
+    }
+    @PostMapping(value = "/detail",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CampingPicRes> InsPic(@RequestPart(required = false) List<MultipartFile> pics, @RequestPart CampingPicDto dto) throws Exception{
+        return ResponseEntity.ok(SERVICE.InsPic(pics,dto));
     }
 }

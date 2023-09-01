@@ -56,4 +56,5 @@ public class CampEntity {
     @JoinColumn(name = "inationwide")
     private NationwideEntity nationwideEntity;
 
+
 }

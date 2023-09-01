@@ -4,7 +4,5 @@ import lombok.Data;
 
 @Data
 public class CampingPicDto {
-    private Long icampPic;
-    private String pic;
     private Long icamp;
 }
