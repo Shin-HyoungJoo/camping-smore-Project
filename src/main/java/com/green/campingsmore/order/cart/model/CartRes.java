@@ -1,9 +1,13 @@
 package com.green.campingsmore.order.cart.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class InsCartDto1 {
+@Builder
+public class CartRes {
+    private Long icart;
     private Long iuser;
     private Long iitem;
     private Long quantity;

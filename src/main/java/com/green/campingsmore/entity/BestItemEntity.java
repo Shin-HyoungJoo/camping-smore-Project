@@ -2,6 +2,7 @@ package com.green.campingsmore.entity;
 
 import com.green.campingsmore.jpa.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -20,12 +21,16 @@ import java.time.LocalDate;
 public class BestItemEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED")
+    @Column(updatable = false, columnDefinition = "BIGINT UNSIGNED")
+    @NotNull
     private Long id;
 
     @JoinColumn(name = "iitem")
-    private Long iitem;
+    @ManyToOne
+    @NotNull
+    private ItemEntity itemEntity;
 
-    @Column(nullable = false, columnDefinition = "DATE")
+    @Column(columnDefinition = "DATE")
+    @NotNull
     private LocalDate monthLike;
 }

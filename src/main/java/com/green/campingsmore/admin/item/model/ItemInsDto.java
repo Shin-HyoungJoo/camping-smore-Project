@@ -1,4 +1,4 @@
-package com.green.campingsmore.item.model;
+package com.green.campingsmore.admin.item.model;
 
 import lombok.Data;
 
@@ -9,6 +9,6 @@ public class ItemInsDto {
     private Long iitemCategory;
     private String name;
     private String pic;
-    private int price;
+    private Integer price;
     private List<String> picUrl;
 }

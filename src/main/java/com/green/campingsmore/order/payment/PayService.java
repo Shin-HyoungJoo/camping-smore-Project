@@ -3,11 +3,12 @@ package com.green.campingsmore.order.payment;
 import com.green.campingsmore.order.payment.model.*;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PayService {
     //결제 관련
-    Long insPayInfo(InsPayInfoDto1 dto);
-    PaymentCompleteDto selPaymentComplete(Long iorder);
+    Long insPayInfo(InsPayInfoDto dto);
+    Optional<PaymentCompleteDto> selPaymentComplete(Long iorder);
     List<SelPaymentDetailDto> selPaymentDetailAll(Long iuser);
     PaymentDetailDto selPaymentPageItem(Long iitem, Long quantity);
     List<PaymentDetailDto> selPaymentPageItemList(CartPKDto dto);

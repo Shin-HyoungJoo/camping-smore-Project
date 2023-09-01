@@ -1,5 +1,6 @@
 package com.green.campingsmore.item;
 
+import com.green.campingsmore.admin.item.model.ItemInsDto;
 import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.dataset.NaverApi;
 import com.green.campingsmore.item.model.*;

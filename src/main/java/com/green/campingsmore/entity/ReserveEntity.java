@@ -23,37 +23,46 @@ import java.time.LocalDate;
 public class ReserveEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false,nullable = false,columnDefinition = "BIGINT UNSIGNED")
+    @Column(updatable = false,columnDefinition = "BIGINT UNSIGNED")
+    @NotNull
     private Long ireserved;
 
-    @Column(nullable = false)
+
+    @NotNull
     private LocalDate reservation;
 
-    @Column(nullable = false)
+    @NotNull
     @Size(min = 2)
     private String name;
 
-    @Column(nullable = false,length = 11)
+    @Column(length = 11)
+    @NotNull
     @Size(min = 11)
     private String phone;
 
-    @Column(nullable = false)
+
+    @NotNull
     private Integer price;
 
-    @Column(name = "pay_type",nullable = false)
+    @Column(name = "pay_type")
+    @NotNull
     @Enumerated(EnumType.STRING)
     private PayType payType;
 
-    @Column(name = "pay_status",nullable = false)
+    @Column(name = "pay_status")
+    @NotNull
     @Enumerated(EnumType.STRING)
     private PayStatus payStatus;
 
     @ManyToOne
-    @JoinColumn(name = "camp_id",nullable = false)
+    @JoinColumn(name = "icamp")
+    @NotNull
     private CampEntity campEntity;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "iuser")
     @NotNull
     private UserEntity userEntity;
+
+
 }
