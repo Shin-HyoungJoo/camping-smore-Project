@@ -2,6 +2,7 @@ package com.green.campingsmore.entity;
 
 import com.green.campingsmore.jpa.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,8 @@ public class ItemDetailPicEntity extends BaseEntity {
     @ToString.Exclude
     private ItemEntity itemEntity;
 
-    @Column(nullable = false, length = 200)
+
+    @Column(columnDefinition="TEXT")
+    @NotNull
     private String pic;
 }

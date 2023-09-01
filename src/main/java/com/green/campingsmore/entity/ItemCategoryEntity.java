@@ -1,6 +1,7 @@
 package com.green.campingsmore.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -17,9 +18,11 @@ import lombok.experimental.SuperBuilder;
 public class ItemCategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "iitem_category", updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
+    @Column(name = "iitem_category", updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
+    @NotNull
     private Long iitemCategory;
 
-    @Column(nullable = false, length = 50, name = "\"name\"")
+    @Column(length = 50, name = "\"name\"")
+    @NotNull
     private String name;
 }

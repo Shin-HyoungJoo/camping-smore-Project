@@ -4,6 +4,7 @@ package com.green.campingsmore.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.green.campingsmore.jpa.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,8 @@ import org.hibernate.annotations.ColumnDefault;
 public class ReviewEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
+    @Column(updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
+    @NotNull
     private Long ireview;
 
     @JoinColumn(name = "iuser")
@@ -36,20 +38,23 @@ public class ReviewEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private ItemEntity itemEntity;
 
-    @Column(nullable = false, length = 200)
+    @Column(length = 200)
+    @NotNull
     private String reviewCtnt;
 
     @Column(length = 200)
     private String pic;
 
-    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
+    @Column(columnDefinition = "TINYINT", length = 1)
+    @NotNull
     @ColumnDefault("5")
     private Integer starRating;
 
     @Column(columnDefinition = "INT UNSIGNED", length = 10)
     private Long reviewLike;
 
-    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
+    @Column(columnDefinition = "TINYINT", length = 1)
+    @NotNull
     @ColumnDefault("1")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer delYn;

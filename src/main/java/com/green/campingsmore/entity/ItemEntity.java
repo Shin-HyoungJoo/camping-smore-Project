@@ -3,6 +3,7 @@ package com.green.campingsmore.entity;
 
 import com.green.campingsmore.jpa.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,8 @@ import org.hibernate.annotations.ColumnDefault;
 public class ItemEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
+    @Column(updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
+    @NotNull
     private Long iitem;
 
     @JoinColumn(name = "iitemCategory")
@@ -28,23 +30,27 @@ public class ItemEntity extends BaseEntity {
     @ToString.Exclude
     private ItemCategoryEntity itemCategoryEntity;
 
-    @Column(nullable = false, length = 100, name = "\"name\"")
+    @Column(length = 100, name = "\"name\"")
+    @NotNull
     private String name;
 
-    @Column(nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
-    private Long price;
+    @Column(columnDefinition = "INT UNSIGNED", length = 10)
+    @NotNull
+    private Integer price;
 
     @Column
     private String info;
 
-    @Column(nullable = false, length = 200)
+    @Column(length = 500)
     private String pic;
 
     @Column(columnDefinition = "INT UNSIGNED")
+    @NotNull
     @ColumnDefault("0")
     private Integer stock;
 
-    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
+    @Column(columnDefinition = "TINYINT", length = 1)
+    @NotNull
     @ColumnDefault("2")
     private Integer status; // 삭제(0) / 노출됨, 판매중(1) / 노출되지않음, 판매중지(2)
 
