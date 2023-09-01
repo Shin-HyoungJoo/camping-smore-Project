@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +21,7 @@ public class AdminItemService {
     private final AdminItemRepository adminItemRep;
     private final AdminItemCategoryRepository adminItemCategoryRep;
     private final AdminItemDetailPicRepository adminItemDetailPicRep;
-    private final AdminBestItemEntityRepository adminBestItemEntityRep;
+    private final AdminBestItemRepository adminBestItemRep;
 
     public ItemCategoryVo saveCategory(ItemCategoryInsDto dto) {
         ItemCategoryEntity entity = ItemCategoryEntity.builder()
@@ -133,7 +132,7 @@ public class AdminItemService {
                 .itemEntity(optEntity.get())
                 .monthLike(dto.getMonthLike())
                 .build();
-        adminBestItemEntityRep.save(entity);
+        adminBestItemRep.save(entity);
         return null;
     }
 

@@ -23,7 +23,7 @@ public class ReviewService {
     private String fileDir;
 
 
-    public String insReview(ReviewInsDto dto, MultipartFile pic) {
+    public String insReview(ReviewPageDto.ReviewInsDto dto, MultipartFile pic) {
         ReviewEntity2 entity = new ReviewEntity2();
         entity.setIuser(FACADE.getLoginUserPk());
         entity.setIorder(dto.getIorder());

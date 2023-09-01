@@ -1,9 +1,7 @@
 package com.green.campingsmore.user.camping;
 
 import com.green.campingsmore.community.board.utils.FileUtils;
-import com.green.campingsmore.entity.CampEntity;
-import com.green.campingsmore.entity.CampPicEntity;
-import com.green.campingsmore.entity.NationwideEntity;
+import com.green.campingsmore.entity.*;
 import com.green.campingsmore.user.camping.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +23,7 @@ public class CampingService {
     private final CityRepository CITYREP;
     private final CampingRepositoryImpl IMPL;
     private final CampingPicRepository PICREP;
+    private final ReserveRepository RESREP;
 
     @Value("${file.dir}")
     private String fileDir;
@@ -45,6 +44,7 @@ public class CampingService {
                     .capacity(dto.getCapacity())
                     .note(dto.getNote())
                     .mainPic(saveName)
+                    .price(dto.getPrice())
                     .quantity(dto.getQuantity())
                     .delyn(1)
                     .nationwideEntity(nationwideEntity)
@@ -76,6 +76,7 @@ public class CampingService {
                     .address(campEntity.getAddress())
                     .capacity(campEntity.getCapacity())
                     .mainPic(campEntity.getMainPic())
+                    .price(campEntity.getPrice())
                     .note(campEntity.getNote())
                     .quantity(campEntity.getQuantity())
                     .delyn(campEntity.getDelyn())
@@ -110,6 +111,7 @@ public class CampingService {
                     .campPhone(dto.getCampPhone())
                     .name(dto.getName())
                     .address(dto.getAddress())
+                    .price(dto.getPrice())
                     .capacity(dto.getCapacity())
                     .nationwideEntity(nationwideEntity)
                     .note(dto.getNote())
@@ -142,6 +144,7 @@ public class CampingService {
                     .inationwide(dto.getInationwide())
                     .address(campEntity.getAddress())
                     .capacity(campEntity.getCapacity())
+                    .price(campEntity.getPrice())
                     .mainPic(campEntity.getMainPic())
                     .note(campEntity.getNote())
                     .quantity(campEntity.getQuantity())
@@ -153,7 +156,6 @@ public class CampingService {
 
     public CampingRes delCamping(CampingDelDto dto) {
         Optional<CampEntity> opt = REP.findById(dto.getIcamp());
-
         if (!opt.isPresent()) {
             return null;
         }
@@ -224,6 +226,53 @@ public class CampingService {
         }
         return fileUrls;
     }
+
+    public Long delPic(CampingPicDelDto dto) {
+        Optional<CampPicEntity> opt = PICREP.findById(dto.getIcampPic());
+        if (!opt.isPresent()) {
+            return null;
+        }
+        CampPicEntity entity = opt.get();
+
+        // 파일을 삭제할 디렉토리 경로
+        String centerPath = String.format("campPics/%d", dto.getIcamp());
+        String targetPath = String.format("%s/%s", FileUtils.getAbsolutePath(fileDir), centerPath);
+        String result = entity.getPic();
+        String picName = result.substring(result.lastIndexOf('/') + 1);
+        File fileToDelete = new File(targetPath, picName);
+
+        // 파일 삭제
+        if (fileToDelete.exists()) {
+            if (fileToDelete.delete()) {
+                // 파일 삭제에 성공하면 엔티티를 영구적으로 삭제
+                PICREP.delete(entity);
+                return entity.getIcampPic();
+            } else {
+                // 파일 삭제 실패 처리
+                return null;
+            }
+        } else {
+            // 파일이 존재하지 않는 경우 처리
+            return null;
+        }
+    }
+//    public ReserveRes InsReserve(ReserveDto dto){
+//        Optional<CampEntity> opt = REP.findById(dto.getIcamp());
+//        if (!opt.isPresent()) {
+//            return null;
+//        }
+//        CampEntity entity = opt.get();
+//        UserEntity userEntity = UserEntity.builder()
+//                .iuser(dto.getIuser())
+//                .build();
+//        ReserveEntity reserveEntity = ReserveEntity.builder()
+//                .reservation(dto.getReservation())
+//                .name(dto.getName())
+//                .phone(dto.getPhone())
+//                .price(entity.getPrice)
+//
+//
+//    }
 }
 
 

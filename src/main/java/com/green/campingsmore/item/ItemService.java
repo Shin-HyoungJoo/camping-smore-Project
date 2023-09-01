@@ -7,6 +7,7 @@ import com.green.campingsmore.item.model.*;
 import com.green.campingsmore.review.ReviewService;
 import com.green.campingsmore.review.model.ReviewPageDto;
 import com.green.campingsmore.review.model.ReviewRes;
+import com.green.campingsmore.review.model.ReviewUpdDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -63,7 +64,7 @@ public class ItemService {
         return 0L;
     }
 
-    public ItemSelDetailRes searchItem(ItemSearchDto dto) {
+    public ReviewUpdDto.ItemSelDetailRes searchItem(ItemSearchDto dto) {
         // 아이템 리스트 뿌려주기 전에 로그인 상태 체크
 
 
@@ -80,7 +81,7 @@ public class ItemService {
         int maxPage = (int)Math.ceil((double) count /dto.getRow());
         int isMore = maxPage > dto.getPage() ? 1 : 0;
 
-    return ItemSelDetailRes.builder()
+    return ReviewUpdDto.ItemSelDetailRes.builder()
             .iitemCategory(dto.getIitemCategory())
             .text(dto.getText())
             .sort(dto.getSort())

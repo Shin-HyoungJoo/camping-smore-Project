@@ -38,4 +38,9 @@ public class CampingController {
     public ResponseEntity<List<String>> InsPic(@RequestPart(required = false) List<MultipartFile> pics, @RequestPart CampingPicDto dto) throws Exception{
         return ResponseEntity.ok(SERVICE.InsPic(pics,dto));
     }
+    @DeleteMapping
+    public ResponseEntity<Long> delPic(@RequestBody CampingPicDelDto dto){
+        return ResponseEntity.ok(SERVICE.delPic(dto));
+    }
+
 }
