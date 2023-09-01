@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.green.campingsmore.item.ItemMapper2">
+<mapper namespace="com.green.campingsmore.item.ItemMapper">
 
     <!--카테고리 추가-->
     <insert id="insCate">

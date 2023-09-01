@@ -1,7 +1,6 @@
 package com.green.campingsmore.review;
 
 import com.green.campingsmore.review.model.*;
-import com.green.campingsmore.user.review.model.ReviewInsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Tag(name="리뷰")
 @RequestMapping("/api/review")
 @RequiredArgsConstructor
-public class ReviewController2 {
-    private final ReviewService2 SERVICE;
+public class ReviewController {
+    private final ReviewService SERVICE;
 
 /*    @PostMapping
     @Operation(summary = "리뷰 추가"
@@ -38,7 +37,7 @@ public class ReviewController2 {
             "\"reviewCtnt\": [-] 리뷰 내용,<br>" +
             "\"starRating\": [-] 별점,<br>" +
             "\"pic\": [-] 사진 이미지<br>")
-    public String postReview(@RequestPart ReviewInsDto dto,
+    public String postReview(@RequestPart ReviewPageDto.ReviewInsDto dto,
                            @RequestPart(required = false) MultipartFile pic) {
         return SERVICE.insReview(dto, pic);
     }

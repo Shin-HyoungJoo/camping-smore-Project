@@ -3,7 +3,6 @@ package com.green.campingsmore.review;
 import com.green.campingsmore.community.board.utils.FileUtils;
 import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.review.model.*;
-import com.green.campingsmore.user.review.model.ReviewInsDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,14 +16,14 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ReviewService2 {
-    private final ReviewMapper2 MAPPER;
+public class ReviewService {
+    private final ReviewMapper MAPPER;
     private final AuthenticationFacade FACADE;
     @Value("${file.dir}")
     private String fileDir;
 
 
-    public String insReview(ReviewInsDto dto, MultipartFile pic) {
+    public String insReview(ReviewPageDto.ReviewInsDto dto, MultipartFile pic) {
         ReviewEntity2 entity = new ReviewEntity2();
         entity.setIuser(FACADE.getLoginUserPk());
         entity.setIorder(dto.getIorder());

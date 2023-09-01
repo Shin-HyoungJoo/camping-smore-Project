@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ItemMapperTest {
 
     @Autowired
-    private ItemMapper2 mapper;
+    private ItemMapper mapper;
 
     @Test
     @DisplayName("Item - 카테고리 리스트")

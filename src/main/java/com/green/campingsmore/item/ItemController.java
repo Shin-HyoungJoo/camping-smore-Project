@@ -2,7 +2,7 @@ package com.green.campingsmore.item;
 
 import com.green.campingsmore.admin.item.model.*;
 import com.green.campingsmore.item.model.*;
-import com.green.campingsmore.user.item.model.ItemSelDetailRes;
+import com.green.campingsmore.review.model.ReviewUpdDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -14,8 +14,8 @@ import java.util.List;
 @Tag(name="아이템")
 @RequestMapping("/api/item")
 @RequiredArgsConstructor
-public class ItemController2 {
-    private final ItemService2 SERVICE;
+public class ItemController {
+    private final ItemService SERVICE;
 
 
     @GetMapping("/category")
@@ -46,11 +46,11 @@ public class ItemController2 {
             "\"cate\": [-] 카테고리(11: 축산물, 16: 수산물, 13: 소스/드레싱, 18: 밀키트, 17: 농산물),<br>" +
             "\"sort\": [1] 판매순 랭킹(0 : 최신순, 1: 오래된순, 2: 높은가격순, 3: 낮은가격순)  <br>"
     )
-    public ItemSelDetailRes getSearchItem(@RequestParam(value = "cate",required=false)Long cate,
-                                          @RequestParam(value = "text",required=false)String text,
-                                          @RequestParam(defaultValue = "1")int page,
-                                          @RequestParam(defaultValue = "15")int row,
-                                          @RequestParam(defaultValue = "0")int sort) {
+    public ReviewUpdDto.ItemSelDetailRes getSearchItem(@RequestParam(value = "cate",required=false)Long cate,
+                                                       @RequestParam(value = "text",required=false)String text,
+                                                       @RequestParam(defaultValue = "1")int page,
+                                                       @RequestParam(defaultValue = "15")int row,
+                                                       @RequestParam(defaultValue = "0")int sort) {
 
         // 로그인을 안한 비회원인 경우 아이템 리스트 뿌려줌
         ItemSearchDto dto = new ItemSearchDto();
