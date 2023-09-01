@@ -1,10 +1,10 @@
 package com.green.campingsmore.user.camping.model;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-public class CampingDto {
+public class CampingUpdDto {
+    private Long icamp;
     private Integer capacity;
     private Integer quantity;
     private String address;

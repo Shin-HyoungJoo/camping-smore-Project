@@ -1,25 +1,40 @@
 package com.green.campingsmore.user.camping;
 
+import com.green.campingsmore.user.camping.model.CampingDelDto;
 import com.green.campingsmore.user.camping.model.CampingDto;
 import com.green.campingsmore.user.camping.model.CampingRes;
+import com.green.campingsmore.user.camping.model.CampingUpdDto;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/camp")
+@RequestMapping("/api/camp")
 @RequiredArgsConstructor
+@Tag(name = "캠핑장")
 public class CampingController {
     private final CampingService SERVICE;
 
-    @PostMapping
-    public ResponseEntity<CampingRes> InsCamp(@RequestBody CampingDto dto){
-        return ResponseEntity.ok(SERVICE.InsCamp(dto));
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CampingRes> InsCamp(@RequestPart(required = false) MultipartFile pic,
+                                              @RequestPart CampingDto dto) throws Exception {
+        return ResponseEntity.ok(SERVICE.InsCamp(pic, dto));
     }
 
+    @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<CampingRes> updCamp(@RequestPart(required = false) MultipartFile pic,
+                                              @RequestPart CampingUpdDto dto) throws Exception {
+        return ResponseEntity.ok(SERVICE.updCamping(pic, dto));
+    }
+    @PutMapping("/delcamp")
+    public ResponseEntity<CampingRes> delCamp(@RequestBody CampingDelDto dto){
+        return ResponseEntity.ok(SERVICE.delCamping(dto));
+    }
 }
