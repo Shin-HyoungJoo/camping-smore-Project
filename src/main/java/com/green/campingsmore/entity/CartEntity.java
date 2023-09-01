@@ -30,7 +30,7 @@ public class CartEntity extends BaseEntity {
     private UserEntity userEntity;
 
     @JoinColumn(name = "iitem")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch= FetchType.LAZY)
     @ToString.Exclude
     private ItemEntity itemEntity;
 

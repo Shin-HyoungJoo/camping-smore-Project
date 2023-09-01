@@ -39,8 +39,16 @@ public class SignController {
         String password = userLogin.getUpw();
         String ip = req.getRemoteAddr();
         log.info("[signIn] 로그인을 시도하고 있습니다. id: {}, pw: {}, ip: {}",id, password, ip);
-
         return SERVICE.signIn(userLogin,ip);
+    }
+
+    @GetMapping("/notuser")
+    @Operation(summary = "비회원이 로그인을 하지 않고 들어올 시 방문자 Count 증가 API",
+            description = "Try it out -> Execute 눌러주세요"
+    )
+    public ResponseEntity<?> IncreaseCount(){
+        SERVICE.IncreaseCount();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PostMapping("/oauth/logout")

@@ -18,4 +18,6 @@ public interface UserDetailsMapper {
     int searchPW(UpdatePwDto updatePwDto);
     UserInfo getmyInfo(int iuser);
     SearchUserDto searchUser(SearchUserDto searchUserDto);
+    int IncreaseCount();
+    int IncreaseUserCount(int gender,String birth_date);
 }

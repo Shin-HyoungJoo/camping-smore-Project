@@ -1,10 +1,10 @@
 package com.green.campingsmore.order.cart.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 
-@Getter
+@Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class SelCartVo {
     private Long icart;
     private String pic;
