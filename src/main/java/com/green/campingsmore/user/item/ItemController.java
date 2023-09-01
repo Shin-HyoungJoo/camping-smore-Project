@@ -18,7 +18,7 @@ import java.awt.print.Pageable;
 public class ItemController {
     private final ItemService service;
 
-    @GetMapping("/search")
+/*    @GetMapping("/search")
     @Operation(summary = "아이템 검색 및 검색리스트"
             , description = "" +
             "\"text\": [-] 검색어,<br>" +
@@ -32,6 +32,6 @@ public class ItemController {
         ItemSelDetailRes res = service.searchItem(cate,text,pageable);
         return ResponseEntity.ok(res);
 
-    }
+    }*/
 
 }

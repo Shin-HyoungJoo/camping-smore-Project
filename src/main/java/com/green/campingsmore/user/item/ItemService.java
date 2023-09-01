@@ -22,18 +22,18 @@ public class ItemService {
     private final ItemCategoryRepository itemCategoryRep;
 
 
-    public ItemSelDetailRes searchItem(Long cate, String text, Pageable pageable) {
+/*    public ItemSelDetailRes searchItem(Long cate, String text, Pageable pageable) {
 
 
-/*
+*//*
         ItemSelDetailRes res = ItemSelDetailRes.builder()
                 .iitemCategory(itemCategoryRep.findById(cate).get().getIitemCategory())
                 .text(text)
                 .startIdx((pageable.getPage))
                 .build();
-*/
+*//*
 
         return ItemSelDetailRes.builder().build();
-    }
+    }*/
 
 }

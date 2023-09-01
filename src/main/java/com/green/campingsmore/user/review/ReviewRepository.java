@@ -1,4 +1,7 @@
 package com.green.campingsmore.user.review;
 
-public interface ReviewRepository {
+import com.green.campingsmore.entity.ReviewEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ReviewRepository extends JpaRepository<ReviewEntity,Long> {
 }
