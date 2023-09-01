@@ -24,8 +24,4 @@ public class CampPicEntity {
     @JoinColumn(name = "icamp",nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private CampEntity campEntity;
-
-    public void setCampEntity(CampEntity campEntity) {
-        this.campEntity = campEntity;
-    }
 }
