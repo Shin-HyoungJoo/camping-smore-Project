@@ -35,6 +35,7 @@ public class JwtTokenProvider {
     public JwtTokenProvider(@Value("${springboot.jwt.access-secret}") String accessSecretKey
             , @Value("${springboot.jwt.refresh-secret}") String refreshSecretKey
             , @Value("${springboot.jwt.token-type}") String tokenType) {
+        // 토큰 디코딩
         byte[] accessKeyBytes = Decoders.BASE64.decode(accessSecretKey);
         this.ACCESS_KEY = Keys.hmacShaKeyFor(accessKeyBytes);
 
@@ -102,7 +103,7 @@ public class JwtTokenProvider {
                 .getBody();
     }
 
-    // Filter에서 사용
+    // Filter에서 사용 ..토큰 유효성 검증
     public boolean isValidateToken(String token, Key key) {
         log.info("JwtTokenProvider - isValidateToken: 토큰 유효 체크 시작");
         try {

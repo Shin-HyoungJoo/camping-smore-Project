@@ -1,6 +1,7 @@
 package com.green.campingsmore.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,29 +21,40 @@ public class CampEntity {
     @Column(updatable = false,nullable = false,columnDefinition = "BIGINT UNSIGNED")
     private Long icamp;
 
-    @Column(nullable = false)
+
+    @NotNull
     private String name;
 
-    @Column(updatable = false,nullable = false)
-    private String city;
-
-    @Column(updatable = false,nullable = false)
+    @Column(updatable = false)
+    @NotNull
     private String address;
 
 
-    @Column(name = "main_pic",nullable = false)
+    @Column(name = "main_pic")
+    @NotNull
     private String mainPic;
 
-    @Column(name = "camp_phone",nullable = false)
+    @Column(name = "camp_phone")
+    @NotNull
     @Size(min = 9,max = 20)
     private String campPhone;
 
-    @Column(nullable = false)
+    @NotNull
     private Integer quantity;
 
-    @Column(nullable = false,length = 2)
+    @Column(length = 2)
+    @NotNull
     private Integer capacity;
 
-    @Column(nullable = false)
+    @NotNull
     private String note;
+
+    @Column(name = "del_yn",columnDefinition = "TINYINT not null DEFAULT 1 CHECK(del_yn in (0,1))",length = 1)
+    private Integer delyn;
+
+    @ManyToOne
+    @JoinColumn(name = "inationwide")
+    private NationwideEntity nationwideEntity;
+
+
 }

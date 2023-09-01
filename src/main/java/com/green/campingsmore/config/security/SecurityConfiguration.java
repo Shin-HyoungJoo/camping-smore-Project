@@ -29,6 +29,7 @@ public class SecurityConfiguration {
                                                 , "/swagger-ui/**"
                                                 , "/v3/api-docs/**"
 
+                                                ,"/api/notuser" // 비회원 방문 카운트 증가
                                                 ,"/api/oauth/authorize" //로그인
                                                 , "/api/oauth/logout" // 로그아웃
                                                 , "/api/user" // 회원가입
@@ -42,12 +43,14 @@ public class SecurityConfiguration {
                                                 ,"/api/community/iboard" // 게시판
                                                 ,"/api/community/comunity" // 게시판
                                                 ,"/api/community/boardDetail/**" // 게시판
-                                                ,"/api/item/bestitem" // 아이템
-                                                ,"/api/item/search" // 아이템
-                                                ,"/api/item/category" // 아이템
-                                                ,"/api/item/detail/**" // 아이템
+                                                ,"/api/item/**" // 아이템
+//                                                ,"/api/item/bestitem" // 아이템
+//                                                ,"/api/item/search" // 아이템
+//                                                ,"/api/item/category" // 아이템
+//                                                ,"/api/item/detail/**" // 아이템
                                                 ,"/api/review/**/detail" // 리뷰 리스트
                                                 ,"/api/review/**/**" // 리뷰 리스트
+                                                ,"/api/camp/**/**" // 캠프 예약
                                                 , "/api/exception"
                                         ).permitAll()
 //                            .requestMatchers(HttpMethod.GET, "").permitAll()
@@ -62,6 +65,7 @@ public class SecurityConfiguration {
                     except.accessDeniedHandler(new CustomAccessDeniedHandler());
                     except.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
                 })
+                // 검증이 정상적으로 통과되었다면 인증된 authentication 객체를 기반으로 JWT 토큰을 생성합니다  ==> UsernamePasswordAuthenticationFilter가 하는 일
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisService), UsernamePasswordAuthenticationFilter.class)
                 .anonymous(anony -> anony.disable()); // 익명 사용자 disable();
 

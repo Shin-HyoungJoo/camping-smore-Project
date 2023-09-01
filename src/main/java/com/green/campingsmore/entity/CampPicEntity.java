@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @NoArgsConstructor
 @ToString(callSuper = true)
-public class CampPic {
+public class CampPicEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "icamp_pic",updatable = false,nullable = false,columnDefinition = "BIGINT UNSIGNED")

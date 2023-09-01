@@ -23,24 +23,24 @@ spring:
     password: green502
   jpa:
     hibernate:
-#      ddl-auto: create-drop
+        #      ddl-auto: create-drop
       ddl-auto: update
     show-sql: true
     properties:
       hibernate:
           format_sql: true
-  data:
-    redis:
-      host: 192.168.0.144
-      port: 6379
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
 
 
+  data:
+    redis:
+      host: 192.168.0.144
+      port: 6379
+
 file:
   dir: /home/download/
-
 # swagger
 springdoc:
   swagger-ui:

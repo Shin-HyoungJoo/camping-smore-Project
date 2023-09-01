@@ -12,6 +12,7 @@ import com.green.campingsmore.config.security.model.*;
 import com.green.campingsmore.config.security.redis.RedisService;
 import com.green.campingsmore.config.security.redis.model.RedisJwtVo;
 import com.green.campingsmore.config.utils.MyFileUtils;
+import com.green.campingsmore.entity.UserEntity;
 import com.green.campingsmore.sign.model.*;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,22 +21,21 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class SignService {
     private final UserDetailsMapper MAPPER;
+    private final SignRepository repository;
     private final JwtTokenProvider JWT_PROVIDER;
     private final PasswordEncoder PW_ENCODER;
     private final RedisService REDIS_SERVICE;
@@ -47,6 +47,10 @@ public class SignService {
 
     public void test() {
         log.info("service-test-iuser : {}", FACADE.getLoginUserPk());
+    }
+
+    public int IncreaseCount(){
+        return MAPPER.IncreaseCount();
     }
 
     public SignUpResultDto signUp(SignUpDto signUpDto) {
@@ -106,8 +110,9 @@ public class SignService {
 
         System.out.println("로그인 유지되고 있어야하는데...myUserDetails = " + myUserDetails);
 
-        // RT가 이미 있을 경우
+
         String redisKey = String.format("RT(%s):%s:%s", "Server", user.getIuser(), ip);
+        // RT가 이미 있을 경우
         if(REDIS_SERVICE.getValues(redisKey) != null) {
             REDIS_SERVICE.deleteValues(redisKey); // 삭제
         }
@@ -138,6 +143,9 @@ public class SignService {
 
         log.info("[getSignInResult] SignInResultDto 객체 값 주입");
         setSuccessResult(dto);
+
+        // 로그인한 회원 방문자 카운트 증가 시키기
+        MAPPER.IncreaseUserCount(user.getGender(),user.getBirth_date());
 
         return dto;
     }
@@ -239,6 +247,11 @@ public class SignService {
     }
 
     public int deleteUser(int iuser){
+        Optional<UserEntity> isuser = repository.findById(Long.valueOf(iuser));
+        System.out.println("Optional<UserEntity> = "+ isuser);
+        if(ObjectUtils.isEmpty(isuser)){
+            throw new RuntimeException("삭제 실패.. 머선 일이고!!!");
+        }
         return MAPPER.delYnUser(iuser);
     }
 
@@ -328,6 +341,11 @@ public class SignService {
 
     public UserInfo getmyInfo(){
         System.out.println("로그인 상태 유뮤 = " + FACADE.getLoginUserPk());
+        Optional<UserEntity> islogin = repository.findById(FACADE.getLoginUserPk());
+        System.out.println("Optional<UserEntity> = "+ islogin);
+        if(ObjectUtils.isEmpty(islogin)){
+            throw new RuntimeException("로그인 상태가 아닙니다.");
+        }
         return MAPPER.getmyInfo(Math.toIntExact(FACADE.getLoginUserPk()));
     }
 
