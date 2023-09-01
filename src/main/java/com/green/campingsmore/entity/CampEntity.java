@@ -40,6 +40,9 @@ public class CampEntity {
     private String campPhone;
 
     @NotNull
+    private Integer price;
+
+    @NotNull
     private Integer quantity;
 
     @Column(length = 2)

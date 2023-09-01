@@ -41,9 +41,6 @@ public class ReserveEntity extends BaseEntity {
     private String phone;
 
 
-    @NotNull
-    private Integer price;
-
     @Column(name = "pay_type")
     @NotNull
     @Enumerated(EnumType.STRING)
