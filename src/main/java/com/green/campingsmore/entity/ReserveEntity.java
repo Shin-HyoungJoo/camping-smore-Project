@@ -25,7 +25,7 @@ public class ReserveEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false,columnDefinition = "BIGINT UNSIGNED")
     @NotNull
-    private Long ireserved;
+    private Long ireserve;
 
 
     @NotNull

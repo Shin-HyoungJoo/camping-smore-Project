@@ -25,6 +25,7 @@ public class CampingService {
     private final CityRepository CITYREP;
     private final CampingRepositoryImpl IMPL;
     private final CampingPicRepository PICREP;
+    private final ReserveRepository RESREP;
 
     @Value("${file.dir}")
     private String fileDir;
@@ -153,7 +154,6 @@ public class CampingService {
 
     public CampingRes delCamping(CampingDelDto dto) {
         Optional<CampEntity> opt = REP.findById(dto.getIcamp());
-
         if (!opt.isPresent()) {
             return null;
         }
@@ -224,6 +224,41 @@ public class CampingService {
         }
         return fileUrls;
     }
+
+    public Long delPic(CampingPicDelDto dto) {
+        Optional<CampPicEntity> opt = PICREP.findById(dto.getIcampPic());
+        if (!opt.isPresent()) {
+            return null;
+        }
+        CampPicEntity entity = opt.get();
+
+        // 파일을 삭제할 디렉토리 경로
+        String centerPath = String.format("campPics/%d", dto.getIcamp());
+        String targetPath = String.format("%s/%s", FileUtils.getAbsolutePath(fileDir), centerPath);
+        String result = entity.getPic();
+        String picName = result.substring(result.lastIndexOf('/') + 1);
+        File fileToDelete = new File(targetPath, picName);
+
+        // 파일 삭제
+        if (fileToDelete.exists()) {
+            if (fileToDelete.delete()) {
+                // 파일 삭제에 성공하면 엔티티를 영구적으로 삭제
+                PICREP.delete(entity);
+                return entity.getIcampPic();
+            } else {
+                // 파일 삭제 실패 처리
+                return null;
+            }
+        } else {
+            // 파일이 존재하지 않는 경우 처리
+            return null;
+        }
+    }
+//    public ReserveRes InsReserve(ReserveDto dto){
+//        Optional<CampEntity> entity = REP.findById(dto.getIcamp());
+//
+//
+//    }
 }
 
 
