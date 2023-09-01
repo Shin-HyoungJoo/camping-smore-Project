@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import java.util.List;
 
 @Mapper
-public interface ItemMapper {
+public interface ItemMapper2 {
 
 
     //카테고리

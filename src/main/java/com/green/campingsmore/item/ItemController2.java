@@ -2,6 +2,7 @@ package com.green.campingsmore.item;
 
 import com.green.campingsmore.admin.item.model.*;
 import com.green.campingsmore.item.model.*;
+import com.green.campingsmore.user.item.model.ItemSelDetailRes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +14,8 @@ import java.util.List;
 @Tag(name="아이템")
 @RequestMapping("/api/item")
 @RequiredArgsConstructor
-public class ItemController {
-    private final ItemService SERVICE;
+public class ItemController2 {
+    private final ItemService2 SERVICE;
 
 
     @GetMapping("/category")

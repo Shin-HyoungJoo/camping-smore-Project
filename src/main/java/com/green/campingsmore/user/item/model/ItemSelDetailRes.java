@@ -1,4 +1,4 @@
-package com.green.campingsmore.item.model;
+package com.green.campingsmore.user.item.model;
 
 import com.green.campingsmore.admin.item.model.ItemVo;
 import lombok.Builder;

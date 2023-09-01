@@ -1,22 +1,20 @@
 package com.green.campingsmore.review;
 
 import com.green.campingsmore.review.model.*;
+import com.green.campingsmore.user.review.model.ReviewInsDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-
 @RestController
 @Tag(name="리뷰")
 @RequestMapping("/api/review")
 @RequiredArgsConstructor
-public class ReviewController {
-    private final ReviewService SERVICE;
+public class ReviewController2 {
+    private final ReviewService2 SERVICE;
 
 /*    @PostMapping
     @Operation(summary = "리뷰 추가"

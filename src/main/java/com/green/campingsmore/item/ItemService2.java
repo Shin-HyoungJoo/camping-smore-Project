@@ -4,9 +4,10 @@ import com.green.campingsmore.admin.item.model.*;
 import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.dataset.NaverApi;
 import com.green.campingsmore.item.model.*;
-import com.green.campingsmore.review.ReviewService;
+import com.green.campingsmore.review.ReviewService2;
 import com.green.campingsmore.review.model.ReviewPageDto;
 import com.green.campingsmore.review.model.ReviewRes;
+import com.green.campingsmore.user.item.model.ItemSelDetailRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,10 +17,10 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ItemService {
-    private final ItemMapper MAPPER;
+public class ItemService2 {
+    private final ItemMapper2 MAPPER;
     private final NaverApi naverApi;
-    private final ReviewService REVIEWSERVICE;
+    private final ReviewService2 REVIEWSERVICE;
     private final AuthenticationFacade FACADE;
 
     // 카테고리
