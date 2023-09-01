@@ -10,5 +10,8 @@ public class ItemInsDto {
     private String name;
     private String pic;
     private Integer price;
+    private String info;
+    private Integer stock;
+    private Integer status;
     private List<String> picUrl;
 }

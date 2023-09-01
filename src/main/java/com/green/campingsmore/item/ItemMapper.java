@@ -1,5 +1,7 @@
 package com.green.campingsmore.item;
 
+import com.green.campingsmore.admin.item.model.ItemInsBestDto;
+import com.green.campingsmore.admin.item.model.ItemVo;
 import com.green.campingsmore.item.model.*;
 import org.apache.ibatis.annotations.Mapper;
 

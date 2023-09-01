@@ -1,6 +1,6 @@
 package com.green.campingsmore.item;
 
-import com.green.campingsmore.admin.item.model.ItemInsDto;
+import com.green.campingsmore.admin.item.model.*;
 import com.green.campingsmore.item.model.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
