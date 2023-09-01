@@ -42,5 +42,9 @@ public class CampingController {
     public ResponseEntity<Long> delPic(@RequestBody CampingPicDelDto dto){
         return ResponseEntity.ok(SERVICE.delPic(dto));
     }
+    @PostMapping("/reserve")
+    public ResponseEntity<ReserveRes> InsReserve(@RequestBody ReserveDto dto){
+        return ResponseEntity.ok(SERVICE.InsReserve(dto));
+    }
 
 }
