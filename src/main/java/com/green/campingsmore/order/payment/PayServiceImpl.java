@@ -17,62 +17,21 @@ public class PayServiceImpl implements PayService {
 
     private final PayMapper MAPPER;
     private final PayRepository repo;
-    private final PayRepositoryImpl dslRepo;
 
-    @Override
+    @Override       //dsl
     @Transactional(rollbackFor = {Exception.class})
     public Long insPayInfo(InsPayInfoDto dto) {
-//
-//        OrderEntity entity = OrderEntity.builder()
-//                .userEntity(UserEntity.builder().iuser(dto.getIuser()).build())
-//                .campEntity(CampEntity.builder().icamp(dto.getIReserve()).build())
-//                .address(dto.getAddress())
-//                .addressDetail(dto.getAddressDetail())
-//                .totalPrice(dto.getTotalPrice())
-//                .shippingMemo(dto.getShippingMemo())
-//                .build();
-//
-//
-//        repo.save(entity);
-//
-//        List<PayDetailInfoVo> itemList = dto.getPurchaseList();
-//        for (PayDetailInfoVo item : itemList) {
-//            OrderItemEntity.builder()
-//                    .orderEntity(OrderEntity.builder().iorder(repo.findTopByOrderByIOrderDesc()))
-//                    .itemEntity(ItemEntity.builder().iitem(item.getIitem()).build())
-//                    .price(repo.findById())
-//                            .build());
-//        }
-//
-//        InsPayInfoDto1 orderDto = new InsPayInfoDto1();
-//
-//        try {
-//            orderDto.setIuser(dto.getIuser());
-//            orderDto.setAddress(dto.getAddress());
-//            orderDto.setAddressDetail(dto.getAddressDetail());
-//            orderDto.setShippingPrice(dto.getShippingPrice());
-//            orderDto.setShippingMemo(dto.getShippingMemo());
-//            orderDto.setTotalPrice(dto.getTotalPrice());
-//            MAPPER.insPayInfo(orderDto);
-//
-//            List<PayDetailInfoVo> purchaseList = dto.getPurchaseList();
-//            log.info("purchaseList = {}", purchaseList);
-//            MAPPER.insPayDetailInfo(purchaseList);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return 0L;
-//        }
-        return 1L;
+        return repo.insPayInfo(dto);
     }
 
     @Override   //querydsl
     public Optional<PaymentCompleteDto> selPaymentComplete(Long iorder) {
-        return dslRepo.selPaymentComplete(iorder);
+        return repo.selPaymentComplete(iorder);
     }
 
     @Override
-    public List<SelPaymentDetailDto> selPaymentDetailAll(Long iuser) {
-        return MAPPER.selPaymentDetailAll1(iuser);
+    public Optional<List<SelPaymentDetailDto>> selPaymentDetailAll(Long iuser) {
+        return repo.selPaymentDetailAll(iuser);
     }
 
     @Override

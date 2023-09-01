@@ -66,6 +66,7 @@ public class OrderEntity extends BaseEntity {
 
     @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
     @Check(constraints = "shipping IN (0, 1, 2)")
+    @ColumnDefault("0")
     @NotNull
     private Integer shipping;
 }
