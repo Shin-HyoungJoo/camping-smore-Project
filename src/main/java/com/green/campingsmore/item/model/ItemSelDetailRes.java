@@ -1,5 +1,6 @@
 package com.green.campingsmore.item.model;
 
+import com.green.campingsmore.admin.item.model.ItemVo;
 import lombok.Builder;
 import lombok.Getter;
 

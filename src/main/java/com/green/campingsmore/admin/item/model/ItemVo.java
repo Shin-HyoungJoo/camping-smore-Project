@@ -1,4 +1,4 @@
-package com.green.campingsmore.item.model;
+package com.green.campingsmore.admin.item.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,9 +13,7 @@ public class ItemVo {
     private Long iitem;
     private String name;
     private String pic;
-    private int price;
+    private Integer price;
     private LocalDate createdAt;
-    private int wish;
-
-
+    private Integer wish;
 }

@@ -4,12 +4,14 @@ package com.green.campingsmore.entity;
 import com.green.campingsmore.jpa.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
+
 
 @Entity
 @Table(name = "item")
@@ -51,6 +53,7 @@ public class ItemEntity extends BaseEntity {
 
     @Column(columnDefinition = "TINYINT", length = 1)
     @NotNull
+    @Size(min = 0,max = 2)
     @ColumnDefault("2")
     private Integer status; // 삭제(0) / 노출됨, 판매중(1) / 노출되지않음, 판매중지(2)
 
