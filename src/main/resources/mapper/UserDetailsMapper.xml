@@ -2,6 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.green.campingsmore.config.security.UserDetailsMapper">
+
+    <insert id="IncreaseUserCount">
+        INSERT INTO visitor
+        SET gender = #{gender},birth_date = #{birth_date}
+    </insert>
+
+    <insert id="IncreaseCount">
+        INSERT INTO visitor
+        SET gender = NULL,birth_date = NULL
+    </insert>
+
     <insert id="signUp">
         INSERT INTO user
         SET user_id = #{uid}
@@ -16,7 +27,7 @@
     </insert>
 
     <select id="getByUid">
-        SELECT iuser, user_id uid, password upw, name, role
+        SELECT iuser, user_id uid, password upw, name, birth_date, gender, role
         FROM user
         WHERE user_id = #{uid} AND del_yn = 1
     </select>

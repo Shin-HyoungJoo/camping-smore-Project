@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 public class AuthenticationFacade {
     public MyUserDetails getLoginUser() {
         // auth = null (로그인 안하면 null)
+        //검증이 정상적으로 통과되었다면 인증된 authentication 객체를 기반으로 JWT 토큰을 생성합니다
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         MyUserDetails userDetails = (MyUserDetails) auth.getPrincipal();
         return userDetails;
@@ -19,6 +20,7 @@ public class AuthenticationFacade {
     }
 
     public boolean isLogin(){
+        // 검증이 정상적으로 통과되었다면 인증된 authentication 객체를 기반으로 JWT 토큰을 생성합니다
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         MyUserDetails userDetails = (MyUserDetails) auth.getPrincipal();
 

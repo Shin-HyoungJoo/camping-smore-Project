@@ -49,6 +49,10 @@ public class SignService {
         log.info("service-test-iuser : {}", FACADE.getLoginUserPk());
     }
 
+    public int IncreaseCount(){
+        return MAPPER.IncreaseCount();
+    }
+
     public SignUpResultDto signUp(SignUpDto signUpDto) {
         log.info("[getSignUpResult] signDataHandler로 회원 정보 요청");
         SignUpDto user = SignUpDto.builder()
@@ -106,8 +110,9 @@ public class SignService {
 
         System.out.println("로그인 유지되고 있어야하는데...myUserDetails = " + myUserDetails);
 
-        // RT가 이미 있을 경우
+
         String redisKey = String.format("RT(%s):%s:%s", "Server", user.getIuser(), ip);
+        // RT가 이미 있을 경우
         if(REDIS_SERVICE.getValues(redisKey) != null) {
             REDIS_SERVICE.deleteValues(redisKey); // 삭제
         }
@@ -138,6 +143,9 @@ public class SignService {
 
         log.info("[getSignInResult] SignInResultDto 객체 값 주입");
         setSuccessResult(dto);
+
+        // 로그인한 회원 방문자 카운트 증가 시키기
+        MAPPER.IncreaseUserCount(user.getGender(),user.getBirth_date());
 
         return dto;
     }
