@@ -25,7 +25,7 @@ public class ReserveEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false,columnDefinition = "BIGINT UNSIGNED")
     @NotNull
-    private Long ireserved;
+    private Long ireserve;
 
 
     @NotNull
@@ -40,9 +40,6 @@ public class ReserveEntity extends BaseEntity {
     @Size(min = 11)
     private String phone;
 
-
-    @NotNull
-    private Integer price;
 
     @Column(name = "pay_type")
     @NotNull

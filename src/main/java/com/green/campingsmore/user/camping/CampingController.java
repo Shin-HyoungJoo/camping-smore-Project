@@ -35,7 +35,12 @@ public class CampingController {
         return ResponseEntity.ok(SERVICE.delCamping(dto));
     }
     @PostMapping(value = "/detail",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<CampingPicRes> InsPic(@RequestPart(required = false) List<MultipartFile> pics, @RequestPart CampingPicDto dto) throws Exception{
+    public ResponseEntity<List<String>> InsPic(@RequestPart(required = false) List<MultipartFile> pics, @RequestPart CampingPicDto dto) throws Exception{
         return ResponseEntity.ok(SERVICE.InsPic(pics,dto));
     }
+    @DeleteMapping
+    public ResponseEntity<Long> delPic(@RequestBody CampingPicDelDto dto){
+        return ResponseEntity.ok(SERVICE.delPic(dto));
+    }
+
 }

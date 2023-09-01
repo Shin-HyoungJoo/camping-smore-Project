@@ -3,13 +3,10 @@ package com.green.campingsmore.review;
 import com.green.campingsmore.review.model.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @Tag(name="리뷰")
@@ -40,7 +37,7 @@ public class ReviewController {
             "\"reviewCtnt\": [-] 리뷰 내용,<br>" +
             "\"starRating\": [-] 별점,<br>" +
             "\"pic\": [-] 사진 이미지<br>")
-    public String postReview(@RequestPart ReviewInsDto dto,
+    public String postReview(@RequestPart ReviewPageDto.ReviewInsDto dto,
                            @RequestPart(required = false) MultipartFile pic) {
         return SERVICE.insReview(dto, pic);
     }

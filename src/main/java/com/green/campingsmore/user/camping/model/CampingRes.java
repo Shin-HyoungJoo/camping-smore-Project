@@ -17,4 +17,5 @@ public class CampingRes {
     private String name;
     private String note;
     private Integer delyn;
+    private Integer price;
 }
