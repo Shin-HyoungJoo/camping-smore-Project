@@ -20,8 +20,7 @@ import lombok.experimental.SuperBuilder;
 public class CartEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
-    @NotNull
+    @Column(nullable = false, updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
     private Long icart;
 
     @JoinColumn(name = "iuser")
@@ -34,7 +33,6 @@ public class CartEntity extends BaseEntity {
     @ToString.Exclude
     private ItemEntity itemEntity;
 
-    @Column(columnDefinition = "TINYINT", length = 2)
-    @NotNull
-    private Long quantity;
+    @Column(nullable = false, columnDefinition = "TINYINT", length = 2)
+    private Integer quantity;
 }

@@ -1,6 +1,7 @@
 package com.green.campingsmore.admin.user;
 
 import com.green.campingsmore.CommonRes;
+import com.green.campingsmore.admin.user.model.ChatDto;
 import com.green.campingsmore.admin.user.model.UserDto;
 import com.green.campingsmore.sign.SignService;
 import com.green.campingsmore.sign.model.SignInResultDto;
@@ -21,7 +22,6 @@ import java.util.List;
 @RequestMapping("/api/admin")
 public class AdminUserController {
     // 관리자 로그아웃은 유저 로그아웃과 동일한 것을 쓴다.
-    private final SignService signService;
     private final AdminUserService SERVICE;
 
     @PostMapping("/oauth/authorize")
@@ -49,10 +49,12 @@ public class AdminUserController {
 
     @GetMapping("/chart")
     @Operation(summary = "관리자 - 유저 현황 차트 (방문자, 성별 비율, 회원 나이 비율)",
-            description = "Try it out -> Execute 눌러주세요  "
+            description = "Try it out -> Execute 눌러주세요 \n\n "+
+                    "회원 나이 비율 10살 이하면 0으로 처리됨. 프론트에서는 10대 이하로 처리하면 됨 \n\n" +
+                    "null 값은 성별,회원 나이 비율 둘다 알수 없음 요소로 차트에 나타낸다."
     )
-    public void selectChart(){
-
+    public List<ChatDto> selectChart(){
+        return SERVICE.selectChart();
     }
 
 }

@@ -21,15 +21,17 @@ public class PayController {
 
     private final PayService SERVICE;
 
-    @PostMapping
+    @PostMapping    //Check, if문 분기(카카오, 예약시) 필요, 미완
     @Operation(summary = "결제 정보 저장하기",
             description =
-                    "<h3> address : 배송지\n" +
+                    "<h3> ireserve : 캠핑 예약번호 (없을 경우 그대로 둘 것)\n" +
+                            "<h3> address : 배송지\n" +
                             "<h3> addressDetail : 상세 배송지\n" +
                             "<h3> totalPrice : 총 결제 금액\n" +
                             "<h3> shippingPrice : 배송비\n" +
                             "<h3> shippingMemo : 배송 메모\n" +
-                            "<h3>purchaseList : 구입 목록\n" +
+                            "<h3> type : 결제 타입 (KAKAO, CARD) 택 1\n" +
+                            "<h3> purchaseList : 구입 목록\n" +
                             "<h3>   └iitem : 결제한 아이템 PK\n" +
                             "<h3>   └quantity : 아이템 수량\n" +
                             "<h3>   └totalPrice : 아이템별 총 가격\n" +
@@ -43,7 +45,7 @@ public class PayController {
         return SERVICE.insPayInfo(dto);
     }
 
-    @GetMapping("/{iorder}")
+    @GetMapping("/{iorder}")    //check
     @Operation(summary = "결제 내역 보기",
             description = "<h3> iorder : 주문 PK\n" +
                     "<h3>-----------------------------------\n" +
@@ -71,9 +73,9 @@ public class PayController {
                     "<h3>   └reviewYn : 리뷰 존재 여부 (있을 시 ireview 반환, 없을 시 0 반환)\n"
     )
     //유저마이페이지에서 조회
-    public List<SelPaymentDetailDto> getPaymentList(@AuthenticationPrincipal MyUserDetails user) {
+    public ResponseEntity<List<SelPaymentDetailDto>> getPaymentList(@AuthenticationPrincipal MyUserDetails user) {
         Long iuser = user.getIuser();
-        return SERVICE.selPaymentDetailAll(iuser);
+        return ResponseEntity.ok(SERVICE.selPaymentDetailAll(iuser));
     }
 
     @GetMapping("/paymentList/detail/{iorder}")
@@ -159,13 +161,8 @@ public class PayController {
     )
     public Long insAddress(@AuthenticationPrincipal MyUserDetails user,
                            @RequestBody ShippingInsDto dto) {
-        ShippingInsDto1 dto1 = new ShippingInsDto1();
-        dto1.setAddress(dto.getAddress());
-        dto1.setName(dto.getName());
-        dto1.setAddressDetail(dto.getAddressDetail());
-        dto1.setPhone(dto.getPhone());
-        dto1.setIuser(user.getIuser());
-        return SERVICE.insAddress(dto1);
+        dto.setIuser(user.getIuser());
+        return SERVICE.insAddress(dto);
     }
 
     @GetMapping("/address")

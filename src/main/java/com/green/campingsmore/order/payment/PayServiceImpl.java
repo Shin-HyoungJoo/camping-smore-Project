@@ -2,6 +2,7 @@ package com.green.campingsmore.order.payment;
 
 import com.green.campingsmore.entity.*;
 import com.green.campingsmore.order.payment.model.*;
+import com.green.campingsmore.user.camping.ReserveRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,129 +17,126 @@ import java.util.Optional;
 public class PayServiceImpl implements PayService {
 
     private final PayMapper MAPPER;
-    private final PayRepository repo;
-    private final PayRepositoryImpl dslRepo;
+    private final OrderRepository orderRepo;
+    private final OrderItemRepository orderItemRepo;
+    private final ReserveRepository resRepo;
+    private final ShippingAddressRepository shippingRepo;
 
-    @Override
+    @Override       //dsl
     @Transactional(rollbackFor = {Exception.class})
     public Long insPayInfo(InsPayInfoDto dto) {
-//
-//        OrderEntity entity = OrderEntity.builder()
-//                .userEntity(UserEntity.builder().iuser(dto.getIuser()).build())
-//                .campEntity(CampEntity.builder().icamp(dto.getIReserve()).build())
-//                .address(dto.getAddress())
-//                .addressDetail(dto.getAddressDetail())
-//                .totalPrice(dto.getTotalPrice())
-//                .shippingMemo(dto.getShippingMemo())
-//                .build();
-//
-//
-//        repo.save(entity);
-//
-//        List<PayDetailInfoVo> itemList = dto.getPurchaseList();
-//        for (PayDetailInfoVo item : itemList) {
-//            OrderItemEntity.builder()
-//                    .orderEntity(OrderEntity.builder().iorder(repo.findTopByOrderByIOrderDesc()))
-//                    .itemEntity(ItemEntity.builder().iitem(item.getIitem()).build())
-//                    .price(repo.findById())
-//                            .build());
-//        }
-//
-//        InsPayInfoDto1 orderDto = new InsPayInfoDto1();
-//
-//        try {
-//            orderDto.setIuser(dto.getIuser());
-//            orderDto.setAddress(dto.getAddress());
-//            orderDto.setAddressDetail(dto.getAddressDetail());
-//            orderDto.setShippingPrice(dto.getShippingPrice());
-//            orderDto.setShippingMemo(dto.getShippingMemo());
-//            orderDto.setTotalPrice(dto.getTotalPrice());
-//            MAPPER.insPayInfo(orderDto);
-//
-//            List<PayDetailInfoVo> purchaseList = dto.getPurchaseList();
-//            log.info("purchaseList = {}", purchaseList);
-//            MAPPER.insPayDetailInfo(purchaseList);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return 0L;
-//        }
+
+        ReserveEntity reserveEntity = dto.getIreserve() == null ? null : resRepo.findById(dto.getIreserve()).get();
+
+        OrderEntity orderEntity = OrderEntity.builder()
+                .userEntity(UserEntity.builder().iuser(dto.getIuser()).build())
+                .reserveEntity(reserveEntity)
+                .address(dto.getAddress())
+                .addressDetail(dto.getAddressDetail())
+                .totalPrice(dto.getTotalPrice())
+                .shippingPrice(dto.getShippingPrice())
+                .shippingMemo(dto.getShippingMemo())
+                .type(dto.getType())
+                .delYn(1)
+                .shipping(0)
+                .build();
+
+        orderRepo.save(orderEntity);
+
+        List<PayDetailInfoVo> purchaseItem = dto.getPurchaseList();
+
+        for (PayDetailInfoVo item : purchaseItem) {
+
+            OrderItemEntity result = OrderItemEntity.builder()
+                    .orderEntity(OrderEntity.builder().iorder(orderEntity.getIorder()).build())
+                    .itemEntity(ItemEntity.builder().iitem(item.getIitem()).build())
+                    .price(orderRepo.selPriceFromItem(item.getIitem()))
+                    .quantity(item.getQuantity())
+                    .totalPrice(item.getTotalPrice())
+                    .delYn(1)
+                    .refund(0)
+                    .build();
+
+            orderItemRepo.save(result);
+        }
         return 1L;
     }
 
     @Override   //querydsl
     public Optional<PaymentCompleteDto> selPaymentComplete(Long iorder) {
-        return dslRepo.selPaymentComplete(iorder);
+        return orderRepo.selPaymentComplete(iorder);
     }
 
-    @Override
+    @Override   //querydsl
     public List<SelPaymentDetailDto> selPaymentDetailAll(Long iuser) {
-        return MAPPER.selPaymentDetailAll1(iuser);
+        return orderRepo.selPaymentDetailAll(iuser);
     }
 
-    @Override
+    @Override   //querydsl
     public PaymentDetailDto selPaymentPageItem(Long iitem, Long quantity) {
-        PaymentDetailDto dto = MAPPER.selPaymentPageItem(iitem);
-        Long price = dto.getPrice();
-
-        dto.setQuantity(quantity);
-        dto.setTotalPrice(price * quantity);
-        return dto;
+        PaymentDetailDto result = orderRepo.selPaymentPageItem(iitem);
+        result.setQuantity(quantity);
+        result.setTotalPrice(result.getPrice() * quantity);
+        return result;
     }
 
     @Override
-    @Transactional(rollbackFor = {Exception.class})
+    @Transactional(rollbackFor = {Exception.class}) //querydsl
     public List<PaymentDetailDto> selPaymentPageItemList(CartPKDto dto) {
-        List<PaymentDetailDto> paymentDetailDtos = MAPPER.selPaymentPageItemList(dto.getIcart());
+
+        List<PaymentDetailDto> result = orderRepo.selPaymentPageItemList(dto);
         try {
-            for (PaymentDetailDto paymentDetailDto : paymentDetailDtos) {
-                Long price = paymentDetailDto.getPrice();
-                Long quantity = paymentDetailDto.getQuantity();
+            for (PaymentDetailDto item : result) {
+                Long price = item.getPrice();
+                Long quantity = item.getQuantity();
                 Long totalPrice = price * quantity;
-                paymentDetailDto.setTotalPrice(totalPrice);
+                item.setTotalPrice(totalPrice);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return paymentDetailDtos;
+        return result;
     }
 
     @Override
-    @Transactional(rollbackFor = {Exception.class})
+    @Transactional(rollbackFor = {Exception.class}) //jpa
     public Long delPaymentDetail(Long iorder, Long iitem) {
-
-        try {
-            Long result1 = MAPPER.delPaymentDetail(iorder, iitem);
-            Long result2 = MAPPER.paymentDetailNullCheck(iorder, iitem);
-
-            if (result1 == 1L && result2 == 0L) {
-                MAPPER.delOrder(iorder);
-                return 2L;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        Optional<OrderItemEntity> delYN = orderItemRepo.findById(iorder);
+        if (delYN.isEmpty()) {
             return 0L;
         }
+        orderItemRepo.deleteById(iorder);
+        return 1L;
+    }
+
+    @Override   //dsl
+    public SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorder, Long iitem) {
+        return orderRepo.selDetailedItemPaymentInfo(iorder, iitem);
+    }
+
+    @Override   //jpa
+    public Long insAddress(ShippingInsDto dto) {
+        ShippingAddressEntity entity = ShippingAddressEntity.builder()
+                .iuser(UserEntity.builder().iuser(dto.getIuser()).build())
+                .address(dto.getAddress())
+                .addressDetail(dto.getAddressDetail())
+                .name(dto.getName())
+                .phone(dto.getPhone())
+                .build();
+
+        shippingRepo.save(entity);
         return 1L;
     }
 
     @Override
-    public SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorder, Long iitem) {
-        return MAPPER.selDetailedItemPaymentInfo(iorder, iitem);
-    }
-
-    @Override
-    public Long insAddress(ShippingInsDto1 dto) {
-        return MAPPER.insAddress(dto);
-    }
-
-    @Override
     public SelUserAddressVo selUserAddress(Long iuser) {
-        return MAPPER.selUserAddress(iuser);
+        return shippingRepo.selUserAddress(iuser);
     }
 
     @Override
     public List<ShippingListSelVo> selAddressList(Long iuser) {
-        return MAPPER.selAddressList(iuser);
+//        shippingRepo.selAddressList(Long iuser);
+        return null;
     }
 
     @Override

@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Check;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
@@ -25,39 +26,35 @@ public class RefundEntity extends BaseEntity {
     @Column(updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
     private Long irefund;
 
-    @JoinColumn(name = "iuser")
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "iuser")
     private UserEntity userEntity;
 
     @OneToOne
     @JoinColumn(name = "iorder", referencedColumnName = "iorder")
-    private OrderItemEntity orderItemEntityIorder;
+    private OrderItemEntity orderItem;
 
     @OneToOne
     @JoinColumn(name = "iitem", referencedColumnName = "iitem")
-    private OrderItemEntity orderItemEntityIitem;
+    private OrderItemEntity item;
 
-    @Column(name = "refund_date")
-    @NotNull
+    @Column(nullable = false, name = "refund_date")
     private LocalDateTime refundDate;      //주문일
 
-    @Column(name = "refund_start_date")
-    @NotNull
+    @Column(nullable = false, name = "refund_start_date")
     private LocalDateTime refundStartDate;      //환불접수일
 
     @Column(name = "refund_end_date")
     private LocalDateTime refundEndDate;      //환불접수일
 
-    @Column(columnDefinition = "TINYINT", length = 2)
-    @NotNull
-    private Long quantity;
+    @Column(nullable = false, columnDefinition = "TINYINT", length = 2)
+    private Integer quantity;
 
-    @Column(columnDefinition = "BIGINT UNSIGNED", length = 20)
-    @NotNull
-    private Long totalPrice;
+    @Column(nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
+    private Integer totalPrice;
 
-    @Column(columnDefinition = "TINYINT", length = 1)
+    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
     @ColumnDefault("1")
-    @NotNull
+    @Check(constraints = "shipping IN (0, 1, 2)")
     private Integer refundStatus;
 }

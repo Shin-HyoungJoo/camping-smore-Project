@@ -3,6 +3,7 @@ package com.green.campingsmore.review;
 import com.green.campingsmore.community.board.utils.FileUtils;
 import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.review.model.*;
+import com.green.campingsmore.user.review.model.ReviewSelVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

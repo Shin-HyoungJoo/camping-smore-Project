@@ -9,6 +9,6 @@ public class SelCartVo {
     private Long icart;
     private String pic;
     private String name;
-    private Long price;
-    private Long quantity;
+    private Integer price;
+    private Integer quantity;
 }
