@@ -26,11 +26,11 @@ public class OrderEntity extends BaseEntity {
     private Long iorder;
 
     @JoinColumn(name = "iuser")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private UserEntity userEntity;
 
     @JoinColumn(name = "ireserve")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private ReserveEntity reserveEntity;
 
     @Column(nullable = false, length = 100)

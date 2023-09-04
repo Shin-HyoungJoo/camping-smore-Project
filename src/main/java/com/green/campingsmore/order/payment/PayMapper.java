@@ -22,7 +22,7 @@ public interface PayMapper {
     Long paymentDetailNullCheck(Long iorder, Long iitem);
 
     //주소 관련
-    Long insAddress(ShippingInsDto1 dto);
+    Long insAddress(ShippingInsDto dto);
     SelUserAddressVo selUserAddress(Long iuser);
     List<ShippingListSelVo> selAddressList(Long iuser);
     ShippingListSelVo selOneAddress(SelUserAddressDto dto);

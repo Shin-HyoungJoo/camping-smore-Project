@@ -73,7 +73,7 @@ public class PayController {
                     "<h3>   └reviewYn : 리뷰 존재 여부 (있을 시 ireview 반환, 없을 시 0 반환)\n"
     )
     //유저마이페이지에서 조회
-    public ResponseEntity<Optional<List<SelPaymentDetailDto>>> getPaymentList(@AuthenticationPrincipal MyUserDetails user) {
+    public ResponseEntity<List<SelPaymentDetailDto>> getPaymentList(@AuthenticationPrincipal MyUserDetails user) {
         Long iuser = user.getIuser();
         return ResponseEntity.ok(SERVICE.selPaymentDetailAll(iuser));
     }
@@ -161,13 +161,8 @@ public class PayController {
     )
     public Long insAddress(@AuthenticationPrincipal MyUserDetails user,
                            @RequestBody ShippingInsDto dto) {
-        ShippingInsDto1 dto1 = new ShippingInsDto1();
-        dto1.setAddress(dto.getAddress());
-        dto1.setName(dto.getName());
-        dto1.setAddressDetail(dto.getAddressDetail());
-        dto1.setPhone(dto.getPhone());
-        dto1.setIuser(user.getIuser());
-        return SERVICE.insAddress(dto1);
+        dto.setIuser(user.getIuser());
+        return SERVICE.insAddress(dto);
     }
 
     @GetMapping("/address")

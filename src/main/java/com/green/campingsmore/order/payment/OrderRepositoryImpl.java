@@ -1,5 +1,6 @@
 package com.green.campingsmore.order.payment;
 
+import static com.green.campingsmore.entity.QCartEntity.cartEntity;
 import static com.green.campingsmore.entity.QOrderItemEntity.*;
 
 import static com.green.campingsmore.entity.QItemEntity.*;
@@ -42,77 +43,61 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 .fetchOne());
     }
 
-    @Override
-    public Long insPayInfo(InsPayInfoDto dto) {
-        Long result1 = queryFactory    //order insert
-                .insert(orderEntity)
-//                .columns(
-//                        orderEntity.userEntity.iuser, // userEntity의 iuser 필드
-//                        orderEntity.reserveEntity.ireserve, // reserveEntity의 ireserve 필드
-//                        orderEntity.address,
-//                        orderEntity.addressDetail,
-//                        orderEntity.totalPrice,
-//                        orderEntity.shippingMemo,
-//                        orderEntity.type
-//                )
-                .set(orderEntity.userEntity.iuser,dto.getIuser())
-                .set(orderEntity.reserveEntity, ReserveEntity.builder().ireserve(Optional.ofNullable(dto.getIreserve()).orElse(0L)).build())
-                .set(orderEntity.address, dto.getAddress())
-                .set(orderEntity.addressDetail, dto.getAddressDetail())
-                .set(orderEntity.totalPrice, dto.getTotalPrice())
-                .set(orderEntity.shippingMemo, dto.getShippingMemo())
-                .set(orderEntity.type, dto.getType())
-//                .values(
-//                        dto.getIuser(), // iuser 필드에 해당하는 값
-//                        Optional.ofNullable(dto.getIreserve()).orElse(0L), // ireserve 필드에 해당하는 값
-//                        dto.getAddress(),
-//                        dto.getAddressDetail(),
-//                        dto.getTotalPrice(),
-//                        dto.getShippingMemo(),
-//                        dto.getType()
-//                )
-//                .execute();
-                .execute();
-        if (result1 != 1L) {
-            return 0L;
-        }
+    public PaymentDetailDto selPaymentPageItem(Long iitem) {
+        PaymentDetailDto result = queryFactory
+                .select(Projections.fields(PaymentDetailDto.class,
+                        itemEntity.iitem,
+                        itemEntity.name,
+                        itemEntity.price,
+                        itemEntity.pic))
+                .from(itemEntity)
+                .where(itemEntity.iitem.eq(iitem))
+                .fetchOne();
+        return result;
+    }
 
-        List<PayDetailInfoVo> purchaseList = dto.getPurchaseList();
+    public List<PaymentDetailDto> selPaymentPageItemList(CartPKDto dto) {
+        List<Long> list = dto.getIcart();
 
-        for (PayDetailInfoVo purchaseItem : purchaseList) { //order_detail multi insert
-            Long result2 = queryFactory
-                    .insert(orderItemEntity)
-                    .columns(
-                            orderItemEntity.orderEntity.iorder,
-                            orderItemEntity.itemEntity.iitem,
-                            orderItemEntity.price,
-                            orderItemEntity.quantity,
-                            orderItemEntity.totalPrice
-                    )
-                    .values(
-                            JPAExpressions
-                                    .select(orderEntity.iorder)
-                                    .from(orderEntity)
-                                    .orderBy(orderEntity.iorder.desc())
-                                    .offset(0)
-                                    .limit(1),
-                            purchaseItem.getIitem(),
-                            JPAExpressions
-                                    .select(itemEntity.price)
-                                    .from(itemEntity)
-                                    .where(itemEntity.iitem.eq(dto.getPurchaseList().get(0).getIitem())),
-                            purchaseItem.getQuantity(),
-                            purchaseItem.getTotalPrice()
-                    ).execute();
-            if (result2 != 1L) {
-                return 0L;
-            }
-        }
-        return 1L;
+        return queryFactory.select(Projections.fields(PaymentDetailDto.class,
+                        cartEntity.itemEntity.iitem,
+                        itemEntity.name,
+                        itemEntity.price,
+                        cartEntity.quantity,
+                        itemEntity.pic))
+                .from(cartEntity)
+                .innerJoin(itemEntity)
+                .on(cartEntity.itemEntity.iitem.eq(itemEntity.iitem))
+                .where(cartEntity.icart.in(list))
+                .fetch();
+    }
+
+    public SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorder, Long iitem) {
+        return queryFactory.select(Projections.fields(SelDetailedItemPaymentInfoVo.class,
+                        orderItemEntity.itemEntity.iitem,
+                        itemEntity.name,
+                        orderItemEntity.price,
+                        orderItemEntity.quantity,
+                        orderItemEntity.totalPrice,
+                        itemEntity.pic,
+                        orderEntity.createdAt.as("paymentDate"),
+                        orderEntity.address,
+                        orderEntity.addressDetail,
+                        orderEntity.shippingPrice,
+                        orderEntity.shippingMemo
+                ))
+                .from(orderItemEntity)
+                .innerJoin(orderEntity)
+                .on(orderItemEntity.orderEntity.iorder.eq(orderEntity.iorder))
+                .innerJoin(itemEntity)
+                .on(orderItemEntity.itemEntity.iitem.eq(itemEntity.iitem))
+                .where(orderEntity.iorder.eq(iorder)
+                        .and(orderItemEntity.itemEntity.iitem.eq(iitem)))
+                .fetchOne();
     }
 
     @Override
-    public Optional<List<SelPaymentDetailDto>> selPaymentDetailAll(Long iuser) {
+    public List<SelPaymentDetailDto> selPaymentDetailAll(Long iuser) {
         List<Long> orderList = queryFactory
                 .select(orderEntity.iorder)
                 .from(orderEntity)
@@ -152,34 +137,19 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
             result.add(item);
         }
-        return Optional.ofNullable(result);
+        return result;
     }
 
     @Override
     public Integer selPriceFromItem(Long iitem) {
-        return queryFactory
+        Integer integer = queryFactory
                 .select(itemEntity.price)
                 .from(itemEntity)
                 .where(itemEntity.iitem.eq(iitem))
                 .fetchOne();
+
+        System.out.println("integer = " + integer);
+
+        return integer;
     }
 }
-//queryFactory
-//        .select(Projections.fields(SelPaymentDetailDto.class),
-//        itemEntity.iitem,
-//        itemEntity.name,
-//        orderItemEntity.price,
-//        orderItemEntity.totalPrice,
-//        itemEntity.pic,
-//        orderEntity.createdAt.as("paymentDate"),
-//        ExpressionUtils.as(
-//        JPAExpressions
-//        .select(reviewEntity.ireview.coalesce(0L))
-//        .from(reviewEntity)
-//        .where(reviewEntity.itemEntity.iitem.eq(itemEntity.iitem)
-//        .and(reviewEntity.delYn.eq(1))), "reviewYn"))
-//        .from(orderItemEntity)
-//        .innerJoin(itemEntity).on(orderItemEntity.itemEntity.iitem.eq(itemEntity.iitem))
-//        .innerJoin(orderEntity).on(orderItemEntity.orderEntity.iorder.eq(orderEntity.iorder))
-//        .where(orderEntity.iorder.eq(iorder).and(orderItemEntity.delYn.eq(1)))
-//        .fetch();

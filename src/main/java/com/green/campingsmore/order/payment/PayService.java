@@ -9,14 +9,14 @@ public interface PayService {
     //결제 관련
     Long insPayInfo(InsPayInfoDto dto);
     Optional<PaymentCompleteDto> selPaymentComplete(Long iorder);
-    Optional<List<SelPaymentDetailDto>> selPaymentDetailAll(Long iuser);
+    List<SelPaymentDetailDto> selPaymentDetailAll(Long iuser);
     PaymentDetailDto selPaymentPageItem(Long iitem, Long quantity);
     List<PaymentDetailDto> selPaymentPageItemList(CartPKDto dto);
     Long delPaymentDetail(Long iorder, Long iitem);
     SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorder, Long iitem);
 
     //주소 관련
-    Long insAddress(ShippingInsDto1 dto);
+    Long insAddress(ShippingInsDto dto);
     SelUserAddressVo selUserAddress(Long iuser);
     List<ShippingListSelVo> selAddressList(Long iuser);
     ShippingListSelVo selOneAddress(SelUserAddressDto dto);

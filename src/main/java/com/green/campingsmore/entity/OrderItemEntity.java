@@ -48,7 +48,7 @@ public class OrderItemEntity extends BaseEntity implements Serializable {
     @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
     @ColumnDefault("0")
     @Check(constraints = "refund IN (0, 1, 2, 3)")
-    private Long refund;
+    private Integer refund;
 
     @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
     @ColumnDefault("1")
