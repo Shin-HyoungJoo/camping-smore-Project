@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
 
 
 @Entity
@@ -20,10 +21,11 @@ import org.hibernate.annotations.ColumnDefault;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @SuperBuilder
+@DynamicInsert
 public class ItemEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
+    @Column(updatable = false,nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
     @NotNull
     private Long iitem;
 
@@ -32,11 +34,11 @@ public class ItemEntity extends BaseEntity {
     @ToString.Exclude
     private ItemCategoryEntity itemCategoryEntity;
 
-    @Column(length = 100, name = "\"name\"")
+    @Column(nullable = false,length = 100, name = "\"name\"")
     @NotNull
     private String name;
 
-    @Column(columnDefinition = "INT UNSIGNED", length = 10)
+    @Column(nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
     @NotNull
     private Integer price;
 
@@ -46,12 +48,12 @@ public class ItemEntity extends BaseEntity {
     @Column(length = 500)
     private String pic;
 
-    @Column(columnDefinition = "INT UNSIGNED")
+    @Column(nullable = false, columnDefinition = "INT UNSIGNED")
     @NotNull
     @ColumnDefault("0")
     private Integer stock;
 
-    @Column(columnDefinition = "TINYINT", length = 1)
+    @Column(columnDefinition = "TINYINT not null DEFAULT 1 CHECK(del_yn in (0,1))", length = 1)
     @NotNull
     @Size(min = 0,max = 2)
     @ColumnDefault("2")

@@ -17,7 +17,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ReviewService {
+public class ReviewService2 {
     private final ReviewMapper MAPPER;
     private final AuthenticationFacade FACADE;
     @Value("${file.dir}")

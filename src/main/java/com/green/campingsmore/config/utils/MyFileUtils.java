@@ -10,11 +10,11 @@ import java.util.UUID;
 @Component
 public class MyFileUtils {
     @Value("${file.dir}")
-    private String uploadImagePath;
+    private String fileDir;
 
     //폴더 만들기
     public String makeFolders(String path) {
-        File folder = new File(uploadImagePath, path);
+        File folder = new File(fileDir, path);
         folder.mkdirs();
         return folder.getAbsolutePath();
     }

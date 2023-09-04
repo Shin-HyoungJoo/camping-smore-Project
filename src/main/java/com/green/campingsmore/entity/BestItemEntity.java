@@ -21,7 +21,7 @@ import java.time.LocalDate;
 public class BestItemEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, columnDefinition = "BIGINT UNSIGNED")
+    @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED")
     @NotNull
     private Long id;
 
@@ -30,7 +30,7 @@ public class BestItemEntity extends BaseEntity {
     @NotNull
     private ItemEntity itemEntity;
 
-    @Column(columnDefinition = "DATE")
+    @Column(nullable = false, columnDefinition = "DATE")
     @NotNull
     private LocalDate monthLike;
 }
