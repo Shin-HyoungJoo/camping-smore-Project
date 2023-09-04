@@ -2,6 +2,7 @@ package com.green.campingsmore.user.camping;
 
 import com.green.campingsmore.community.board.utils.FileUtils;
 import com.green.campingsmore.entity.*;
+import com.green.campingsmore.sign.SignRepository;
 import com.green.campingsmore.user.camping.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +25,8 @@ public class CampingService {
     private final CampingRepositoryImpl IMPL;
     private final CampingPicRepository PICREP;
     private final ReserveRepository RESREP;
+    private final SignRepository USERREP;
+
 
     @Value("${file.dir}")
     private String fileDir;
@@ -184,6 +187,7 @@ public class CampingService {
                 .capacity(campEntity.getCapacity())
                 .mainPic(campEntity.getMainPic())
                 .note(campEntity.getNote())
+                .price(campEntity.getPrice())
                 .quantity(campEntity.getQuantity())
                 .delyn(entity.getDelyn())
                 .build();
@@ -256,23 +260,28 @@ public class CampingService {
             return null;
         }
     }
-//    public ReserveRes InsReserve(ReserveDto dto){
-//        Optional<CampEntity> opt = REP.findById(dto.getIcamp());
-//        if (!opt.isPresent()) {
-//            return null;
-//        }
-//        CampEntity entity = opt.get();
-//        UserEntity userEntity = UserEntity.builder()
-//                .iuser(dto.getIuser())
-//                .build();
-//        ReserveEntity reserveEntity = ReserveEntity.builder()
-//                .reservation(dto.getReservation())
-//                .name(dto.getName())
-//                .phone(dto.getPhone())
-//                .price(entity.getPrice)
-//
-//
-//    }
+    public ReserveRes InsReserve(ReserveDto dto){
+        Optional<CampEntity> opt = REP.findById(dto.getIcamp());
+        if (!opt.isPresent()) {
+            return null;
+        }
+        CampEntity entity = opt.get();
+        entity.setIcamp(dto.getIcamp());
+        UserEntity userEntity = UserEntity.builder()
+                .iuser(dto.getIuser())
+                .build();
+        ReserveEntity reserveEntity = ReserveEntity.builder()
+                .reservation(dto.getReservation())
+                .name(dto.getName())
+                .campEntity(entity)
+                .userEntity(userEntity)
+                .phone(dto.getPhone())
+                .payType(dto.getPayType())
+                .payStatus(dto.getPayStatus())
+                .build();
+        RESREP.save(reserveEntity);
+        return null;
+    }
 }
 
 
