@@ -1,4 +1,7 @@
 package com.green.campingsmore.user.item;
 
-public interface ItemRepository {
+import com.green.campingsmore.entity.ItemEntity;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ItemRepository extends JpaRepository<ItemEntity, Long> {
 }
