@@ -16,22 +16,52 @@ import java.util.Optional;
 public class PayServiceImpl implements PayService {
 
     private final PayMapper MAPPER;
-    private final PayRepository repo;
+    private final OrderRepository orderRepo;
+    private final OrderDetailRepository orderDetailRepo;
 
     @Override       //dsl
     @Transactional(rollbackFor = {Exception.class})
     public Long insPayInfo(InsPayInfoDto dto) {
-        return repo.insPayInfo(dto);
+        OrderEntity orderEntity = OrderEntity.builder()
+                .userEntity(UserEntity.builder().iuser(dto.getIuser()).build())
+                .reserveEntity(ReserveEntity.builder().ireserve(dto.getIreserve()).build())
+                .address(dto.getAddress())
+                .addressDetail(dto.getAddressDetail())
+                .totalPrice(dto.getTotalPrice())
+                .shippingPrice(dto.getShippingPrice())
+                .shippingMemo(dto.getShippingMemo())
+                .type(dto.getType())
+                .delYn(1)
+                .shipping(0)
+                .build();
+
+        orderRepo.save(orderEntity);
+
+        List<PayDetailInfoVo> purchaseItem = dto.getPurchaseList();
+
+        for (PayDetailInfoVo item : purchaseItem) {
+
+            OrderItemEntity result = OrderItemEntity.builder()
+                    .orderEntity(OrderEntity.builder().iorder(orderEntity.getIorder()).build())
+                    .itemEntity(ItemEntity.builder().iitem(item.getIitem()).build())
+                    .price(orderRepo.selPriceFromItem(item.getIitem()))
+                    .quantity(item.getQuantity())
+                    .totalPrice(item.getTotalPrice())
+                    .build();
+
+            orderDetailRepo.save(result);
+        }
+        return 1L;
     }
 
     @Override   //querydsl
     public Optional<PaymentCompleteDto> selPaymentComplete(Long iorder) {
-        return repo.selPaymentComplete(iorder);
+        return orderRepo.selPaymentComplete(iorder);
     }
 
     @Override
     public Optional<List<SelPaymentDetailDto>> selPaymentDetailAll(Long iuser) {
-        return repo.selPaymentDetailAll(iuser);
+        return orderRepo.selPaymentDetailAll(iuser);
     }
 
     @Override

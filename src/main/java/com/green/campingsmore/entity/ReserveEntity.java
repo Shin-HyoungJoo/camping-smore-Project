@@ -27,7 +27,6 @@ public class ReserveEntity extends BaseEntity {
     @NotNull
     private Long ireserve;
 
-
     @NotNull
     private LocalDate reservation;
 

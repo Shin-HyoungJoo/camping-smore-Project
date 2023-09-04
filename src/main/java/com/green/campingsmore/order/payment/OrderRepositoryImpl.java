@@ -1,22 +1,15 @@
 package com.green.campingsmore.order.payment;
 
-import static com.green.campingsmore.entity.CampEntity.*;
 import static com.green.campingsmore.entity.QOrderItemEntity.*;
 
 import static com.green.campingsmore.entity.QItemEntity.*;
 
 import static com.green.campingsmore.entity.QReviewEntity.*;
 
-import com.green.campingsmore.entity.OrderEntity;
-import com.green.campingsmore.entity.OrderItemEntity;
-import com.green.campingsmore.entity.QReviewEntity;
-import com.green.campingsmore.entity.UserEntity;
+import com.green.campingsmore.entity.*;
 import com.green.campingsmore.order.payment.model.*;
-import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +23,7 @@ import static com.green.campingsmore.entity.QOrderEntity.orderEntity;
 
 @Repository
 @RequiredArgsConstructor
-public class PayRepositoryImpl implements PayRepositoryCustom {
+public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
@@ -53,15 +46,33 @@ public class PayRepositoryImpl implements PayRepositoryCustom {
     public Long insPayInfo(InsPayInfoDto dto) {
         Long result1 = queryFactory    //order insert
                 .insert(orderEntity)
-                .set(orderEntity.userEntity, UserEntity.builder().iuser(dto.getIuser()).build())
-                .set(orderEntity.campEntity, builder().icamp(Optional.ofNullable(dto.getIreserve()).orElse(0L)).build())
+//                .columns(
+//                        orderEntity.userEntity.iuser, // userEntity의 iuser 필드
+//                        orderEntity.reserveEntity.ireserve, // reserveEntity의 ireserve 필드
+//                        orderEntity.address,
+//                        orderEntity.addressDetail,
+//                        orderEntity.totalPrice,
+//                        orderEntity.shippingMemo,
+//                        orderEntity.type
+//                )
+                .set(orderEntity.userEntity.iuser,dto.getIuser())
+                .set(orderEntity.reserveEntity, ReserveEntity.builder().ireserve(Optional.ofNullable(dto.getIreserve()).orElse(0L)).build())
                 .set(orderEntity.address, dto.getAddress())
                 .set(orderEntity.addressDetail, dto.getAddressDetail())
                 .set(orderEntity.totalPrice, dto.getTotalPrice())
                 .set(orderEntity.shippingMemo, dto.getShippingMemo())
                 .set(orderEntity.type, dto.getType())
+//                .values(
+//                        dto.getIuser(), // iuser 필드에 해당하는 값
+//                        Optional.ofNullable(dto.getIreserve()).orElse(0L), // ireserve 필드에 해당하는 값
+//                        dto.getAddress(),
+//                        dto.getAddressDetail(),
+//                        dto.getTotalPrice(),
+//                        dto.getShippingMemo(),
+//                        dto.getType()
+//                )
+//                .execute();
                 .execute();
-
         if (result1 != 1L) {
             return 0L;
         }
@@ -142,6 +153,15 @@ public class PayRepositoryImpl implements PayRepositoryCustom {
             result.add(item);
         }
         return Optional.ofNullable(result);
+    }
+
+    @Override
+    public Integer selPriceFromItem(Long iitem) {
+        return queryFactory
+                .select(itemEntity.price)
+                .from(itemEntity)
+                .where(itemEntity.iitem.eq(iitem))
+                .fetchOne();
     }
 }
 //queryFactory

@@ -7,9 +7,9 @@ import com.green.campingsmore.order.payment.model.SelPaymentDetailDto;
 import java.util.List;
 import java.util.Optional;
 
-public interface PayRepositoryCustom {
+public interface OrderRepositoryCustom {
     Optional<PaymentCompleteDto> selPaymentComplete(Long iorder);
     Long insPayInfo(InsPayInfoDto dto);
     Optional<List<SelPaymentDetailDto>> selPaymentDetailAll(Long iuser);
-
+    Integer selPriceFromItem(Long iitem);
 }

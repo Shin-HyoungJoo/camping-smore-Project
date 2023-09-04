@@ -10,5 +10,5 @@ public class InsCartDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long iuser;
     private Long iitem;
-    private Long quantity;
+    private Integer quantity;
 }
