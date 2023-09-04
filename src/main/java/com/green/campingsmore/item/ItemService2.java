@@ -69,12 +69,15 @@ public class ItemService2 {
 
 
 
-        if(!FACADE.isLogin()) {
+/*        if(!FACADE.isLogin()) {
             dto.setIuser(0L);
         } else {
             dto.setIuser(FACADE.getLoginUserPk());
             log.info("iuser: {}",dto.getIuser());
-        }
+        }*/
+
+        dto.setIuser(FACADE.getLoginUserPk());
+
         dto.setStartIdx((dto.getPage()-1) * dto.getRow());
         List<ItemVo> list = MAPPER.searchItem(dto);
         int count = MAPPER.selLastItem(dto);

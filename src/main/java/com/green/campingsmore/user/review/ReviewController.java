@@ -48,7 +48,7 @@ public class ReviewController {
             "\"iitem\": [-] 아이템 PK<br>" )
     public ResponseEntity<ReviewRes> getReview(@PathVariable Long iitem,
                                                @PageableDefault(sort = "irevew", direction = Sort.Direction.DESC, size = 5)Pageable pageable) {
-        ReviewRes res = service.selectItemReview(iitem,pageable);
+        ReviewRes res = service.selectItemReview(pageable, iitem);
 
         return ResponseEntity.ok(res);
     }*/

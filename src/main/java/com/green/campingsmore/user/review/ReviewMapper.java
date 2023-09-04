@@ -1,4 +1,4 @@
-package com.green.campingsmore.review;
+package com.green.campingsmore.user.review;
 
 import com.green.campingsmore.review.model.*;
 import com.green.campingsmore.user.review.model.ReviewSelVo;
