@@ -29,6 +29,7 @@ public class CampingService {
     private final ReserveRepository RESREP;
     private final AuthenticationFacade FACADE;
     private final SignRepository USERREP;
+    private final DayRepository DAYREP;
 
 
     @Value("${file.dir}")
@@ -47,12 +48,11 @@ public class CampingService {
                     .campPhone(dto.getCampPhone())
                     .name(dto.getName())
                     .address(dto.getAddress())
-                    .reservation(dto.getReservation())
                     .capacity(dto.getCapacity())
                     .note(dto.getNote())
                     .mainPic(saveName)
-                    .price(dto.getPrice())
                     .quantity(dto.getQuantity())
+                    .price(dto.getPrice())
                     .delyn(1)
                     .nationwideEntity(nationwideEntity)
                     .build();
@@ -87,7 +87,6 @@ public class CampingService {
                     .note(campEntity.getNote())
                     .quantity(campEntity.getQuantity())
                     .delyn(campEntity.getDelyn())
-                    .reservation(campEntity.getReservation())
                     .build();
         }
         return null;
@@ -120,7 +119,6 @@ public class CampingService {
                     .name(dto.getName())
                     .address(dto.getAddress())
                     .price(dto.getPrice())
-                    .reservation(dto.getReservation())
                     .capacity(dto.getCapacity())
                     .nationwideEntity(nationwideEntity)
                     .note(dto.getNote())
@@ -153,7 +151,6 @@ public class CampingService {
                     .inationwide(dto.getInationwide())
                     .address(campEntity.getAddress())
                     .capacity(campEntity.getCapacity())
-                    .reservation(campEntity.getReservation())
                     .price(campEntity.getPrice())
                     .mainPic(campEntity.getMainPic())
                     .note(campEntity.getNote())
@@ -188,7 +185,6 @@ public class CampingService {
         return CampingRes.builder()
                 .icamp(campEntity.getIcamp())
                 .campPhone(campEntity.getCampPhone())
-                .reservation(campEntity.getReservation())
                 .name(campEntity.getName())
                 .inationwide(nationwideEntity.getInationwide()) // 기존 entity에서 가져오도록 수정
                 .address(campEntity.getAddress())
@@ -274,8 +270,9 @@ public class CampingService {
         if (!opt.isPresent()) {
             return null;
         }
+        ReserveDayEntity reserveDayEntity = new ReserveDayEntity();
         CampEntity entity = opt.get();
-        int currentQuantity = entity.getQuantity();
+        int currentQuantity = reserveDayEntity.getDayQuantity();
         LocalDate reserveDay = dto.getReservation(); // 예약 날짜를 dto에서 가져옵니다.
 
         LocalDate today = LocalDate.now();
@@ -291,8 +288,7 @@ public class CampingService {
         }
 
         entity.setIcamp(dto.getIcamp());
-        entity.setQuantity(currentQuantity - 1);
-        entity.setReservation(reserveDay);
+        reserveDayEntity.setDayQuantity(currentQuantity - 1);
 
         UserEntity userEntity = UserEntity.builder()
                 .iuser(FACADE.getLoginUserPk())
@@ -300,6 +296,7 @@ public class CampingService {
         ReserveEntity reserveEntity = ReserveEntity.builder()
                 .name(dto.getName())
                 .campEntity(entity)
+                .reservation(reserveDay)
                 .userEntity(userEntity)
                 .payType(dto.getPayType())
                 .phone(dto.getPhone())
@@ -327,8 +324,9 @@ public class CampingService {
         ReserveEntity reserveEntity = opt.get();
         UserEntity userEntity = UserEntity.builder().iuser(FACADE.getLoginUserPk()).build();
         CampEntity campEntity = reserveEntity.getCampEntity();
+        ReserveDayEntity reserveDayEntity = new ReserveDayEntity();
 
-        LocalDate reservationDate = campEntity.getReservation();
+        LocalDate reservationDate = reserveEntity.getReservation();
         LocalDate currentDate = LocalDate.now();
         long daysUntilReservation = ChronoUnit.DAYS.between(currentDate, reservationDate);
 
@@ -337,7 +335,7 @@ public class CampingService {
         }
 
         if (reserveEntity.getPayStatus() == PayStatus.OK) {
-            campEntity.setQuantity(campEntity.getQuantity() + 1);
+            reserveDayEntity.setDayQuantity(reserveDayEntity.getDayQuantity() + 1);
             ReserveEntity reserve = ReserveEntity.builder()
                     .ireserve(reserveEntity.getIreserve())
                     .campEntity(campEntity)

@@ -15,11 +15,11 @@ import java.util.List;
 
 public interface CampingRepository extends JpaRepository<CampEntity,Long>{
     @Query("select new com.green.campingsmore.user.camping.model.CampingList(c.icamp,c.name, c.address, c.campPhone,c.mainPic,n.city,c.delyn)"+
-            " from CampEntity c join c.nationwideEntity n" + " where n.inationwide = :inationwide and c.reservation = :today and c.delyn = :delyn")
+            " from CampEntity c join c.nationwideEntity n join ReserveEntity b on b.campEntity.icamp = c.icamp" + " where n.inationwide = :inationwide and b.reservation = :today and c.delyn = :delyn")
     List<CampingList> selCamping(@Param("inationwide") Long inationwide, @Param("today") LocalDate today, @Param("delyn") Integer delyn);
 
     @Query("select new com.green.campingsmore.user.camping.model.CampingList(c.icamp,c.name, c.address, c.campPhone,c.mainPic,n.city,c.delyn)"+
-            " from CampEntity c join c.nationwideEntity n" + " where c.reservation = :today and c.delyn = :delyn")
+            " from CampEntity c join c.nationwideEntity n join ReserveEntity b on b.campEntity.icamp = c.icamp" + " where b.reservation = :today and c.delyn = :delyn")
     List<CampingList> selCampingAll(@Param("today") LocalDate today, @Param("delyn") Integer delyn);
 
     @Query("select new com.green.campingsmore.user.camping.model.CampingDetailList(c.icamp,c.name, c.campPhone, c.address,c.price,c.capacity,c.quantity,c.note,b.pic)"+
