@@ -9,6 +9,7 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 @Entity
@@ -23,23 +24,19 @@ public class CampEntity {
     @Column(updatable = false,nullable = false,columnDefinition = "BIGINT UNSIGNED")
     private Long icamp;
 
-    @NotNull
     private LocalDate reservation;
 
-
-    @NotNull
+    @Column(nullable = false)
     private String name;
 
-    @Column(updatable = false)
-    @NotNull
+    @Column(updatable = false,nullable = false)
     private String address;
 
 
     @Column(name = "main_pic")
-    @NotNull
     private String mainPic;
 
-    @Column(name = "camp_phone")
+    @Column(name = "camp_phone",nullable = false)
     @NotNull
     @Size(min = 9,max = 20)
     private String campPhone;
@@ -50,17 +47,15 @@ public class CampEntity {
     @Column(nullable = false,columnDefinition = "INT UNSIGNED")
     private Integer quantity;
 
-    @Column(length = 2)
-    @NotNull
+    @Column(nullable = false,length = 2)
     private Integer capacity;
 
-    @NotNull
     private String note;
 
     @Column(name = "del_yn",columnDefinition = "TINYINT not null DEFAULT 1 CHECK(del_yn in (0,1))",length = 1)
     private Integer delyn;
 
     @ManyToOne
-    @JoinColumn(name = "inationwide")
+    @JoinColumn(name = "inationwide",nullable = false)
     private NationwideEntity nationwideEntity;
 }

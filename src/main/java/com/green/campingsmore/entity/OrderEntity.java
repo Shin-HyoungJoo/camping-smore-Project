@@ -46,7 +46,7 @@ public class OrderEntity extends BaseEntity {
     @ColumnDefault("3000")
     private Integer shippingPrice;
 
-    @Column(length = 10)
+    @Column(length = 100)
     private String shippingMemo;
 
     @Column(nullable = false, columnDefinition = "TINYINT", length = 1)

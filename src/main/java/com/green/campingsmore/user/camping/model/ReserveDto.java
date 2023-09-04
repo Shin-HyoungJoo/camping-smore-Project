@@ -13,5 +13,4 @@ public class ReserveDto {
     private String phone;
     private PayType payType;
     private Long icamp;
-    private Long iuser;
 }
