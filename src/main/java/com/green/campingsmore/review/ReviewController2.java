@@ -10,10 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @Tag(name="리뷰")
-@RequestMapping("/api/review")
+@RequestMapping("/api/review/2")
 @RequiredArgsConstructor
-public class ReviewController {
-    private final ReviewService SERVICE;
+public class ReviewController2 {
+    private final ReviewService2 SERVICE;
 
 /*    @PostMapping
     @Operation(summary = "리뷰 추가"
@@ -28,7 +28,7 @@ public class ReviewController {
         return SERVICE.insReview(dto);
     }*/
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+/*    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "리뷰 추가"
             , description = "" +
             "\"iuser\": [-] 유저 PK,<br>" +
@@ -40,7 +40,7 @@ public class ReviewController {
     public String postReview(@RequestPart ReviewPageDto.ReviewInsDto dto,
                            @RequestPart(required = false) MultipartFile pic) {
         return SERVICE.insReview(dto, pic);
-    }
+    }*/
 
     @GetMapping("/{iitem}/detail")
     @Operation(summary = "리뷰 리스트"

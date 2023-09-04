@@ -1,5 +1,6 @@
 package com.green.campingsmore.review.model;
 
+import com.green.campingsmore.user.review.model.ReviewSelVo;
 import lombok.*;
 
 import java.util.List;

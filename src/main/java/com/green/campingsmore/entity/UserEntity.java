@@ -29,34 +29,26 @@ public class UserEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment 설정
     @Column(updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 15)
     private Long iuser;
-    @NotNull
-    @Column(name = "user_id",updatable = false, length = 20)
+    @Column(name = "user_id",updatable = false, length = 20,nullable = false)
     private String uid;
-    @NotNull
-    @Column // length 기본값 세팅 255임
+    @Column(nullable = false) // length 기본값 세팅 255임
     private String password;
-    @NotNull
-    @Column(length = 100)
+    @Column(length = 100,nullable = false)
     @Size(min = 10, max = 50)
     private String email;
-    @NotNull
-    @Column(length = 20)
+    @Column(length = 20,nullable = false)
     private String name;
-    @NotNull
-    @Column(name = "birth_date",length = 10)
+    @Column(name = "birth_date",length = 10,nullable = false)
     private String birthDate;
-    @NotNull
-    @Column(length = 11)
+    @Column(length = 11,nullable = false)
     private String phone;
     @Column(columnDefinition = "TINYINT not null CHECK(gender in (0,1))",length = 1)
     private Integer gender;
-    @NotNull
-    @Column(name = "user_address",length = 100)
+    @Column(name = "user_address",length = 100,nullable = false)
     private String userAddress;
     @Column(name = "user_address_detail", length = 100)
     private String userAddressDetail;
-    @NotNull
-    @Column(length = 10)
+    @Column(length = 10,nullable = false)
     @ColumnDefault("'ROLE_USER'")
     private String role;
     private String pic;
@@ -66,15 +58,12 @@ public class UserEntity extends BaseEntity {
     private int delyn;
     //    @Column(name = "wishlist_array") // null true는 기본값이라서 설정안해줘도 된다.
 //    private String wishlistArray;
-    @NotNull
-    @Column(name = "provider_type", length = 20)
+    @Column(name = "provider_type", length = 20,nullable = false)
     @Enumerated(EnumType.STRING)
-    @NotNull
     private ProviderType providerType;
     @JsonIgnore
-    @Column(name = "role_type", length = 20)
+    @Column(name = "role_type", length = 20,nullable = false)
     @Enumerated(EnumType.STRING)
-    @NotNull
     private RoleType roleType;
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment 설정

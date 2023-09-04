@@ -22,23 +22,20 @@ import org.hibernate.annotations.ColumnDefault;
 public class BoardEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, columnDefinition = "BIGINT UNSIGNED")
-    @NotNull
+    @Column(nullable = false,updatable = false, columnDefinition = "BIGINT UNSIGNED")
     private Long iboard;
 
-    @JoinColumn(name = "iuser")
+    @JoinColumn(name = "iuser",nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
-    @NotNull
     private UserEntity userEntity;
 
-    @JoinColumn(name = "icategory")
+    @JoinColumn(name = "icategory",nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
-    @NotNull
     private BoardCategoryEntity boardCategoryEntity;
 
-    @Column(length = 20)
+    @Column(nullable = false,length = 20)
     private String title;
 
     @Column(nullable = false, length = 300)

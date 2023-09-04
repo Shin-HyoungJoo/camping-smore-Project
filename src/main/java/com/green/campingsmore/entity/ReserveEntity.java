@@ -26,37 +26,29 @@ public class ReserveEntity extends BaseEntity {
     @Column(updatable = false,columnDefinition = "BIGINT UNSIGNED")
     private Long ireserve;
 
-    @NotNull
-    private LocalDate reservation;
-
-    @NotNull
+    @Column(nullable = false)
     @Size(min = 2)
     private String name;
 
-    @Column(length = 11)
-    @NotNull
+    @Column(nullable = false,length = 11)
     @Size(min = 11)
     private String phone;
 
 
-    @Column(name = "pay_type")
-    @NotNull
+    @Column(name = "pay_type",nullable = false)
     @Enumerated(EnumType.STRING)
     private PayType payType;
 
-    @Column(name = "pay_status")
-    @NotNull
+    @Column(name = "pay_status",nullable = false)
     @Enumerated(EnumType.STRING)
     private PayStatus payStatus;
 
     @ManyToOne
-    @JoinColumn(name = "icamp")
-    @NotNull
+    @JoinColumn(name = "icamp",nullable = false)
     private CampEntity campEntity;
 
     @ManyToOne
-    @JoinColumn(name = "iuser")
-    @NotNull
+    @JoinColumn(name = "iuser",nullable = false)
     private UserEntity userEntity;
 
 

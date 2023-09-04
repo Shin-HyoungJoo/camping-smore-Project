@@ -7,7 +7,7 @@
 //import com.green.campingsmore.review.ReviewService;
 //import com.green.campingsmore.review.model.ReviewPageDto;
 //import com.green.campingsmore.review.model.ReviewRes;
-//import com.green.campingsmore.review.model.ReviewSelVo;
+//import com.green.campingsmore.user.review.model.ReviewSelVo;
 //import lombok.extern.slf4j.Slf4j;
 //import org.junit.jupiter.api.DisplayName;
 //import org.junit.jupiter.api.Test;
