@@ -10,7 +10,7 @@ public interface PayService {
     Long insPayInfo(InsPayInfoDto dto);
     Optional<PaymentCompleteDto> selPaymentComplete(Long iorder);
     List<SelPaymentDetailDto> selPaymentDetailAll(Long iuser);
-    PaymentDetailDto selPaymentPageItem(Long iitem, Long quantity);
+    PaymentDetailDto selPaymentPageItem(Long iitem, Integer quantity);
     List<PaymentDetailDto> selPaymentPageItemList(CartPKDto dto);
     Long delPaymentDetail(Long iorder, Long iitem);
     SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorder, Long iitem);

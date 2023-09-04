@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 public class PaymentDetailDto2 {
     private Long iitem;
     private String name;
-    private Long Price;
-    private Long totalPrice;
-    private String Pic;
-    private LocalDate paymentDate;
+    private Integer price;
+    private Integer totalPrice;
+    private String pic;
+    private LocalDateTime paymentDate;
     private Long reviewYn;
 }

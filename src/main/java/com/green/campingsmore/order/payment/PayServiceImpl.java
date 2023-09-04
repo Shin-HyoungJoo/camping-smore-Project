@@ -73,7 +73,7 @@ public class PayServiceImpl implements PayService {
     }
 
     @Override   //querydsl
-    public PaymentDetailDto selPaymentPageItem(Long iitem, Long quantity) {
+    public PaymentDetailDto selPaymentPageItem(Long iitem, Integer quantity) {
         PaymentDetailDto result = orderRepo.selPaymentPageItem(iitem);
         result.setQuantity(quantity);
         result.setTotalPrice(result.getPrice() * quantity);
@@ -87,9 +87,9 @@ public class PayServiceImpl implements PayService {
         List<PaymentDetailDto> result = orderRepo.selPaymentPageItemList(dto);
         try {
             for (PaymentDetailDto item : result) {
-                Long price = item.getPrice();
-                Long quantity = item.getQuantity();
-                Long totalPrice = price * quantity;
+                Integer price = item.getPrice();
+                Integer quantity = item.getQuantity();
+                Integer totalPrice = price * quantity;
                 item.setTotalPrice(totalPrice);
             }
         } catch (Exception e) {
@@ -117,7 +117,7 @@ public class PayServiceImpl implements PayService {
     @Override   //jpa
     public Long insAddress(ShippingInsDto dto) {
         ShippingAddressEntity entity = ShippingAddressEntity.builder()
-                .iuser(UserEntity.builder().iuser(dto.getIuser()).build())
+                .userEntity(UserEntity.builder().iuser(dto.getIuser()).build())
                 .address(dto.getAddress())
                 .addressDetail(dto.getAddressDetail())
                 .name(dto.getName())
@@ -128,24 +128,30 @@ public class PayServiceImpl implements PayService {
         return 1L;
     }
 
-    @Override
+    @Override   //jpa
     public SelUserAddressVo selUserAddress(Long iuser) {
         return shippingRepo.selUserAddress(iuser);
     }
 
-    @Override
+    @Override   //dsl
     public List<ShippingListSelVo> selAddressList(Long iuser) {
-//        shippingRepo.selAddressList(Long iuser);
-        return null;
+        return shippingRepo.selAddressList(iuser);
     }
 
-    @Override
+    @Override   //dsl
     public ShippingListSelVo selOneAddress(SelUserAddressDto dto) {
-        return MAPPER.selOneAddress(dto);
+        return shippingRepo.selOneAddress(dto);
     }
 
-    @Override
+    @Override  //jpa
     public Long delAddress(Long iaddress) {
-        return MAPPER.delAddress(iaddress);
+        Optional<ShippingAddressEntity> search = shippingRepo.findById(iaddress);
+
+        if(search.isEmpty()) {
+            return null;
+        }
+
+        shippingRepo.deleteById(iaddress);
+        return 1L;
     }
 }

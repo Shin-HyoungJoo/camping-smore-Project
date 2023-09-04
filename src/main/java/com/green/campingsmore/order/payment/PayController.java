@@ -145,7 +145,7 @@ public class PayController {
                             "<h3> totalPrice : 아이템 총 가격\n" +
                             "<h3> Pic : 이미지\n")
     public PaymentDetailDto getPaymentItem(@AuthenticationPrincipal MyUserDetails user,
-                                           @PathVariable Long iitem, @RequestParam Long quantity) {
+                                           @PathVariable Long iitem, @RequestParam Integer quantity) {
         return SERVICE.selPaymentPageItem(iitem, quantity);
     }
 
