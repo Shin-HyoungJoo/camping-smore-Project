@@ -24,7 +24,6 @@ public class ReviewEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
-    @NotNull
     private Long ireview;
 
     @JoinColumn(name = "iuser")
@@ -40,28 +39,21 @@ public class ReviewEntity extends BaseEntity {
     private ItemEntity itemEntity;
 
     @Column(nullable = false, length = 200)
-    @NotNull
     private String reviewCtnt;
 
     @Column(length = 200)
     private String pic;
 
     @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
-    @NotNull
     @Size(min = 0, max = 5)
     @ColumnDefault("5")
     private Integer starRating;
 
     @Column(nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
-    @NotNull
-    @ColumnDefault("1")
     private Integer reviewLike;
 
     @Column(name = "del_yn", columnDefinition = "TINYINT not null DEFAULT 1 CHECK(del_yn in (0,1))", length = 1)
-    @NotNull
     @Size(min = 0, max = 1)
-    @ColumnDefault("1")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer delYn;
-
 }

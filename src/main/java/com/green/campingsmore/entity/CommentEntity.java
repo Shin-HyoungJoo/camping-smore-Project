@@ -23,21 +23,20 @@ public class CommentEntity extends BaseEntity {
     @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
     private Long icomment;
 
-    @JoinColumn(name = "iboard")
+    @JoinColumn(name = "iboard",nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private BoardEntity boardEntity;
 
-    @JoinColumn(name = "iuser")
+    @JoinColumn(name = "iuser",nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     @ToString.Exclude
     private UserEntity userEntity;
 
     @Column(nullable = false, length = 100)
-    private Long ctnt;
+    private String ctnt;
 
     @Column(length = 1, columnDefinition = "TINYINT")
     @ColumnDefault("1")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer delYn;
 }

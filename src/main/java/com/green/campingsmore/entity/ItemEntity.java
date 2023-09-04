@@ -26,7 +26,6 @@ public class ItemEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false,nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
-    @NotNull
     private Long iitem;
 
     @JoinColumn(name = "iitemCategory")
@@ -48,15 +47,10 @@ public class ItemEntity extends BaseEntity {
     @Column(length = 500)
     private String pic;
 
-    @Column(nullable = false, columnDefinition = "INT UNSIGNED")
-    @NotNull
-    @ColumnDefault("0")
+    @Column(columnDefinition = "INT UNSIGNED",nullable = false)
     private Integer stock;
 
-    @Column(columnDefinition = "TINYINT not null DEFAULT 1 CHECK(del_yn in (0,1))", length = 1)
-    @NotNull
-    @Size(min = 0,max = 2)
-    @ColumnDefault("2")
+    @Column(columnDefinition = "TINYINT not null DEFAULT 1 CHECK(status in (0,1,2))", length = 1)
     private Integer status; // 삭제(0) / 노출됨, 판매중(1) / 노출되지않음, 판매중지(2)
 
 /*    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)

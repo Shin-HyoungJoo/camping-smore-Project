@@ -55,6 +55,6 @@ public class RefundEntity extends BaseEntity {
 
     @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
     @ColumnDefault("1")
-    @Check(constraints = "shipping IN (0, 1, 2)")
+    @Check(constraints = "refund_status IN (0, 1, 2)")
     private Integer refundStatus;
 }

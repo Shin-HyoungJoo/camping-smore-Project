@@ -1,6 +1,7 @@
 package com.green.campingsmore.user.camping;
 
 import com.green.campingsmore.community.board.utils.FileUtils;
+import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.entity.*;
 import com.green.campingsmore.sign.SignRepository;
 import com.green.campingsmore.user.camping.model.*;
@@ -15,9 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -28,6 +27,7 @@ public class CampingService {
     private final CampingRepositoryImpl IMPL;
     private final CampingPicRepository PICREP;
     private final ReserveRepository RESREP;
+    private final AuthenticationFacade FACADE;
     private final SignRepository USERREP;
 
 
@@ -295,7 +295,7 @@ public class CampingService {
         entity.setReservation(reserveDay);
 
         UserEntity userEntity = UserEntity.builder()
-                .iuser(dto.getIuser())
+                .iuser(FACADE.getLoginUserPk())
                 .build();
         ReserveEntity reserveEntity = ReserveEntity.builder()
                 .name(dto.getName())
@@ -305,7 +305,6 @@ public class CampingService {
                 .phone(dto.getPhone())
                 .payStatus(PayStatus.OK)
                 .build();
-
         RESREP.save(reserveEntity);
 
         return ReserveRes.builder()
@@ -326,15 +325,15 @@ public class CampingService {
         }
 
         ReserveEntity reserveEntity = opt.get();
-        UserEntity userEntity = UserEntity.builder().iuser(dto.getIuser()).build();
+        UserEntity userEntity = UserEntity.builder().iuser(FACADE.getLoginUserPk()).build();
         CampEntity campEntity = reserveEntity.getCampEntity();
 
         LocalDate reservationDate = campEntity.getReservation();
         LocalDate currentDate = LocalDate.now();
         long daysUntilReservation = ChronoUnit.DAYS.between(currentDate, reservationDate);
 
-        if (daysUntilReservation <= 2) {
-            throw new Exception("예약 날짜가 2일 이내이므로 취소가 불가능합니다.");
+        if (daysUntilReservation <= 1) {
+            throw new Exception("예약 날짜가 1일 이내이므로 취소가 불가능합니다.");
         }
 
         if (reserveEntity.getPayStatus() == PayStatus.OK) {
@@ -359,7 +358,7 @@ public class CampingService {
         }
 
         ReserveEntity reserveEntity = opt.get();
-        UserEntity userEntity = UserEntity.builder().iuser(dto.getIuser()).build();
+        UserEntity userEntity = UserEntity.builder().iuser(FACADE.getLoginUserPk()).build();
 
         reserveEntity.setUserEntity(userEntity);
         reserveEntity.setName(dto.getName());
@@ -374,5 +373,42 @@ public class CampingService {
                 .name(reserveEntity.getName())
                 .phone(reserveEntity.getPhone())
                 .build();
+    }
+    public List<CampingList> getCamping(Long inationwide) {
+        LocalDate today = LocalDate.now(); // 현재 날짜를 가져옴
+        List<CampingList> list = REP.selCamping(inationwide, today, 1); // 오늘 날짜 정보를 파라미터로 전달
+        return list;
+    }
+    public List<CampingList> getCampingAll(){
+        LocalDate today = LocalDate.now();
+        List<CampingList> list = REP.selCampingAll(today,1);
+        return list;
+    }
+    public List<CampingDetailList> getDeCamping(Long icamp) {
+        List<CampingDetailList> results = REP.selDeCamping(icamp);
+
+        Set<Long> uniqueIcampSet = new HashSet<>();
+        List<CampingDetailList> uniqueResults = new ArrayList<>();
+        for (CampingDetailList result : results) {
+            if (uniqueIcampSet.add(result.getIcamp())) {
+                uniqueResults.add(result);
+            }
+        }
+
+        for (CampingDetailList result : uniqueResults) {
+            List<String> picList = new ArrayList<>();
+            for (CampingDetailList resultWithSameIcamp : results) {
+                if (result.getIcamp().equals(resultWithSameIcamp.getIcamp())) {
+                    picList.addAll(resultWithSameIcamp.getPic());
+                }
+            }
+            result.setPic(picList);
+        }
+
+        return uniqueResults;
+    }
+    public List<CampingMyList> getMyList(){
+        List<CampingMyList> list = REP.selMyList(FACADE.getLoginUserPk());
+        return list;
     }
 }
