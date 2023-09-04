@@ -10,7 +10,7 @@
 
     <insert id="IncreaseCount">
         INSERT INTO visitor
-        SET gender = NULL,birth_date = NULL
+        SET gender IS NULL,birth_date IS NULL
     </insert>
 
     <insert id="signUp">

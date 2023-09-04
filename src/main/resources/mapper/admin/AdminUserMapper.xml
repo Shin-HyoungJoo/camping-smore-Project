@@ -13,4 +13,9 @@
         SELECT iuser,user_id,name,birth_date,phone,gender,role
         FROM user
     </select>
+
+    <select id="selectChart">
+        SELECT gender,TRUNCATE(YEAR(NOW())-YEAR(STR_TO_DATE(birth_date,'%Y-%m-%d'))+1 ,-1) age
+        FROM visitor;
+    </select>
 </mapper>

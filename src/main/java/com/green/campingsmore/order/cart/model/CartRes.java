@@ -10,5 +10,5 @@ public class CartRes {
     private Long icart;
     private Long iuser;
     private Long iitem;
-    private Long quantity;
+    private Integer quantity;
 }

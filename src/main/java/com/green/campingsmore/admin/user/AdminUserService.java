@@ -3,6 +3,7 @@ package com.green.campingsmore.admin.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.green.campingsmore.CommonRes;
+import com.green.campingsmore.admin.user.model.ChatDto;
 import com.green.campingsmore.admin.user.model.UserDto;
 import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.config.security.JwtTokenProvider;
@@ -31,6 +32,10 @@ public class AdminUserService {
     private final RedisService REDIS_SERVICE;
     private final JwtTokenProvider JWT_PROVIDER;
     private final ObjectMapper OBJECT_MAPPER;
+
+    public List<ChatDto> selectChart(){
+        return adminUserMapper.selectChart();
+    }
 
     public List<UserDto> selectAllusers(){
         return adminUserMapper.selectAllusers();

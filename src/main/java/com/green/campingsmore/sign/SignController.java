@@ -176,4 +176,11 @@ public class SignController {
     }
 
     // 카카오 , 구글, 네이버 SNS 로그인
+    @PostMapping("/sns-login/kakao")
+    @Operation(summary = "SNS Login - 카카오 로그인",
+            description = "Try it out -> Execute 눌러주세요 \n\n "
+    )
+    public void KakaoLogin(){
+
+    }
 }

@@ -24,9 +24,7 @@ public class ReserveEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false,columnDefinition = "BIGINT UNSIGNED")
-    @NotNull
     private Long ireserve;
-
 
     @NotNull
     private LocalDate reservation;
