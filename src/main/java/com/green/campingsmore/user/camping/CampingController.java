@@ -43,8 +43,16 @@ public class CampingController {
         return ResponseEntity.ok(SERVICE.delPic(dto));
     }
     @PostMapping("/reserve")
-    public ResponseEntity<ReserveRes> InsReserve(@RequestBody ReserveDto dto){
+    public ResponseEntity<ReserveRes> InsReserve(@RequestBody ReserveDto dto) throws Exception{
         return ResponseEntity.ok(SERVICE.InsReserve(dto));
+    }
+    @PutMapping("/cancel")
+    public ResponseEntity<ReserveRes> cancelReserve(@RequestBody ReserveCancelDto dto)throws Exception {
+        return ResponseEntity.ok(SERVICE.cancelReserve(dto));
+    }
+    @PutMapping("/change")
+    public ResponseEntity<ReserveRes> updReserve(@RequestBody ReserveUpdDto dto) throws Exception{
+        return ResponseEntity.ok(SERVICE.updReserve(dto));
     }
 
 }

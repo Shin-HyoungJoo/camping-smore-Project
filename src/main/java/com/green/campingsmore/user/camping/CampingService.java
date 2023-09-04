@@ -6,12 +6,15 @@ import com.green.campingsmore.sign.SignRepository;
 import com.green.campingsmore.user.camping.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +47,7 @@ public class CampingService {
                     .campPhone(dto.getCampPhone())
                     .name(dto.getName())
                     .address(dto.getAddress())
+                    .reservation(dto.getReservation())
                     .capacity(dto.getCapacity())
                     .note(dto.getNote())
                     .mainPic(saveName)
@@ -83,6 +87,7 @@ public class CampingService {
                     .note(campEntity.getNote())
                     .quantity(campEntity.getQuantity())
                     .delyn(campEntity.getDelyn())
+                    .reservation(campEntity.getReservation())
                     .build();
         }
         return null;
@@ -115,6 +120,7 @@ public class CampingService {
                     .name(dto.getName())
                     .address(dto.getAddress())
                     .price(dto.getPrice())
+                    .reservation(dto.getReservation())
                     .capacity(dto.getCapacity())
                     .nationwideEntity(nationwideEntity)
                     .note(dto.getNote())
@@ -147,6 +153,7 @@ public class CampingService {
                     .inationwide(dto.getInationwide())
                     .address(campEntity.getAddress())
                     .capacity(campEntity.getCapacity())
+                    .reservation(campEntity.getReservation())
                     .price(campEntity.getPrice())
                     .mainPic(campEntity.getMainPic())
                     .note(campEntity.getNote())
@@ -181,6 +188,7 @@ public class CampingService {
         return CampingRes.builder()
                 .icamp(campEntity.getIcamp())
                 .campPhone(campEntity.getCampPhone())
+                .reservation(campEntity.getReservation())
                 .name(campEntity.getName())
                 .inationwide(nationwideEntity.getInationwide()) // 기존 entity에서 가져오도록 수정
                 .address(campEntity.getAddress())
@@ -260,51 +268,111 @@ public class CampingService {
             return null;
         }
     }
-    public ReserveRes InsReserve(ReserveDto dto){
+
+    public ReserveRes InsReserve(ReserveDto dto) throws Exception {
         Optional<CampEntity> opt = REP.findById(dto.getIcamp());
         if (!opt.isPresent()) {
             return null;
         }
         CampEntity entity = opt.get();
+        int currentQuantity = entity.getQuantity();
+        LocalDate reserveDay = dto.getReservation(); // 예약 날짜를 dto에서 가져옵니다.
+
+        LocalDate today = LocalDate.now();
+
+        LocalDate maxReservationDate = today.plusDays(30);
+
+        if (reserveDay.isBefore(today) || reserveDay.isAfter(maxReservationDate)) {
+            throw new Exception("예약 불가: 예약 가능한 날짜는 오늘부터 30일 이후까지입니다.");
+        }
+
+        if (currentQuantity <= 0) {
+            throw new Exception("예약 불가: 캠핑장이 모두 예약되었습니다.");
+        }
+
         entity.setIcamp(dto.getIcamp());
+        entity.setQuantity(currentQuantity - 1);
+        entity.setReservation(reserveDay);
+
         UserEntity userEntity = UserEntity.builder()
                 .iuser(dto.getIuser())
                 .build();
         ReserveEntity reserveEntity = ReserveEntity.builder()
-                .reservation(dto.getReservation())
                 .name(dto.getName())
                 .campEntity(entity)
                 .userEntity(userEntity)
-                .phone(dto.getPhone())
                 .payType(dto.getPayType())
-                .payStatus(dto.getPayStatus())
+                .phone(dto.getPhone())
+                .payStatus(PayStatus.OK)
                 .build();
+
         RESREP.save(reserveEntity);
-        return null;
+
+        return ReserveRes.builder()
+                .ireserve(reserveEntity.getIreserve())
+                .icamp(entity.getIcamp())
+                .price(entity.getPrice())
+                .iuser(userEntity.getIuser())
+                .name(reserveEntity.getName())
+                .payType(reserveEntity.getPayType())
+                .phone(reserveEntity.getPhone())
+                .payStatus(reserveEntity.getPayStatus())
+                .campEntity(entity).build();
+    }
+    public ReserveRes cancelReserve(ReserveCancelDto dto) throws Exception {
+        Optional<ReserveEntity> opt = RESREP.findById(dto.getIreserve());
+        if (!opt.isPresent()) {
+            throw new NotFoundException("예약을 찾을 수 없습니다.");
+        }
+
+        ReserveEntity reserveEntity = opt.get();
+        UserEntity userEntity = UserEntity.builder().iuser(dto.getIuser()).build();
+        CampEntity campEntity = reserveEntity.getCampEntity();
+
+        LocalDate reservationDate = campEntity.getReservation();
+        LocalDate currentDate = LocalDate.now();
+        long daysUntilReservation = ChronoUnit.DAYS.between(currentDate, reservationDate);
+
+        if (daysUntilReservation <= 2) {
+            throw new Exception("예약 날짜가 2일 이내이므로 취소가 불가능합니다.");
+        }
+
+        if (reserveEntity.getPayStatus() == PayStatus.OK) {
+            campEntity.setQuantity(campEntity.getQuantity() + 1);
+            ReserveEntity reserve = ReserveEntity.builder()
+                    .ireserve(reserveEntity.getIreserve())
+                    .campEntity(campEntity)
+                    .userEntity(userEntity)
+                    .payStatus(PayStatus.CANCEL)
+                    .build();
+            RESREP.save(reserve);
+        }
+
+        return ReserveRes.builder()
+                .ireserve(reserveEntity.getIreserve())
+                .build();
+    }
+    public ReserveRes updReserve(ReserveUpdDto dto) throws NotFoundException {
+        Optional<ReserveEntity> opt = RESREP.findById(dto.getIreserve());
+        if (!opt.isPresent()) {
+            throw new NotFoundException("예약을 찾을 수 없습니다.");
+        }
+
+        ReserveEntity reserveEntity = opt.get();
+        UserEntity userEntity = UserEntity.builder().iuser(dto.getIuser()).build();
+
+        reserveEntity.setUserEntity(userEntity);
+        reserveEntity.setName(dto.getName());
+        reserveEntity.setPhone(dto.getPhone());
+
+
+        RESREP.save(reserveEntity);
+
+        return ReserveRes.builder()
+                .ireserve(reserveEntity.getIreserve())
+                .iuser(userEntity.getIuser())
+                .name(reserveEntity.getName())
+                .phone(reserveEntity.getPhone())
+                .build();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

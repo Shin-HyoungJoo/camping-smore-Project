@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDate;
+
 
 @Entity
 @Table(name = "camp")
@@ -20,6 +22,9 @@ public class CampEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false,nullable = false,columnDefinition = "BIGINT UNSIGNED")
     private Long icamp;
+
+    @NotNull
+    private LocalDate reservation;
 
 
     @NotNull
@@ -42,7 +47,7 @@ public class CampEntity {
     @NotNull
     private Integer price;
 
-    @NotNull
+    @Column(nullable = false,columnDefinition = "INT UNSIGNED")
     private Integer quantity;
 
     @Column(length = 2)
@@ -58,6 +63,4 @@ public class CampEntity {
     @ManyToOne
     @JoinColumn(name = "inationwide")
     private NationwideEntity nationwideEntity;
-
-
 }
