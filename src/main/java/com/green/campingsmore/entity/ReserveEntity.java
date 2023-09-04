@@ -5,11 +5,9 @@ import com.green.campingsmore.jpa.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 
@@ -27,10 +25,6 @@ public class ReserveEntity extends BaseEntity {
     @NotNull
     private Long ireserve;
 
-
-    @NotNull
-    private LocalDate reservation;
-
     @NotNull
     @Size(min = 2)
     private String name;
@@ -42,24 +36,20 @@ public class ReserveEntity extends BaseEntity {
 
 
     @Column(name = "pay_type")
-    @NotNull
     @Enumerated(EnumType.STRING)
     private PayType payType;
 
-    @Column(name = "pay_status")
-    @NotNull
+    @Column(name = "pay_status",nullable = false)
     @Enumerated(EnumType.STRING)
+    @ColumnDefault("OK")
     private PayStatus payStatus;
 
     @ManyToOne
-    @JoinColumn(name = "icamp")
-    @NotNull
+    @JoinColumn(name = "icamp",nullable = false)
     private CampEntity campEntity;
 
     @ManyToOne
-    @JoinColumn(name = "iuser")
-    @NotNull
+    @JoinColumn(name = "iuser",nullable = false)
+
     private UserEntity userEntity;
-
-
 }
