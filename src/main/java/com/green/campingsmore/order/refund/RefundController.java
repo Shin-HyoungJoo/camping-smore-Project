@@ -20,8 +20,8 @@ import java.util.List;
 @RequestMapping("/refund")
 @RequiredArgsConstructor
 public class RefundController {
-    private final RefundService SERVICE;
 
+    private final RefundService SERVICE;
 
     @PostMapping
     public RefundRes postRefund(@AuthenticationPrincipal MyUserDetails user,

@@ -31,12 +31,8 @@ public class RefundEntity {
     private UserEntity userEntity;
 
     @OneToOne
-    @JoinColumn(name = "iorder", referencedColumnName = "iorder")
+    @JoinColumn(name = "iorder_item")
     private OrderItemEntity orderItemEntity;
-
-    @OneToOne
-    @JoinColumn(name = "iitem", referencedColumnName = "iitem")
-    private OrderItemEntity orderItemEntity2;
 
     @Column(nullable = false, name = "refund_start_date")
     private LocalDateTime refundStartDate;      //환불접수일

@@ -101,17 +101,16 @@ public class PayController {
         return SERVICE.selDetailedItemPaymentInfo(iorder, iitem);
     }
 
-    @PutMapping("/paymentList/{iorder}")
+    @PutMapping("/paymentList/{iorderItem}")
     @Operation(summary = "전체 결제 내역에서 하나의 결제 내역 삭제(아이템별, 마이 페이지)",
-            description = "<h3> iorder : 결제내역 PK\n" +
-                    "<h3> iitem : 아이템 PK\n" +
+            description = "<h3> iorderItem : 상세 결제내역 PK\n" +
                     "<h3>-----------------------------------\n" +
                     "<h3>CODE 1 : 선택한 결제내역 삭제\n" +
                     "<h3>CODE 2 : 선택한 결제내역 삭제 + 텅빈 결제내역 틀 삭제\n" +
                     "<h3>CODE 0 : 삭제되지 않음\n"
     ) //유저마이페이지에서 조회
-    public Long delPaymentDetail(@PathVariable Long iorder, @RequestParam Long iitem) {
-        return SERVICE.delPaymentDetail(iorder, iitem);
+    public Long delPaymentDetail(@PathVariable Long iorderItem) throws Exception{
+        return SERVICE.delPaymentDetail(iorderItem);
     }
 
     @PostMapping("/order/cart")

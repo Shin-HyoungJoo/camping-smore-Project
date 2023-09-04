@@ -19,10 +19,11 @@ public class RefundService {
     private final RefundRepository refundRepo;
 
     public RefundRes insRefund(InsRefund dto) {
+
         RefundEntity entity = RefundEntity.builder()
                 .userEntity(UserEntity.builder().iuser(dto.getIuser()).build())
                 .orderItemEntity(OrderItemEntity.builder().orderEntity(OrderEntity.builder().iorder(dto.getIorder()).build()).build())
-                .orderItemEntity2(OrderItemEntity.builder().itemEntity(ItemEntity.builder().iitem(dto.getIitem()).build()).build())
+//                .orderItemEntity2(OrderItemEntity.builder().itemEntity(ItemEntity.builder().iitem(dto.getIitem()).build()).build())
                 .refundStartDate(dto.getRefundStartDate())
                 .refundStartDate(dto.getRefundStartDate())
                 .quantity(dto.getQuantity())
@@ -37,7 +38,7 @@ public class RefundService {
                 .irefund(entity.getIrefund())
                 .iuser(entity.getUserEntity().getIuser())
                 .iorder(entity.getOrderItemEntity().getOrderEntity().getIorder())
-                .iitem(entity.getOrderItemEntity2().getItemEntity().getIitem())
+//                .iitem(entity.getOrderItemEntity2().getItemEntity().getIitem())
                 .refundStartDate(entity.getRefundStartDate())
                 .quantity(entity.getQuantity())
                 .totalPrice(entity.getTotalPrice())
@@ -77,7 +78,7 @@ public class RefundService {
                     .irefund(result.getIrefund())
                     .iuser(result.getUserEntity().getIuser())
                     .iorder(result.getOrderItemEntity().getOrderEntity().getIorder())
-                    .iitem(result.getOrderItemEntity2().getItemEntity().getIitem())
+//                    .iitem(result.getOrderItemEntity2().getItemEntity().getIitem())
                     .refundStartDate(result.getRefundStartDate())
                     .quantity(result.getQuantity())
                     .totalPrice(result.getTotalPrice())

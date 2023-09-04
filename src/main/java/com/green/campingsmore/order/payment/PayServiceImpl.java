@@ -80,7 +80,7 @@ public class PayServiceImpl implements PayService {
         return result;
     }
 
-    @Override
+    @Override   //완
     @Transactional(rollbackFor = {Exception.class}) //querydsl
     public List<PaymentDetailDto> selPaymentPageItemList(CartPKDto dto) {
 
@@ -98,15 +98,24 @@ public class PayServiceImpl implements PayService {
         return result;
     }
 
-    @Override
+    @Override   //완
     @Transactional(rollbackFor = {Exception.class}) //jpa
-    public Long delPaymentDetail(Long iorder, Long iitem) {
-        Optional<OrderItemEntity> delYN = orderItemRepo.findById(iorder);
-        if (delYN.isEmpty()) {
-            return 0L;
+    public Long delPaymentDetail(Long iorderItem) throws Exception{
+        try {
+            Optional<OrderItemEntity> delYN = orderItemRepo.findById(iorderItem);
+            if (delYN.isEmpty()) {
+                return 0L;
+            }
+
+            OrderItemEntity result = delYN.get();
+            result.setDelYn(0);
+
+            orderItemRepo.save(result);
+        } catch (Exception e) {
+            throw new Exception("없는 PK입니다");
         }
-        orderItemRepo.deleteById(iorder);
-        return 1L;
+            return 1L;
+
     }
 
     @Override   //dsl
@@ -147,7 +156,7 @@ public class PayServiceImpl implements PayService {
     public Long delAddress(Long iaddress) {
         Optional<ShippingAddressEntity> search = shippingRepo.findById(iaddress);
 
-        if(search.isEmpty()) {
+        if (search.isEmpty()) {
             return null;
         }
 

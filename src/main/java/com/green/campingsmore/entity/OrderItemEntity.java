@@ -22,16 +22,19 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @SuperBuilder
-@IdClass(OrderItemId.class)
-public class OrderItemEntity extends BaseEntity implements Serializable {
-    @Id
-    @JoinColumn(name = "iorder")
-    @ManyToOne(fetch = FetchType.LAZY)
-    private OrderEntity orderEntity;
+public class OrderItemEntity extends BaseEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "iorder_item", nullable = false, updatable = false, columnDefinition = "BIGINT UNSIGNED")
+    private Long iorderItem;
+
+    @JoinColumn(name = "iorder")
+    @ManyToOne
+    private OrderEntity orderEntity;
+
     @JoinColumn(name = "iitem")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private ItemEntity itemEntity;
 
     @Column(nullable = false, columnDefinition = "INT UNSIGNED", length = 10)

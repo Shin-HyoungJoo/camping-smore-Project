@@ -12,7 +12,7 @@ public interface PayService {
     List<SelPaymentDetailDto> selPaymentDetailAll(Long iuser);
     PaymentDetailDto selPaymentPageItem(Long iitem, Integer quantity);
     List<PaymentDetailDto> selPaymentPageItemList(CartPKDto dto);
-    Long delPaymentDetail(Long iorder, Long iitem);
+    Long delPaymentDetail(Long iorderItem) throws Exception;
     SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorder, Long iitem);
 
     //주소 관련

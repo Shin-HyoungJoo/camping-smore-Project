@@ -22,7 +22,7 @@ public class RefundRepositoryImpl implements RefundRepositoryCustom {
                         refundEntity.irefund,
                         refundEntity.userEntity.iuser,
                         refundEntity.orderItemEntity.orderEntity.iorder,
-                        refundEntity.orderItemEntity2.itemEntity.iitem,
+//                        refundEntity.orderItemEntity2.itemEntity.iitem,
                         refundEntity.refundStartDate,
                         refundEntity.refundEndDate,
                         refundEntity.quantity,
