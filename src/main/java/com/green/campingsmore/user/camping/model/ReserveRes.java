@@ -1,5 +1,6 @@
 package com.green.campingsmore.user.camping.model;
 
+import com.green.campingsmore.entity.CampEntity;
 import com.green.campingsmore.entity.PayStatus;
 import com.green.campingsmore.entity.PayType;
 import lombok.Builder;
@@ -11,7 +12,6 @@ import java.time.LocalDate;
 @Getter
 public class ReserveRes {
     private Long ireserve;
-    private LocalDate reservation;
     private String name;
     private String phone;
     private Integer price;
@@ -19,4 +19,6 @@ public class ReserveRes {
     private PayStatus payStatus;
     private Long icamp;
     private Long iuser;
+    private CampEntity campEntity;
+    private Integer dayQuantity;
 }

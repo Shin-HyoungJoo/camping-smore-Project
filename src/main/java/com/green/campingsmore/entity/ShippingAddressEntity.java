@@ -24,7 +24,7 @@ public class ShippingAddressEntity {
 
     @JoinColumn(name = "iuser")
     @ManyToOne(fetch = FetchType.LAZY)
-    private UserEntity iuser;
+    private UserEntity userEntity;
 
     @Column(length = 100)
     @NotNull

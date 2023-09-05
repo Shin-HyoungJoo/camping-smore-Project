@@ -13,6 +13,8 @@ import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.io.Serializable;
+
 @Entity
 @Table(name = "order_item")
 @Data
@@ -21,39 +23,38 @@ import org.hibernate.annotations.ColumnDefault;
 @ToString(callSuper = true)
 @SuperBuilder
 public class OrderItemEntity extends BaseEntity {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "iorder_item", nullable = false, updatable = false, columnDefinition = "BIGINT UNSIGNED")
+    private Long iorderItem;
+
     @JoinColumn(name = "iorder")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private OrderEntity orderEntity;
 
-    @Id
     @JoinColumn(name = "iitem")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private ItemEntity itemEntity;
 
-    @Column(columnDefinition = "INT UNSIGNED", length = 10)
-    @NotNull
-    private Long price;
+    @Column(nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
+    private Integer price;
 
-    @Column(columnDefinition = "TINYINT", length = 2)
+    @Column(nullable = false, columnDefinition = "TINYINT", length = 2)
     @ColumnDefault("1")
-    @NotNull
-    private Long quantity;
+    private Integer quantity;
 
-    @Column(columnDefinition = "BIGINT UNSIGNED", length = 20)
-    @NotNull
-    private Long totalPrice;
+    @Column(nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
+    private Integer totalPrice;
 
     //0 - default, 1 - 환불 진행중, 2 - 환불 완료, 3 - 환불 불가
-    @Column(columnDefinition = "TINYINT", length = 1)
+    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
     @ColumnDefault("0")
     @Check(constraints = "refund IN (0, 1, 2, 3)")
-    @NotNull
-    private Long refund;
+    private Integer refund;
 
-    @Column(columnDefinition = "TINYINT", length = 1)
+    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
     @ColumnDefault("1")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    @NotNull
     private Integer delYn;
 }

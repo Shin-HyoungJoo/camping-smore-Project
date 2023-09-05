@@ -1,14 +1,15 @@
-package com.green.campingsmore.review.model;
+package com.green.campingsmore.user.review.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
-@Data
+@Getter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReviewSelVo {
+public class ReviewVo {
     private Long ireview;
     private String name;
     private String reviewCtnt;

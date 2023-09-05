@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 @Getter
 @Builder
 public class CampingRes {
@@ -18,4 +20,5 @@ public class CampingRes {
     private String note;
     private Integer delyn;
     private Integer price;
+    private LocalDate reservation;
 }

@@ -14,8 +14,8 @@ import java.util.List;
 @Tag(name="아이템")
 @RequestMapping("/api/item")
 @RequiredArgsConstructor
-public class ItemController {
-    private final ItemService SERVICE;
+public class ItemController2 {
+    private final ItemService2 SERVICE;
 
 
     @GetMapping("/category")

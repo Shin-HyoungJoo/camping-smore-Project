@@ -41,7 +41,7 @@
             <if test = "text != null">
                 and `name` LIKE CONCAT('%',#{text},'%')
             </if>
-            AND del_yn = 1
+            AND status = 1
         </where>
     </select>
 
@@ -52,7 +52,7 @@
                 0 as wish
             </if>
             <if test= "iuser >= 1" >
-                IFNULL((SELECT del_yn
+                IFNULL((SELECT status
                 FROM wishlist
                 WHERE iitem = A.iitem and iuser = #{iuser}),0) wish
             </if>
@@ -64,7 +64,7 @@
             <if test = "text != null">
                 and `name` LIKE CONCAT('%',#{text},'%')
             </if>
-            AND del_yn = 1
+            AND status = 1
         </where>
         <if test = "sort == 0">
             ORDER BY created_at DESC
@@ -96,7 +96,7 @@
 <!--  아이템 삭제  -->
     <update id="delItem">
         UPDATE item
-        SET del_yn = 0
+        SET status = 0
         WHERE iitem = #{iitem}
     </update>
 

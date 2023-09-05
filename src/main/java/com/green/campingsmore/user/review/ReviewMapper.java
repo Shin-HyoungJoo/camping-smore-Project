@@ -1,6 +1,7 @@
-package com.green.campingsmore.review;
+package com.green.campingsmore.user.review;
 
 import com.green.campingsmore.review.model.*;
+import com.green.campingsmore.user.review.model.ReviewSelVo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

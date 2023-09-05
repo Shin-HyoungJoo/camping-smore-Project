@@ -2,6 +2,8 @@ package com.green.campingsmore.user.camping.model;
 
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 public class CampingUpdDto {
     private Long icamp;

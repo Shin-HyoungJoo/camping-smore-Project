@@ -1,13 +1,14 @@
 package com.green.campingsmore.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.green.campingsmore.jpa.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Check;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
@@ -16,48 +17,42 @@ import java.time.LocalDateTime;
 @Table(name = "refund")
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 @ToString(callSuper = true)
 @SuperBuilder
-public class RefundEntity extends BaseEntity {
+public class RefundEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
     private Long irefund;
 
+    @ManyToOne
     @JoinColumn(name = "iuser")
-    @ManyToOne(fetch = FetchType.LAZY)
     private UserEntity userEntity;
 
     @OneToOne
-    @JoinColumn(name = "iorder", referencedColumnName = "iorder")
-    private OrderItemEntity orderItemEntityIorder;
+    @JoinColumn(name = "iorder_item")
+    private OrderItemEntity orderItemEntity;
 
-    @OneToOne
-    @JoinColumn(name = "iitem", referencedColumnName = "iitem")
-    private OrderItemEntity orderItemEntityIitem;
-
-    @Column(name = "refund_date")
-    @NotNull
-    private LocalDateTime refundDate;      //주문일
-
-    @Column(name = "refund_start_date")
-    @NotNull
+    @Column(nullable = false, name = "refund_start_date")
     private LocalDateTime refundStartDate;      //환불접수일
 
     @Column(name = "refund_end_date")
-    private LocalDateTime refundEndDate;      //환불접수일
+    private LocalDateTime refundEndDate;      //환불종료일
 
-    @Column(columnDefinition = "TINYINT", length = 2)
-    @NotNull
-    private Long quantity;
+    @Column(nullable = false, columnDefinition = "TINYINT", length = 2)
+    private Integer quantity;
 
-    @Column(columnDefinition = "BIGINT UNSIGNED", length = 20)
-    @NotNull
-    private Long totalPrice;
+    @Column(nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
+    private Integer totalPrice;
 
-    @Column(columnDefinition = "TINYINT", length = 1)
-    @ColumnDefault("1")
-    @NotNull
+    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
+    @ColumnDefault("0")
+    @Check(constraints = "refund_status IN (0, 1, 2)")
     private Integer refundStatus;
+
+    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
+    @ColumnDefault("1")
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Integer delYn;
 }

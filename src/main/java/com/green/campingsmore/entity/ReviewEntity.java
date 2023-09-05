@@ -23,8 +23,7 @@ import org.hibernate.annotations.ColumnDefault;
 public class ReviewEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
-    @NotNull
+    @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
     private Long ireview;
 
     @JoinColumn(name = "iuser")
@@ -39,27 +38,22 @@ public class ReviewEntity extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     private ItemEntity itemEntity;
 
-    @Column(length = 200)
-    @NotNull
+    @Column(nullable = false, length = 200)
     private String reviewCtnt;
 
     @Column(length = 200)
     private String pic;
 
-    @Column(columnDefinition = "TINYINT", length = 1)
-    @NotNull
+    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
     @Size(min = 0, max = 5)
     @ColumnDefault("5")
     private Integer starRating;
 
-    @Column(columnDefinition = "INT UNSIGNED", length = 10)
+    @Column(nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
     private Integer reviewLike;
 
-    @Column(columnDefinition = "TINYINT", length = 1)
-    @NotNull
+    @Column(name = "del_yn", columnDefinition = "TINYINT not null DEFAULT 1 CHECK(del_yn in (0,1))", length = 1)
     @Size(min = 0, max = 1)
-    @ColumnDefault("1")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer delYn;
-
 }
