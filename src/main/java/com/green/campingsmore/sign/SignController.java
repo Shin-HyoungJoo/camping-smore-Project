@@ -25,6 +25,16 @@ public class SignController {
     private final AuthenticationFacade FACADE;
 
     @PostMapping("/kakao")
+    @Operation(summary = "카카오 로그인",
+            description = "Try it out -> Execute 눌러주세요 \n\n " +
+                    "\"profile_nickname\": \"string\",\n\n" +
+                    "  \"profile_image\": \"string\",\n\n" +
+                    "  \"account_email\": \"string\",\n\n" +
+                    "  \"gender\": \"string\",\n\n" +
+                    "  \"age_range\": \"string\",\n\n" +
+                    "  \"birthday\": \"string\""  +
+                    "\n\n 이 형식으로 오는 것 맞는지 확인해주세요!! - 황주은"
+    )
     public int kakaoLogin(@RequestBody KaKaoLoginVo kaKaoLoginVo){
         return SERVICE.kakaoLogin(kaKaoLoginVo);
     }
