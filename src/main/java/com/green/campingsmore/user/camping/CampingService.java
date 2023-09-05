@@ -43,7 +43,6 @@ public class CampingService {
             NationwideEntity nationwideEntity = NationwideEntity.builder()
                     .inationwide(dto.getInationwide())
                     .build();
-            CITYREP.save(nationwideEntity);
             CampEntity campEntity = CampEntity.builder()
                     .campPhone(dto.getCampPhone())
                     .name(dto.getName())
@@ -439,5 +438,31 @@ public class CampingService {
     public List<CampingList> getCampingTitle(String name){
         List<CampingList> list = REP.selTitleCamping(name,1);
         return list;
+    }
+    public List<DailyRes> InsMainCamp() {
+        List<DailyRes> reservations = new ArrayList<>();
+        List<CampEntity> campgrounds = REP.findAll(); // 모든 캠핑장 불러오기
+        LocalDate startDate = LocalDate.now(); // 오늘 날짜를 시작일로 설정
+
+        for (CampEntity campground : campgrounds) {
+            for (int day = 0; day < 31; day++) { // 31일치 예약 생성
+                LocalDate reservationDate = startDate.plusDays(day);
+                ReserveDayEntity reserveDayEntity = ReserveDayEntity.builder()
+                        .date(reservationDate)
+                        .dayQuantity(10)
+                        .campEntity(campground)
+                        .build();
+                DAYREP.save(reserveDayEntity);
+
+                reservations.add(DailyRes.builder()
+                        .iday(reserveDayEntity.getIday())
+                        .campEntity(reserveDayEntity.getCampEntity())
+                        .date(reserveDayEntity.getDate())
+                        .dayQuantity(reserveDayEntity.getDayQuantity())
+                        .build());
+            }
+        }
+
+        return reservations;
     }
 }

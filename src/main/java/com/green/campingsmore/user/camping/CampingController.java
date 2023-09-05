@@ -105,4 +105,10 @@ public class CampingController {
     public ResponseEntity<List<CampingList>> getCampingTitle(String name){
         return ResponseEntity.ok(SERVICE.getCampingTitle(name));
     }
+    @PostMapping("/camp")
+    @Operation(summary = "캠핑장 31일치 만들기 터치x")
+    public ResponseEntity<List<DailyRes>> InsCampMain(){
+        return ResponseEntity.ok(SERVICE.InsMainCamp());
+
+    }
 }
