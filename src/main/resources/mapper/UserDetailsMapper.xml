@@ -3,6 +3,11 @@
 
 <mapper namespace="com.green.campingsmore.config.security.UserDetailsMapper">
 
+    <select id="kakaoLogin">
+        SELECT iuser USER
+        WHERE email = #{account_email} AND gender = #{gender} AND birth_date = #{birthday};
+    </select>
+
     <insert id="IncreaseUserCount">
         INSERT INTO visitor
         SET gender = #{gender},birth_date = #{birth_date}

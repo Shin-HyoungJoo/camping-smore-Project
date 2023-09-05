@@ -11,7 +11,6 @@ import com.green.campingsmore.config.security.UserDetailsMapper;
 import com.green.campingsmore.config.security.model.*;
 import com.green.campingsmore.config.security.redis.RedisService;
 import com.green.campingsmore.config.security.redis.model.RedisJwtVo;
-import com.green.campingsmore.config.utils.MyFileUtils;
 import com.green.campingsmore.entity.UserEntity;
 import com.green.campingsmore.sign.model.*;
 import io.jsonwebtoken.Claims;
@@ -51,6 +50,11 @@ public class SignService {
 
     public int IncreaseCount(){
         return MAPPER.IncreaseCount();
+    }
+
+    public int kakaoLogin(KaKaoLoginVo kaKaoLoginVo){
+        MAPPER.kakaoLogin(); // 유저 조회
+        return 1;
     }
 
     public SignUpResultDto signUp(SignUpDto signUpDto) {

@@ -1,9 +1,7 @@
 package com.green.campingsmore.admin.user;
 
-import com.green.campingsmore.CommonRes;
 import com.green.campingsmore.admin.user.model.ChatDto;
 import com.green.campingsmore.admin.user.model.UserDto;
-import com.green.campingsmore.sign.SignService;
 import com.green.campingsmore.sign.model.SignInResultDto;
 import com.green.campingsmore.sign.model.UserLogin;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,7 +37,7 @@ public class AdminUserController {
         return SERVICE.adminSignIn(userLogin,ip);
     }
 
-    @GetMapping("/users")
+    @GetMapping("/manage/users")
     @Operation(summary = "관리자 - 모든 유저 리스트 보기",
             description = "Try it out -> Execute 눌러주세요 \n\n "
     )
@@ -47,7 +45,7 @@ public class AdminUserController {
         return SERVICE.selectAllusers();
     }
 
-    @GetMapping("/chart")
+    @GetMapping("/manage/chart")
     @Operation(summary = "관리자 - 유저 현황 차트 (방문자, 성별 비율, 회원 나이 비율)",
             description = "Try it out -> Execute 눌러주세요 \n\n "+
                     "회원 나이 비율 10살 이하면 0으로 처리됨. 프론트에서는 10대 이하로 처리하면 됨 \n\n" +
