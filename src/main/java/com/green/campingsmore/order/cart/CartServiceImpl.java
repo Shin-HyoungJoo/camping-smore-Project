@@ -33,6 +33,7 @@ public class CartServiceImpl implements CartService {
                 .icart(entity.getIcart())
                 .iuser(entity.getItemEntity().getIitem())
                 .iitem(entity.getItemEntity().getIitem())
+                .quantity(entity.getQuantity())
                 .build());
     }
 
@@ -45,7 +46,7 @@ public class CartServiceImpl implements CartService {
     public Long delCart(Long icart) {
         Optional<CartEntity> existCheck = repo.findById(icart);
 
-        if(existCheck.isEmpty()) {
+        if (existCheck.isEmpty()) {
             return 0L;
         }
 
@@ -60,7 +61,7 @@ public class CartServiceImpl implements CartService {
 
         for (Long search : icart) {
             Optional<CartEntity> existCheck = repo.findById(search);
-            if(existCheck.isEmpty()) {
+            if (existCheck.isEmpty()) {
                 return 0L;
             }
             count++;

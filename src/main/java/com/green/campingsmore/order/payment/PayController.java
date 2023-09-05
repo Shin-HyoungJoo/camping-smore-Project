@@ -1,6 +1,5 @@
 package com.green.campingsmore.order.payment;
 
-import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.config.security.model.MyUserDetails;
 import com.green.campingsmore.order.payment.model.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -31,6 +30,7 @@ public class PayController {
                             "<h3> shippingPrice : 배송비\n" +
                             "<h3> shippingMemo : 배송 메모\n" +
                             "<h3> type : 결제 타입 (KAKAO, CARD) 택 1\n" +
+                            "<h3> ReceiveCampingYn : 캠핑지로 받을건지 여부 (0 : 일반 배송지, 1 : 캠핑지) \n" +
                             "<h3> purchaseList : 구입 목록\n" +
                             "<h3>   └iitem : 결제한 아이템 PK\n" +
                             "<h3>   └quantity : 아이템 수량\n" +
@@ -40,13 +40,13 @@ public class PayController {
                             "<h3>   CODE 0 : DB 정보 저장 실패\n"
     )
     public Long postPayInfo(@AuthenticationPrincipal MyUserDetails user,
-                            @RequestBody InsPayInfoDto dto) {
+                            @RequestBody InsPayInfoDto dto) throws Exception{
         dto.setIuser(user.getIuser());
         return SERVICE.insPayInfo(dto);
     }
 
     @GetMapping("/{iorder}")    //check
-    @Operation(summary = "결제 내역 보기",
+    @Operation(summary = "결제 내역 보기(결제 완료 페이지)",
             description = "<h3> iorder : 주문 PK\n" +
                     "<h3>-----------------------------------\n" +
                     "<h3> address : 주소\n" +
@@ -60,7 +60,7 @@ public class PayController {
         return ResponseEntity.ok(SERVICE.selPaymentComplete(iorder));
     }
 
-    @GetMapping("/paymentList")
+    @GetMapping("/payment-list")
     @Operation(summary = "전체 결제 내역 보기(마이 페이지)",
             description = "<h3> iorder : 주문 PK\n" +
                     "<h3>-----------------------------------\n" +
@@ -78,10 +78,9 @@ public class PayController {
         return ResponseEntity.ok(SERVICE.selPaymentDetailAll(iuser));
     }
 
-    @GetMapping("/paymentList/detail/{iorder}")
+    @GetMapping("/payment-list/detail/{iorderItem}")
     @Operation(summary = "상세 결제 내역 보기(마이 페이지)",
-            description = "<h3> iorder : 결제내역 PK\n" +
-                    "<h3> iitem : 아이템 PK\n" +
+            description = "<h3> iorderItem : 상세 결제내역 PK\n" +
                     "<h3>-----------------------------------\n" +
                     "<h3> iitem : 아이템 PK\n" +
                     "<h3> name : 아이템 이름\n" +
@@ -96,22 +95,20 @@ public class PayController {
                     "<h3> shippingMemo : 배송 메모\n"
 
     ) //유저마이페이지에서 조회
-    public SelDetailedItemPaymentInfoVo getDetailedItemPaymentInfo(@AuthenticationPrincipal MyUserDetails user,
-                                                                   @PathVariable Long iorder, @RequestParam Long iitem) {
-        return SERVICE.selDetailedItemPaymentInfo(iorder, iitem);
+    public SelDetailedItemPaymentInfoVo getDetailedItemPaymentInfo(@PathVariable Long iorderItem) {
+        return SERVICE.selDetailedItemPaymentInfo(iorderItem);
     }
 
-    @PutMapping("/paymentList/{iorder}")
+    @PutMapping("/payment-list/{iorderItem}")
     @Operation(summary = "전체 결제 내역에서 하나의 결제 내역 삭제(아이템별, 마이 페이지)",
-            description = "<h3> iorder : 결제내역 PK\n" +
-                    "<h3> iitem : 아이템 PK\n" +
+            description = "<h3> iorderItem : 상세 결제내역 PK\n" +
                     "<h3>-----------------------------------\n" +
                     "<h3>CODE 1 : 선택한 결제내역 삭제\n" +
                     "<h3>CODE 2 : 선택한 결제내역 삭제 + 텅빈 결제내역 틀 삭제\n" +
                     "<h3>CODE 0 : 삭제되지 않음\n"
     ) //유저마이페이지에서 조회
-    public Long delPaymentDetail(@PathVariable Long iorder, @RequestParam Long iitem) {
-        return SERVICE.delPaymentDetail(iorder, iitem);
+    public Long delPaymentDetail(@PathVariable Long iorderItem) throws Exception{
+        return SERVICE.delPaymentDetail(iorderItem);
     }
 
     @PostMapping("/order/cart")
@@ -124,12 +121,13 @@ public class PayController {
                     "<h3> name : 아이템 이름\n" +
                     "<h3> price : 아이템 가격\n" +
                     "<h3> quantity : 아이템 수량\n" +
-                    "<h3> totalPrice : 아이템 총 가격\n" +
+                    "<h3> ShppingPrice : 배송비\n" +
+                    "<h3> totalPrice : 결제 총 가격(배송비 포함)\n" +
                     "<h3> Pic : 이미지\n"
     )
-    public List<PaymentDetailDto> getPaymentItemList(@AuthenticationPrincipal MyUserDetails user,
+    public CartPaymentDetailDto getPaymentItemList(@AuthenticationPrincipal MyUserDetails user,
                                                      @RequestBody CartPKDto dto) {
-        return SERVICE.selPaymentPageItemList(dto);
+        return SERVICE.selPaymentPageItemList(dto, user.getIuser());
     }
 
     @GetMapping("/order/{iitem}")
@@ -137,16 +135,18 @@ public class PayController {
             description =
                     "<h3> iitem : 결제 클릭한 아이템의 PK\n" +
                             "<h3> quantity : 올려놓은 아이템의 수량\n" +
+                            "<h3> ireserve : 캠핑 예약 PK\n" +
                             "<h3>-----------------------------------\n" +
                             "<h3> iitem : 아이템 PK\n" +
                             "<h3> name : 아이템 이름\n" +
                             "<h3> price : 아이템 가격\n" +
                             "<h3> quantity : 아이템 수량\n" +
-                            "<h3> totalPrice : 아이템 총 가격\n" +
+                            "<h3> ShppingPrice : 배송비\n" +
+                            "<h3> totalPrice : 결제 총 가격(배송비 포함)\n" +
                             "<h3> Pic : 이미지\n")
     public PaymentDetailDto getPaymentItem(@AuthenticationPrincipal MyUserDetails user,
-                                           @PathVariable Long iitem, @RequestParam Long quantity) {
-        return SERVICE.selPaymentPageItem(iitem, quantity);
+                                           @PathVariable Long iitem, @RequestParam Integer quantity) {
+        return SERVICE.selPaymentPageItem(iitem, quantity, user.getIuser());
     }
 
     @PostMapping("/address")
@@ -179,7 +179,7 @@ public class PayController {
         return SERVICE.selUserAddress(iuser);
     }
 
-    @GetMapping("/addressList")
+    @GetMapping("/address-list")
     @Operation(summary = "등록된 배송지 리스트 출력",
             description =
                     "<h3>-----------------------------------\n" +
@@ -193,7 +193,7 @@ public class PayController {
         return SERVICE.selAddressList(iuser);
     }
 
-    @GetMapping("/addressList/{iaddress}")
+    @GetMapping("/address-list/{iaddress}")
     @Operation(summary = "등록된 배송지 중 선택한 배송지 정보 출력",
             description =
                     "<h3> iaddress : 등록한 배송지PK\n" +

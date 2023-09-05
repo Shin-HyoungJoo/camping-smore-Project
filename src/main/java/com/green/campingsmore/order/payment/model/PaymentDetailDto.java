@@ -7,8 +7,11 @@ import java.time.LocalDate;
 public class PaymentDetailDto {
     private Long iitem;
     private String name;
-    private Long price;
-    private Long quantity;
-    private Long totalPrice;
-    private String Pic;
+    private Integer price;
+    private Integer quantity;
+    private Integer shippingPrice;
+    private Integer totalPrice;
+    private String pic;
+    private Integer reserveYn;
+    private SelReserveInfoVo campInfo;
 }
