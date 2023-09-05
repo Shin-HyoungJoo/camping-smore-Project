@@ -7,13 +7,13 @@ import com.green.campingsmore.admin.user.model.ChatDto;
 import com.green.campingsmore.admin.user.model.UserDto;
 import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.config.security.JwtTokenProvider;
-import com.green.campingsmore.config.security.UserDetailsMapper;
 import com.green.campingsmore.config.security.model.LoginDto;
 import com.green.campingsmore.config.security.redis.RedisService;
 import com.green.campingsmore.config.security.redis.model.RedisJwtVo;
 import com.green.campingsmore.sign.model.SignInResultDto;
 import com.green.campingsmore.sign.model.SignUpResultDto;
 import com.green.campingsmore.sign.model.UserLogin;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +25,7 @@ import java.util.List;
 @Slf4j
 @Service
 @AllArgsConstructor
+@Transactional
 public class AdminUserService {
     private final AdminUserMapper adminUserMapper;
     private final AuthenticationFacade FACADE;
