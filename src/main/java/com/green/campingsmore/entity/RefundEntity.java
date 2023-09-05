@@ -28,10 +28,12 @@ public class RefundEntity {
 
     @ManyToOne
     @JoinColumn(name = "iuser")
+    @ToString.Exclude
     private UserEntity userEntity;
 
     @OneToOne
     @JoinColumn(name = "iorder_item")
+    @ToString.Exclude
     private OrderItemEntity orderItemEntity;
 
     @Column(nullable = false, name = "refund_start_date")

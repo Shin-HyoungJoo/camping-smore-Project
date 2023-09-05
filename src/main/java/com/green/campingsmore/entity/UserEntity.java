@@ -58,11 +58,10 @@ public class UserEntity extends BaseEntity {
     private int delyn;
     @Column(name = "provider_type", length = 20,nullable = false)
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("KAKAO")
     private ProviderType providerType;
+
     @JsonIgnore
     @Column(name = "role_type", length = 20,nullable = false)
     @Enumerated(EnumType.STRING)
-    @ColumnDefault("USER")
     private RoleType roleType;
 }
