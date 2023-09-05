@@ -15,12 +15,12 @@ import java.util.List;
 public class InsPayInfoDto {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long iuser;
-    private Long ireserve;
     private String address;
     private String addressDetail;
     private Integer totalPrice;
     private Integer shippingPrice;
     private String shippingMemo;
     private PayType type;
+    private Integer ReceiveCampingYn;
     private List<PayDetailInfoVo> purchaseList;
 }

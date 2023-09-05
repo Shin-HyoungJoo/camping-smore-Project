@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
-@Tag(name="환불")
+@Tag(name="환불 아직 건들지 마시오")
 @RestController
 @RequestMapping("/api/admin/refund")
 @RequiredArgsConstructor

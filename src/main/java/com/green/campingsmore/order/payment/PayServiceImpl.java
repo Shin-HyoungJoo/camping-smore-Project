@@ -27,13 +27,9 @@ public class PayServiceImpl implements PayService {
     @Transactional(rollbackFor = {Exception.class})
     public Long insPayInfo(InsPayInfoDto dto) throws Exception {
 
-
-
-        ReserveEntity reserveEntity = dto.getIreserve() == null ? null : resRepo.findById(dto.getIreserve()).get();
-
         OrderEntity orderEntity = OrderEntity.builder()
                 .userEntity(UserEntity.builder().iuser(dto.getIuser()).build())
-                .reserveEntity(reserveEntity)
+                .reserveEntity(null)
                 .address(dto.getAddress())
                 .addressDetail(dto.getAddressDetail())
                 .totalPrice(dto.getTotalPrice())
@@ -43,6 +39,18 @@ public class PayServiceImpl implements PayService {
                 .delYn(1)
                 .shipping(0)
                 .build();
+
+        if(dto.getReceiveCampingYn() < 0 || dto.getReceiveCampingYn() > 1) {
+            throw new Exception("ReceiveCampingYn은 0,1만 가능");
+        }
+
+        if (dto.getReceiveCampingYn() == 1) {   //캠핑지로 주소입력함
+            SelReserveCheckVO reserveCheck = orderRepo.selReserveCheck(dto.getIuser());
+
+            ReserveEntity reserveEntity = resRepo.findById(reserveCheck.getIreserve()).get();
+
+            orderEntity.setReserveEntity(reserveEntity);
+        }
 
         orderRepo.save(orderEntity);    //결제정보저장
 
@@ -69,7 +77,7 @@ public class PayServiceImpl implements PayService {
                 throw new Exception("재고가 없습니다");
             }
 
-            itemResult.setStock(itemStock-purchaseStock);
+            itemResult.setStock(itemStock - purchaseStock);
             ItemRepo.save(itemResult);
 
             orderItemRepo.save(result);
@@ -88,41 +96,82 @@ public class PayServiceImpl implements PayService {
     }
 
     @Override   //querydsl
-    public PaymentDetailDto selPaymentPageItem(Long iitem, Integer quantity, Long ireserve) {
-        if (ireserve == null) {
+    public PaymentDetailDto selPaymentPageItem(Long iitem, Integer quantity, Long iuser) {
+        Integer shppingPrice = 3000;
+
+        SelReserveCheckVO reserveCheck = orderRepo.selReserveCheck(iuser);
+
+        if (reserveCheck == null) {
             PaymentDetailDto result = orderRepo.selPaymentPageItem(iitem);
             result.setQuantity(quantity);
             result.setTotalPrice(result.getPrice() * quantity);
+            result.setReserveYn(0);
             return result;
         }
 
+        PaymentDetailDto result = orderRepo.selPaymentPageItem(iitem);
+        result.setQuantity(quantity);
+        result.setShippingPrice(shppingPrice);
+        result.setTotalPrice(result.getPrice() * quantity + shppingPrice);
+        result.setReserveYn(1);
 
-
-
-
+        SelReserveInfoVo campInfoResult = orderRepo.selCampInfo(reserveCheck.getIreserve());
+        result.setCampInfo(campInfoResult);
+        return result;
     }
 
-    @Override   //완
+    @Override   //완 //배송비
     @Transactional(rollbackFor = {Exception.class}) //querydsl
-    public List<PaymentDetailDto> selPaymentPageItemList(CartPKDto dto) {
+    public CartPaymentDetailDto selPaymentPageItemList(CartPKDto dto, Long iuser) {
 
-        List<PaymentDetailDto> result = orderRepo.selPaymentPageItemList(dto);
-        try {
-            for (PaymentDetailDto item : result) {
-                Integer price = item.getPrice();
-                Integer quantity = item.getQuantity();
-                Integer totalPrice = price * quantity;
-                item.setTotalPrice(totalPrice);
+        SelReserveCheckVO reserveCheck = orderRepo.selReserveCheck(iuser);
+        Integer totalPrice = 0;
+        Integer shippingPrice = 3000;
+
+        if (reserveCheck == null) {
+            List<CartPaymentItemDto> itemList = orderRepo.selPaymentPageItemList(dto);
+            try {
+                for (CartPaymentItemDto item : itemList) {
+                    Integer price = item.getPrice();
+                    Integer quantity = item.getQuantity();
+                    totalPrice += price * quantity;
+                }
+                CartPaymentDetailDto result = CartPaymentDetailDto.builder()
+                        .itemList(itemList)
+                        .shippingPrice(shippingPrice)
+                        .totalPrice(totalPrice + shippingPrice)
+                        .reserveYn(0)
+                        .build();
+                return result;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
+        List<CartPaymentItemDto> itemList = orderRepo.selPaymentPageItemList(dto);
+
+        for (CartPaymentItemDto item : itemList) {
+            Integer price = item.getPrice();
+            Integer quantity = item.getQuantity();
+            totalPrice += price * quantity;
+        }
+
+        CartPaymentDetailDto result = CartPaymentDetailDto.builder()
+                .itemList(itemList)
+                .shippingPrice(shippingPrice)
+                .totalPrice(totalPrice + shippingPrice)
+                .reserveYn(1)
+                .build();
+
+        SelReserveInfoVo campInfoResult = orderRepo.selCampInfo(reserveCheck.getIreserve());
+        result.setCampInfo(campInfoResult);
+
         return result;
     }
 
     @Override   //완
     @Transactional(rollbackFor = {Exception.class}) //jpa
-    public Long delPaymentDetail(Long iorderItem) throws Exception{
+    public Long delPaymentDetail(Long iorderItem) throws Exception {
         try {
             Optional<OrderItemEntity> delYN = orderItemRepo.findById(iorderItem);
             if (delYN.isEmpty()) {
@@ -136,7 +185,7 @@ public class PayServiceImpl implements PayService {
         } catch (Exception e) {
             throw new Exception("없는 PK입니다");
         }
-            return 1L;
+        return 1L;
 
     }
 

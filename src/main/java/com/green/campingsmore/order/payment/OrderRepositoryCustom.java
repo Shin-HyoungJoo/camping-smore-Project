@@ -9,8 +9,9 @@ public interface OrderRepositoryCustom {
     List<SelPaymentDetailDto> selPaymentDetailAll(Long iuser);
     Integer selPriceFromItem(Long iitem);
     Optional<PaymentCompleteDto> selPaymentComplete(Long iorder);
+    SelReserveCheckVO selReserveCheck(Long iuser);
     PaymentDetailDto selPaymentPageItem(Long iitem);
-    PaymentDetailDto selCampInfo(Long iitem);
-    List<PaymentDetailDto> selPaymentPageItemList(CartPKDto dto);
+    SelReserveInfoVo selCampInfo(Long ireserve);
+    List<CartPaymentItemDto> selPaymentPageItemList(CartPKDto dto);
     SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorderItem);
 }
