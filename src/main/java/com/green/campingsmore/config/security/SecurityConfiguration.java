@@ -74,6 +74,7 @@ public class SecurityConfiguration {
                                                 ,"/api/review/**/detail" // 리뷰 리스트
                                                 ,"/api/review/**/**" // 리뷰 리스트
                                                 ,"/api/camp/**/**" // 캠프 예약
+                                                ,"/api/refund/**/**" // 환불
                                                 , "/api/exception"
                                         ).permitAll()
 //                            .requestMatchers(HttpMethod.GET, "").permitAll()
