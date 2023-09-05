@@ -24,6 +24,7 @@ springboot:
     refresh-secret: HelloWorldRefreshTokenCreateBySecretHaHaaasdfasdf
     header-scheme-name: Authorization
     token-type: Bearer
+
 spring:
   thymeleaf:
     check-template-location: true
@@ -41,8 +42,13 @@ spring:
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     jdbc-url: jdbc:mariadb://192.168.0.144:3306/team_e
-    username: team_e
+    username: root
     password: green502
+#  datasource:
+#    driver-class-name: org.mariadb.jdbc.Driver
+#    jdbc-url: jdbc:mariadb://192.168.0.144:3306/team_e
+#    username: team_e
+#    password: green502
   jpa:
     hibernate:
       #      ddl-auto: create-drop
@@ -123,15 +129,17 @@ Naver:
   MAIL_PORT: 465
 # cors
 cors:
-  allowed-origins: 'http://localhost:8082'
+  allowed-origins: 'http://localhost:8080'
   allowed-methods: GET,POST,PUT,DELETE,OPTIONS
   allowed-headers: '*'
   max-age: 3600
+
 ---
+
 spring:
   config:
     activate:
-      on-profile: test
+      on-profile: "test"
   datasource:
     jdbc-url: jdbc:mariadb://localhost:3306/campingsmore_test
     username: root
@@ -144,3 +152,35 @@ spring:
       encoding: UTF-8
   jpa:
     defer-datasource-initialization: true
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+  datasource:
+    jdbc-url: jdbc:mariadb://192.168.0.144:3306/team_e
+  sql:
+    init:
+      mode: never
+  jpa:
+    hibernate:
+      ddl-auto: none
+  data:
+    redis:
+      host: 192.168.0.144
+      port: 6379
+
+# cors
+cors:
+  allowed-origins: 'http://192.168.0.144:5005'
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: '*'
+  max-age: 3600
+
+app:
+  auth:
+  oauth2:
+    authorized-redirect-uris:
+      - http://192.168.0.144:8080/oauth/redirect

@@ -19,8 +19,7 @@ import java.time.LocalDateTime;
 public class RefundRes {
     private Long irefund;
     private Long iuser;
-    private Long iorder;
-    private Long iitem;
+    private Long iorderItem;
     private LocalDateTime refundStartDate;      //환불접수일
     private LocalDateTime refundEndDate;      //환불종료일
     private Integer quantity;

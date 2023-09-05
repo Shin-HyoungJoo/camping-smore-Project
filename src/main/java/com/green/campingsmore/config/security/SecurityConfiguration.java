@@ -44,6 +44,7 @@ public class SecurityConfiguration {
                                                 ,"/api/community/comunity" // 게시판
                                                 ,"/api/community/boardDetail/**" // 게시판
                                                 ,"/api/item/**" // 아이템
+                                                ,"/api/admin/refund/**" // 환불
 //                                                ,"/api/item/bestitem" // 아이템
 //                                                ,"/api/item/search" // 아이템
 //                                                ,"/api/item/category" // 아이템

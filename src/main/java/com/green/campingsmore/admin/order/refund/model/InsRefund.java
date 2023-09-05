@@ -13,8 +13,7 @@ import java.time.LocalDateTime;
 public class InsRefund {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Long iuser;
-    private Long iorder;
-    private Long iitem;
+    private Long iorderItem;
     private LocalDateTime refundStartDate;
     private Integer quantity;
     private Integer totalPrice;
