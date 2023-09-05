@@ -1,4 +1,4 @@
-package com.green.campingsmore.order.refund;
+package com.green.campingsmore.admin.order.refund;
 
 import com.green.campingsmore.entity.RefundEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

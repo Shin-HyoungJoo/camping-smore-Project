@@ -11,4 +11,5 @@ public class PaymentDetailDto {
     private Integer quantity;
     private Integer totalPrice;
     private String pic;
+    private SelReserveInfoVo campInfo;
 }

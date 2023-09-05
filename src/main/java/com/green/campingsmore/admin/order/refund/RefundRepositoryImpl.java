@@ -1,12 +1,9 @@
-package com.green.campingsmore.order.refund;
+package com.green.campingsmore.admin.order.refund;
 
-import com.green.campingsmore.entity.QRefundEntity;
-import com.green.campingsmore.entity.RefundEntity;
-import com.green.campingsmore.order.refund.model.SelRefundVo;
+import com.green.campingsmore.admin.order.refund.model.SelRefundVo;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 

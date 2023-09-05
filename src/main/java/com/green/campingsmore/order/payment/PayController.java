@@ -1,6 +1,5 @@
 package com.green.campingsmore.order.payment;
 
-import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.config.security.model.MyUserDetails;
 import com.green.campingsmore.order.payment.model.*;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,7 +39,7 @@ public class PayController {
                             "<h3>   CODE 0 : DB 정보 저장 실패\n"
     )
     public Long postPayInfo(@AuthenticationPrincipal MyUserDetails user,
-                            @RequestBody InsPayInfoDto dto) {
+                            @RequestBody InsPayInfoDto dto) throws Exception{
         dto.setIuser(user.getIuser());
         return SERVICE.insPayInfo(dto);
     }
@@ -78,10 +77,9 @@ public class PayController {
         return ResponseEntity.ok(SERVICE.selPaymentDetailAll(iuser));
     }
 
-    @GetMapping("/paymentList/detail/{iorder}")
+    @GetMapping("/paymentList/detail/{iorderItem}")
     @Operation(summary = "상세 결제 내역 보기(마이 페이지)",
-            description = "<h3> iorder : 결제내역 PK\n" +
-                    "<h3> iitem : 아이템 PK\n" +
+            description = "<h3> iorderItem : 상세 결제내역 PK\n" +
                     "<h3>-----------------------------------\n" +
                     "<h3> iitem : 아이템 PK\n" +
                     "<h3> name : 아이템 이름\n" +
@@ -96,9 +94,8 @@ public class PayController {
                     "<h3> shippingMemo : 배송 메모\n"
 
     ) //유저마이페이지에서 조회
-    public SelDetailedItemPaymentInfoVo getDetailedItemPaymentInfo(@AuthenticationPrincipal MyUserDetails user,
-                                                                   @PathVariable Long iorder, @RequestParam Long iitem) {
-        return SERVICE.selDetailedItemPaymentInfo(iorder, iitem);
+    public SelDetailedItemPaymentInfoVo getDetailedItemPaymentInfo(@PathVariable Long iorderItem) {
+        return SERVICE.selDetailedItemPaymentInfo(iorderItem);
     }
 
     @PutMapping("/paymentList/{iorderItem}")
@@ -144,8 +141,9 @@ public class PayController {
                             "<h3> totalPrice : 아이템 총 가격\n" +
                             "<h3> Pic : 이미지\n")
     public PaymentDetailDto getPaymentItem(@AuthenticationPrincipal MyUserDetails user,
-                                           @PathVariable Long iitem, @RequestParam Integer quantity) {
-        return SERVICE.selPaymentPageItem(iitem, quantity);
+                                           @PathVariable Long iitem, @RequestParam Integer quantity,
+                                           @RequestParam Long ireserve) {
+        return SERVICE.selPaymentPageItem(iitem, quantity, ireserve);
     }
 
     @PostMapping("/address")

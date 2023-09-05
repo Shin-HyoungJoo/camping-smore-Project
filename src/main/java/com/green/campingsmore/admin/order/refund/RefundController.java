@@ -1,14 +1,13 @@
-package com.green.campingsmore.order.refund;
+package com.green.campingsmore.admin.order.refund;
 
+import com.green.campingsmore.admin.order.refund.model.InsRefund;
 import com.green.campingsmore.config.security.model.MyUserDetails;
-import com.green.campingsmore.order.refund.model.InsRefund;
-import com.green.campingsmore.order.refund.model.PatchRefund;
-import com.green.campingsmore.order.refund.model.RefundRes;
-import com.green.campingsmore.order.refund.model.SelRefundVo;
+import com.green.campingsmore.admin.order.refund.model.PatchRefund;
+import com.green.campingsmore.admin.order.refund.model.RefundRes;
+import com.green.campingsmore.admin.order.refund.model.SelRefundVo;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +16,7 @@ import java.util.List;
 @Slf4j
 @Tag(name="환불")
 @RestController
-@RequestMapping("/refund")
+@RequestMapping("/api/admin/refund")
 @RequiredArgsConstructor
 public class RefundController {
 

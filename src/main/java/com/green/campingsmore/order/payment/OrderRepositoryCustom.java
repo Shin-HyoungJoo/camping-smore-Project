@@ -10,6 +10,7 @@ public interface OrderRepositoryCustom {
     Integer selPriceFromItem(Long iitem);
     Optional<PaymentCompleteDto> selPaymentComplete(Long iorder);
     PaymentDetailDto selPaymentPageItem(Long iitem);
+    PaymentDetailDto selCampInfo(Long iitem);
     List<PaymentDetailDto> selPaymentPageItemList(CartPKDto dto);
-    SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorder, Long iitem);
+    SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorderItem);
 }

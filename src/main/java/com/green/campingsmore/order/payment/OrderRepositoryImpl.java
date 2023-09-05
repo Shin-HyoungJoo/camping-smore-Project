@@ -1,5 +1,6 @@
 package com.green.campingsmore.order.payment;
 
+import static com.green.campingsmore.entity.QCampEntity.*;
 import static com.green.campingsmore.entity.QCartEntity.cartEntity;
 import static com.green.campingsmore.entity.QOrderItemEntity.*;
 
@@ -56,6 +57,17 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
         return result;
     }
 
+    public PaymentDetailDto selCampInfo(Long iitem) {
+        CampEntity
+        queryFactory
+                .select(Projections.fields(SelReserveInfoVo.class,
+
+                        ))
+                .from(campEntity)
+                .join()
+                .where()
+    }
+
     public List<PaymentDetailDto> selPaymentPageItemList(CartPKDto dto) {
         List<Long> list = dto.getIcart();
 
@@ -72,8 +84,9 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 .fetch();
     }
 
-    public SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorder, Long iitem) {
+    public SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorderItem) {
         return queryFactory.select(Projections.fields(SelDetailedItemPaymentInfoVo.class,
+                        orderItemEntity.iorderItem,
                         orderItemEntity.itemEntity.iitem,
                         itemEntity.name,
                         orderItemEntity.price,
@@ -87,12 +100,9 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                         orderEntity.shippingMemo
                 ))
                 .from(orderItemEntity)
-                .innerJoin(orderEntity)
-                .on(orderItemEntity.orderEntity.iorder.eq(orderEntity.iorder))
-                .innerJoin(itemEntity)
-                .on(orderItemEntity.itemEntity.iitem.eq(itemEntity.iitem))
-                .where(orderEntity.iorder.eq(iorder)
-                        .and(orderItemEntity.itemEntity.iitem.eq(iitem)))
+                .join(orderEntity, orderEntity)
+                .join(itemEntity, itemEntity)
+                .where(orderItemEntity.iorderItem.eq(iorderItem))
                 .fetchOne();
     }
 

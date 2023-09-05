@@ -7,13 +7,13 @@ import java.util.Optional;
 
 public interface PayService {
     //결제 관련
-    Long insPayInfo(InsPayInfoDto dto);
+    Long insPayInfo(InsPayInfoDto dto) throws Exception;
     Optional<PaymentCompleteDto> selPaymentComplete(Long iorder);
     List<SelPaymentDetailDto> selPaymentDetailAll(Long iuser);
-    PaymentDetailDto selPaymentPageItem(Long iitem, Integer quantity);
+    PaymentDetailDto selPaymentPageItem(Long iitem, Integer quantity, Long ireserve);
     List<PaymentDetailDto> selPaymentPageItemList(CartPKDto dto);
     Long delPaymentDetail(Long iorderItem) throws Exception;
-    SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorder, Long iitem);
+    SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorderItem);
 
     //주소 관련
     Long insAddress(ShippingInsDto dto);

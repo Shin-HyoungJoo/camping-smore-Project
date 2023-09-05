@@ -3,6 +3,7 @@ package com.green.campingsmore.order.payment;
 import com.green.campingsmore.entity.*;
 import com.green.campingsmore.order.payment.model.*;
 import com.green.campingsmore.user.camping.ReserveRepository;
+import com.green.campingsmore.user.item.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,15 +17,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PayServiceImpl implements PayService {
 
-    private final PayMapper MAPPER;
     private final OrderRepository orderRepo;
     private final OrderItemRepository orderItemRepo;
     private final ReserveRepository resRepo;
     private final ShippingAddressRepository shippingRepo;
+    private final ItemRepository ItemRepo;
 
     @Override       //dsl
     @Transactional(rollbackFor = {Exception.class})
-    public Long insPayInfo(InsPayInfoDto dto) {
+    public Long insPayInfo(InsPayInfoDto dto) throws Exception {
+
+
 
         ReserveEntity reserveEntity = dto.getIreserve() == null ? null : resRepo.findById(dto.getIreserve()).get();
 
@@ -41,7 +44,7 @@ public class PayServiceImpl implements PayService {
                 .shipping(0)
                 .build();
 
-        orderRepo.save(orderEntity);
+        orderRepo.save(orderEntity);    //결제정보저장
 
         List<PayDetailInfoVo> purchaseItem = dto.getPurchaseList();
 
@@ -56,6 +59,18 @@ public class PayServiceImpl implements PayService {
                     .delYn(1)
                     .refund(0)
                     .build();
+
+            ItemEntity itemResult = ItemRepo.findById(item.getIitem()).get();
+
+            Integer itemStock = itemResult.getStock();
+            Integer purchaseStock = item.getQuantity();
+
+            if (itemStock == 0) {
+                throw new Exception("재고가 없습니다");
+            }
+
+            itemResult.setStock(itemStock-purchaseStock);
+            ItemRepo.save(itemResult);
 
             orderItemRepo.save(result);
         }
@@ -73,11 +88,18 @@ public class PayServiceImpl implements PayService {
     }
 
     @Override   //querydsl
-    public PaymentDetailDto selPaymentPageItem(Long iitem, Integer quantity) {
-        PaymentDetailDto result = orderRepo.selPaymentPageItem(iitem);
-        result.setQuantity(quantity);
-        result.setTotalPrice(result.getPrice() * quantity);
-        return result;
+    public PaymentDetailDto selPaymentPageItem(Long iitem, Integer quantity, Long ireserve) {
+        if (ireserve == null) {
+            PaymentDetailDto result = orderRepo.selPaymentPageItem(iitem);
+            result.setQuantity(quantity);
+            result.setTotalPrice(result.getPrice() * quantity);
+            return result;
+        }
+
+
+
+
+
     }
 
     @Override   //완
@@ -119,8 +141,8 @@ public class PayServiceImpl implements PayService {
     }
 
     @Override   //dsl
-    public SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorder, Long iitem) {
-        return orderRepo.selDetailedItemPaymentInfo(iorder, iitem);
+    public SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorderItem) {
+        return orderRepo.selDetailedItemPaymentInfo(iorderItem);
     }
 
     @Override   //jpa
