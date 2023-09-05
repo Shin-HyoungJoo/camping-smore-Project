@@ -11,7 +11,6 @@ import java.util.List;
 public class ReviewRes {
     private Long iitem;
     private int startIdx;
-    private int maxPage;
     private int isMore;
     private int page;
     private int row;

@@ -26,6 +26,8 @@ public class ReserveEntity extends BaseEntity {
     @Column(updatable = false,columnDefinition = "BIGINT UNSIGNED")
     private Long ireserve;
 
+    private LocalDate reservation;
+
     @Column(nullable = false)
     @Size(min = 2)
     private String name;
