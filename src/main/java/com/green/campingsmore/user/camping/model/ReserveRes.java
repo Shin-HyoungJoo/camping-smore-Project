@@ -20,4 +20,5 @@ public class ReserveRes {
     private Long icamp;
     private Long iuser;
     private CampEntity campEntity;
+    private Integer dayQuantity;
 }

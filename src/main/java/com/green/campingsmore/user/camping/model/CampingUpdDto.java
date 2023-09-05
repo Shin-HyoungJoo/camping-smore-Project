@@ -15,5 +15,4 @@ public class CampingUpdDto {
     private Integer price;
     private String name;
     private String note;
-    private LocalDate reservation;
 }

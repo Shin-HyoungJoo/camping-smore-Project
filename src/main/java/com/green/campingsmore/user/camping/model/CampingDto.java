@@ -10,7 +10,6 @@ import java.time.LocalDate;
 public class CampingDto {
     private Integer capacity;
     private Integer quantity;
-    private LocalDate reservation;
     private Integer price;
     private String address;
     private String campPhone;
