@@ -40,7 +40,7 @@ public class PayController {
                             "<h3>   CODE 0 : DB 정보 저장 실패\n"
     )
     public Long postPayInfo(@AuthenticationPrincipal MyUserDetails user,
-                            @RequestBody InsPayInfoDto dto) throws Exception{
+                            @RequestBody InsPayInfoDto dto) throws Exception {
         dto.setIuser(user.getIuser());
         return SERVICE.insPayInfo(dto);
     }
@@ -82,17 +82,18 @@ public class PayController {
     @Operation(summary = "상세 결제 내역 보기(마이 페이지)",
             description = "<h3> iorderItem : 상세 결제내역 PK\n" +
                     "<h3>-----------------------------------\n" +
+                    "<h3> iorderItem : 상세 결제내역 PK\n" +
                     "<h3> iitem : 아이템 PK\n" +
                     "<h3> name : 아이템 이름\n" +
                     "<h3> price : 아이템 가격\n" +
                     "<h3> quantity : 아이템 수량\n" +
                     "<h3> totalPrice : 총 가격\n" +
-                    "<h3> Pic : 사진\n" +
+                    "<h3> pic : 아이템 사진\n" +
                     "<h3> paymentDate : 결제일\n" +
-                    "<h3> address : 주소\n" +
+                    "<h3> address : 주소 \n" +
                     "<h3> addressDetail : 상세 주소\n" +
-                    "<h3> shippingPrice : 배송 가격\n" +
-                    "<h3> shippingMemo : 배송 메모\n"
+                    "<h3> shippingPrice : 배송비 PK\n" +
+                    "<h3> shippingMemo : 배송 메모 PK\n"
 
     ) //유저마이페이지에서 조회
     public SelDetailedItemPaymentInfoVo getDetailedItemPaymentInfo(@PathVariable Long iorderItem) {
@@ -104,10 +105,9 @@ public class PayController {
             description = "<h3> iorderItem : 상세 결제내역 PK\n" +
                     "<h3>-----------------------------------\n" +
                     "<h3>CODE 1 : 선택한 결제내역 삭제\n" +
-                    "<h3>CODE 2 : 선택한 결제내역 삭제 + 텅빈 결제내역 틀 삭제\n" +
                     "<h3>CODE 0 : 삭제되지 않음\n"
     ) //유저마이페이지에서 조회
-    public Long delPaymentDetail(@PathVariable Long iorderItem) throws Exception{
+    public Long delPaymentDetail(@PathVariable Long iorderItem) throws Exception {
         return SERVICE.delPaymentDetail(iorderItem);
     }
 
@@ -117,16 +117,24 @@ public class PayController {
                     "<h3>-----------------------------------\n" +
                     "<h4># Post 요청이지만 아이템 정보를 보여줌 #\n" +
                     "<h3>-----------------------------------\n" +
-                    "<h3> iitem : 아이템 PK\n" +
-                    "<h3> name : 아이템 이름\n" +
-                    "<h3> price : 아이템 가격\n" +
-                    "<h3> quantity : 아이템 수량\n" +
-                    "<h3> ShppingPrice : 배송비\n" +
-                    "<h3> totalPrice : 결제 총 가격(배송비 포함)\n" +
-                    "<h3> Pic : 이미지\n"
+                    "<h3> itemList : 결제 내역 리스트 PK\n" +
+                    "<h3>   └iitem : 아이템 PK\n" +
+                    "<h3>   └name : 아이템 이름\n" +
+                    "<h3>   └price : 아이템 가격\n" +
+                    "<h3>   └quantity : 아이템 수량\n" +
+                    "<h3>   └pic : 사진\n" +
+                    "<h3> shippingPrice : 배송비 PK\n" +
+                    "<h3> totalPrice : 총 가격\n" +
+                    "<h3> reserveYn : 캠핑예약 여부 (\n" +
+                    "<h3> campInfo : 예약 정보\n" +
+                    "<h3>   └icamp : 캠핑지 PK\n" +
+                    "<h3>   └name : 캠핑지 이름 \n" +
+                    "<h3>   └address : 캠핑지 주소 \n" +
+                    "<h3>   └campPhone : 캠핑지 전화 \n" +
+                    "<h3>   └reservation : 예약날짜 \n"
     )
     public CartPaymentDetailDto getPaymentItemList(@AuthenticationPrincipal MyUserDetails user,
-                                                     @RequestBody CartPKDto dto) {
+                                                   @RequestBody CartPKDto dto) {
         return SERVICE.selPaymentPageItemList(dto, user.getIuser());
     }
 
@@ -141,9 +149,18 @@ public class PayController {
                             "<h3> name : 아이템 이름\n" +
                             "<h3> price : 아이템 가격\n" +
                             "<h3> quantity : 아이템 수량\n" +
-                            "<h3> ShppingPrice : 배송비\n" +
+                            "<h3> shppingPrice : 배송비\n" +
                             "<h3> totalPrice : 결제 총 가격(배송비 포함)\n" +
-                            "<h3> Pic : 이미지\n")
+                            "<h3> pic : 이미지\n" +
+                            "<h3> reserveYn : 캠핑 예약 여부 (0 : 예약X, 1: 예약O)\n" +
+                            "<h3> campInfo : 예약 정보\n" +
+                            "<h3>   └icamp : 캠핑지 PK\n" +
+                            "<h3>   └name : 캠핑지 이름 \n" +
+                            "<h3>   └address : 캠핑지 주소 \n" +
+                            "<h3>   └campPhone : 캠핑지 전화 \n" +
+                            "<h3>   └reservation : 예약날짜 \n"
+
+    )
     public PaymentDetailDto getPaymentItem(@AuthenticationPrincipal MyUserDetails user,
                                            @PathVariable Long iitem, @RequestParam Integer quantity) {
         return SERVICE.selPaymentPageItem(iitem, quantity, user.getIuser());

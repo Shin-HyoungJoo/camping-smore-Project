@@ -445,7 +445,7 @@ public class CampingService {
         LocalDate startDate = LocalDate.now(); // 오늘 날짜를 시작일로 설정
 
         for (CampEntity campground : campgrounds) {
-            for (int day = 0; day < 31; day++) { // 31일치 예약 생성
+            for (int day = 0; day < 31; day++) {
                 LocalDate reservationDate = startDate.plusDays(day);
                 ReserveDayEntity reserveDayEntity = ReserveDayEntity.builder()
                         .date(reservationDate)
