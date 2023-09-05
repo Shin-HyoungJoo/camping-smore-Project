@@ -24,12 +24,12 @@ public class CartEntity extends BaseEntity {
     private Long icart;
 
     @JoinColumn(name = "iuser")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @ToString.Exclude
     private UserEntity userEntity;
 
     @JoinColumn(name = "iitem")
-    @ManyToOne(fetch= FetchType.LAZY)
+    @ManyToOne
     @ToString.Exclude
     private ItemEntity itemEntity;
 
