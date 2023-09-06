@@ -20,7 +20,6 @@ import org.hibernate.annotations.DynamicInsert;
 @Data
 @SuperBuilder
 @ToString(callSuper = true)
-@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @DynamicInsert
 public class UserEntity extends BaseEntity {
@@ -71,6 +70,10 @@ public class UserEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
 
+    @JsonIgnore
+    @Column(name = "role_type", length = 20, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RoleType roleType;
 
 
 }
