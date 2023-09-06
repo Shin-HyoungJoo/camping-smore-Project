@@ -42,6 +42,10 @@ public class AdminUserService {
         return adminUserMapper.selectAllusers();
     }
 
+    public UserDto selectUser(Long iuser){
+        return adminUserMapper.selectUser(iuser);
+    }
+
     public SignInResultDto adminSignIn(UserLogin userLogin, String ip){
         String id = userLogin.getUid();
         String password = userLogin.getUpw();
