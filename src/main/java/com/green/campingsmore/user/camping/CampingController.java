@@ -53,6 +53,11 @@ public class CampingController {
     public ResponseEntity<Long> delPic(@RequestBody CampingPicDelDto dto) {
         return ResponseEntity.ok(SERVICE.delPic(dto));
     }
+    @PostMapping("/reserve-camp")
+    @Operation(summary = "예약 가능 캠핑장")
+    public ResponseEntity<DailyRes> InsReserveCamp(@RequestBody DailyDto dto){
+        return ResponseEntity.ok(SERVICE.InsReserveCamp(dto));
+    }
 
     @PostMapping("/reserve")
     @Operation(summary = "예약")
@@ -83,6 +88,7 @@ public class CampingController {
     public ResponseEntity<List<CampingList>> getCampingAll() {
         return ResponseEntity.ok(SERVICE.getCampingAll());
     }
+
     @GetMapping("/detail-camping")
     @Operation(summary = "캠핑장 상세보기")
     public ResponseEntity<List<CampingDetailList>> getDeCamping(@RequestParam Long icamp){
@@ -92,5 +98,17 @@ public class CampingController {
     @Operation(summary = "내 예약 리스트")
     public ResponseEntity<List<CampingMyList>> getMyList(){
         return ResponseEntity.ok(SERVICE.getMyList());
+    }
+
+    @GetMapping("/camping-title")
+    @Operation(summary = "캠핑장 검색")
+    public ResponseEntity<List<CampingList>> getCampingTitle(String name){
+        return ResponseEntity.ok(SERVICE.getCampingTitle(name));
+    }
+    @PostMapping("/camp")
+    @Operation(summary = "캠핑장 31일치 만들기 터치x")
+    public ResponseEntity<List<DailyRes>> InsCampMain(){
+        return ResponseEntity.ok(SERVICE.InsMainCamp());
+
     }
 }

@@ -24,6 +24,21 @@ public class SignController {
     private final SignService SERVICE;
     private final AuthenticationFacade FACADE;
 
+    @PostMapping("/kakao")
+    @Operation(summary = "카카오 로그인",
+            description = "Try it out -> Execute 눌러주세요 \n\n " +
+                    "\"profile_nickname\": \"string\",\n\n" +
+                    "  \"profile_image\": \"string\",\n\n" +
+                    "  \"account_email\": \"string\",\n\n" +
+                    "  \"gender\": \"string\",\n\n" +
+                    "  \"age_range\": \"string\",\n\n" +
+                    "  \"birthday\": \"string\""  +
+                    "\n\n 이 형식으로 오는 것 맞는지 확인해주세요!! - 황주은"
+    )
+    public int kakaoLogin(@RequestBody KaKaoLoginVo kaKaoLoginVo){
+        return SERVICE.kakaoLogin(kaKaoLoginVo);
+    }
+
     //ApiParam은 문서 자동화를 위한 Swagger에서 쓰이는 어노테이션이고
     //RequestParam은 http 로부터 요청 온 정보를 받아오기 위한 스프링 어노테이션이다.
     //@AuthenticationPrincipal을 통해 로그인한 사용자 정보,PK를 받아 사용할 수 있다.
@@ -173,14 +188,5 @@ public class SignController {
     )
     public int searchPW(@RequestBody SearchUserDto searchUserDto) {
         return SERVICE.searchPW(searchUserDto);
-    }
-
-    // 카카오 , 구글, 네이버 SNS 로그인
-    @PostMapping("/sns-login/kakao")
-    @Operation(summary = "SNS Login - 카카오 로그인",
-            description = "Try it out -> Execute 눌러주세요 \n\n "
-    )
-    public void KakaoLogin(){
-
     }
 }

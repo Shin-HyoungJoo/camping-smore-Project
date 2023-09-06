@@ -24,7 +24,10 @@ public class CampEntity {
     @Column(updatable = false,nullable = false,columnDefinition = "BIGINT UNSIGNED")
     private Long icamp;
 
-    private LocalDate reservation;
+    @Column(nullable = false,columnDefinition = "INT UNSIGNED")
+    private Integer quantity;
+
+
 
     @Column(nullable = false)
     private String name;
@@ -44,8 +47,7 @@ public class CampEntity {
     @NotNull
     private Integer price;
 
-    @Column(nullable = false,columnDefinition = "INT UNSIGNED")
-    private Integer quantity;
+
 
     @Column(nullable = false,length = 2)
     private Integer capacity;

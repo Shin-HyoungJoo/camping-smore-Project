@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class ReserveCancelDto {
     private Long ireserve;
-    private Long icamp;
+    private Long iday;
 }

@@ -5,14 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Builder
+@Setter
 public class CampingList {
     private Long icamp;
     private String name;
     private String address;
     private String campPhone;
     private String mainPic;
-    private String city;
 
     public CampingList(Long icamp, String name, String address, String campPhone, String mainPic, String city, Integer delyn) {
         this.icamp = icamp;
@@ -24,5 +23,6 @@ public class CampingList {
         this.delyn = delyn;
     }
 
+    private String city;
     private Integer delyn;
 }

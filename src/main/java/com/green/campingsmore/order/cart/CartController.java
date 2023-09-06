@@ -40,8 +40,7 @@ public class CartController {
             description =
                     "<h3> iitem : 아이템 PK\n" +
                     "<h3> quantity : 아이템 수량\n" +
-                    "<h3>==========================\n" +
-                    "<h3>CODE 1 : 저장 성공\n"
+                    "<h3>==========================\n"
     )
     private ResponseEntity<Optional<CartRes>> postCart(@AuthenticationPrincipal MyUserDetails user,
                                             @RequestBody InsCartDto dto) {
