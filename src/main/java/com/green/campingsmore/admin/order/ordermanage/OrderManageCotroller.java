@@ -1,7 +1,7 @@
-package com.green.campingsmore.admin.main;
+package com.green.campingsmore.admin.order.ordermanage;
 
-import com.green.campingsmore.admin.main.model.SelAggregateVO;
-import com.green.campingsmore.admin.main.model.SelOrderManageVo;
+import com.green.campingsmore.admin.order.ordermanage.model.SelAggregateVO;
+import com.green.campingsmore.admin.order.ordermanage.model.SelOrderManageVo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -19,8 +19,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/admin/order")
 @RequiredArgsConstructor
-public class MainController {
-    private final MainService SERVICE;
+public class OrderManageCotroller {
+    private final OrderManageService SERVICE;
 
 //    @GetMapping
 //    @Operation(summary = "아직 미완")

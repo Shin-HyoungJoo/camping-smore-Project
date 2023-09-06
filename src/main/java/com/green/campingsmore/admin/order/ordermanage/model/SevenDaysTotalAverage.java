@@ -1,4 +1,4 @@
-package com.green.campingsmore.admin.main.model;
+package com.green.campingsmore.admin.order.ordermanage.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

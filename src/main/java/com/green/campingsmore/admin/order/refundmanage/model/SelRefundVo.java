@@ -1,4 +1,4 @@
-package com.green.campingsmore.admin.order.refund.model;
+package com.green.campingsmore.admin.order.refundmanage.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

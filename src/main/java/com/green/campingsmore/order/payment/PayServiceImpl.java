@@ -1,14 +1,17 @@
 package com.green.campingsmore.order.payment;
 
+import com.green.campingsmore.admin.order.refundmanage.RefundRepository;
 import com.green.campingsmore.entity.*;
 import com.green.campingsmore.order.payment.model.*;
 import com.green.campingsmore.user.camping.ReserveRepository;
 import com.green.campingsmore.user.item.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +25,7 @@ public class PayServiceImpl implements PayService {
     private final ReserveRepository resRepo;
     private final ShippingAddressRepository shippingRepo;
     private final ItemRepository ItemRepo;
+    private final RefundRepository refundRepo;
 
     @Override       //dsl
     @Transactional(rollbackFor = {Exception.class})
@@ -233,5 +237,37 @@ public class PayServiceImpl implements PayService {
 
         shippingRepo.deleteById(iaddress);
         return 1L;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public refundRequestRes refundRequest(Long iorderItem, Long iuser) throws Exception {
+        OrderItemEntity entity = orderItemRepo.selByIorderitem(iorderItem);
+//        Optional<OrderItemEntity> optEntity = orderItemRepo.findById(iorderItem);
+//
+//        if (optEntity.isEmpty()) {
+//            throw new Exception("PK에 해당하는 상세주문이 없습니다");
+//        }
+//
+//        OrderItemEntity entity = optEntity.get();
+
+        entity.setRefund(1);
+        orderItemRepo.save(entity);
+
+        RefundEntity refundEntity = RefundEntity.builder()
+                .userEntity(UserEntity.builder().iuser(iuser).build())
+                .orderItemEntity(OrderItemEntity.builder().iorderItem(entity.getIorderItem()).build())
+                .refundStartDate(LocalDateTime.now())
+                .quantity(entity.getQuantity())
+                .totalPrice(entity.getTotalPrice())
+                .build();
+
+        refundRepo.save(refundEntity);
+
+        return  refundRequestRes.builder()
+                .iorderItem(entity.getIorderItem())
+                .iitem(entity.getItemEntity().getIitem())
+                .refund(entity.getRefund())
+                .build();
     }
 }
