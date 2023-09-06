@@ -74,6 +74,10 @@ public class SignService {
         // 이제 토큰들..Redis에 저장?? 그래야 권한 사용 가능??ㅋㅋ
         // 토큰들  Redis 저장해서 써줘야할듯 함..?ㅋㅋㅋ 프론트에서 항상 넣어서 보내줘야하는데
 
+
+        // 로그인한 회원 방문자 카운트 증가 시키기
+        MAPPER.IncreaseUserCount(0,"0");
+
         return MAPPER.kakaoLogin(kaKaoLoginVo.getEmail());
     }
 
