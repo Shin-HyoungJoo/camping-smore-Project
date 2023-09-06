@@ -27,7 +27,6 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 @Component
-@EnableAsync
 public class CampingService {
     private final CampingRepository REP;
     private final CityRepository CITYREP;
@@ -461,6 +460,7 @@ public class CampingService {
                         .campEntity(campground)
                         .build();
                 DAYREP.save(reserveDayEntity);
+                log.info("{}",DAYREP.save(reserveDayEntity));
 
                 reservations.add(DailyRes.builder()
                         .iday(reserveDayEntity.getIday())
@@ -470,13 +470,11 @@ public class CampingService {
                         .build());
             }
         }
-
         return reservations;
     }
-//    @Async
-//    @Scheduled(cron = "*/30 * * * * *")
+//    @Scheduled(cron = "*/10 * * * * *")
 //    @Transactional
-//    public void run(){
+//    public void run() {
 //        log.info("Scheduler is running...");
 //        List<CampEntity> campgrounds = REP.findAll();
 //        LocalDate startDate = LocalDate.now().plusDays(32);
@@ -486,31 +484,27 @@ public class CampingService {
 //                    .dayQuantity(10)
 //                    .campEntity(campground)
 //                    .build();
-//            log.info("{}"+reserveDayEntity);
-//            DAYREP.save(reserveDayEntity);
+//            log.info("{}", reserveDayEntity);
+//            ReserveDayEntity savedEntity = DAYREP.save(reserveDayEntity); // 저장 후 반환된 엔티티 받기
+//            log.info("Saved ReserveDayEntity with iday: {}", savedEntity.getIday());
 //        }
 //    }
-    @Scheduled(cron = "*/30 * * * * *")
-    public List<DailyRes> camp() {
+    @Transactional(transactionManager="baseTransactionManager")
+    @Scheduled(cron = "*/5 * * * * *")
+    public void run() {
         log.info("Scheduler is running...");
-        List<DailyRes> reservations = new ArrayList<>();
-       List<CampEntity> campgrounds = REP.findAll();
-       LocalDate startDate = LocalDate.now().plusDays(32);
-       for (CampEntity campground : campgrounds) {
+        List<CampEntity> campgrounds = REP.findAll();
+        LocalDate startDate = LocalDate.now().plusDays(32);
+        for (int i = 0; i < campgrounds.size(); i++) {
             ReserveDayEntity reserveDayEntity = ReserveDayEntity.builder()
-                   .date(startDate)
+                    .date(startDate)
                     .dayQuantity(10)
-                    .campEntity(campground)
-                   .build();
-            log.info("{}"+reserveDayEntity);
-            DAYREP.save(reserveDayEntity);
-                reservations.add(DailyRes.builder()
-                        .iday(reserveDayEntity.getIday())
-                        .campEntity(reserveDayEntity.getCampEntity())
-                        .date(reserveDayEntity.getDate())
-                        .dayQuantity(reserveDayEntity.getDayQuantity())
-                        .build());
-            }
-        return reservations;
+                    .campEntity(campgrounds.get(i))
+                    .build();
+            ReserveDayEntity savedEntity = DAYREP.saveAndFlush(reserveDayEntity);
+            log.info("{}" + reserveDayEntity);
+
+            log.info("Saved ReserveDayEntity with iday: {}", savedEntity);
+        }
     }
 }

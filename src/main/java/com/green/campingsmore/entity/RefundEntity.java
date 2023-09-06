@@ -48,7 +48,7 @@ public class RefundEntity {
     @Column(nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
     private Integer totalPrice;
 
-    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
+    @Column(name="refund_status", nullable = false, columnDefinition = "TINYINT", length = 1)
     @ColumnDefault("0")
     @Check(constraints = "refund_status IN (0, 1, 2)")
     private Integer refundStatus;
