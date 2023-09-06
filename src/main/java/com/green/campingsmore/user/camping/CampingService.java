@@ -9,8 +9,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -22,6 +26,8 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Component
+@EnableAsync
 public class CampingService {
     private final CampingRepository REP;
     private final CityRepository CITYREP;
@@ -440,6 +446,7 @@ public class CampingService {
         List<CampingList> list = REP.selTitleCamping(name,1);
         return list;
     }
+
     public List<DailyRes> InsMainCamp() {
         List<DailyRes> reservations = new ArrayList<>();
         List<CampEntity> campgrounds = REP.findAll(); // 모든 캠핑장 불러오기
@@ -466,24 +473,44 @@ public class CampingService {
 
         return reservations;
     }
-    @Scheduled(cron = "0 0 0 * * *")
-    public void run(){
+//    @Async
+//    @Scheduled(cron = "*/30 * * * * *")
+//    @Transactional
+//    public void run(){
+//        log.info("Scheduler is running...");
+//        List<CampEntity> campgrounds = REP.findAll();
+//        LocalDate startDate = LocalDate.now().plusDays(32);
+//        for (CampEntity campground : campgrounds) {
+//            ReserveDayEntity reserveDayEntity = ReserveDayEntity.builder()
+//                    .date(startDate)
+//                    .dayQuantity(10)
+//                    .campEntity(campground)
+//                    .build();
+//            log.info("{}"+reserveDayEntity);
+//            DAYREP.save(reserveDayEntity);
+//        }
+//    }
+    @Scheduled(cron = "*/30 * * * * *")
+    public List<DailyRes> camp() {
         log.info("Scheduler is running...");
         List<DailyRes> reservations = new ArrayList<>();
-        List<CampEntity> campgrounds = REP.findAll();
-        LocalDate startDate = LocalDate.now();
-        for (CampEntity campground : campgrounds) {
-            LocalDate reservationDate = startDate.plusDays(31);
+       List<CampEntity> campgrounds = REP.findAll();
+       LocalDate startDate = LocalDate.now().plusDays(32);
+       for (CampEntity campground : campgrounds) {
             ReserveDayEntity reserveDayEntity = ReserveDayEntity.builder()
-                    .date(reservationDate)
+                   .date(startDate)
                     .dayQuantity(10)
                     .campEntity(campground)
-                    .build();
+                   .build();
+            log.info("{}"+reserveDayEntity);
             DAYREP.save(reserveDayEntity);
-            reservations.add(DailyRes.builder().iday(reserveDayEntity.getIday())
-                    .campEntity(reserveDayEntity.getCampEntity())
-                    .date(reserveDayEntity.getDate())
-                    .dayQuantity(reserveDayEntity.getDayQuantity()).build());
-        }
+                reservations.add(DailyRes.builder()
+                        .iday(reserveDayEntity.getIday())
+                        .campEntity(reserveDayEntity.getCampEntity())
+                        .date(reserveDayEntity.getDate())
+                        .dayQuantity(reserveDayEntity.getDayQuantity())
+                        .build());
+            }
+        return reservations;
     }
 }
