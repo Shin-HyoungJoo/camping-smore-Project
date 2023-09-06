@@ -1,10 +1,13 @@
+/*
 package com.green.campingsmore.review;
 
 import com.green.campingsmore.community.board.utils.FileUtils;
 import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.review.model.*;
 import com.green.campingsmore.user.review.ReviewMapper;
-import com.green.campingsmore.user.review.model.ReviewSelVo;
+import com.green.campingsmore.user.review.model.ReviewRes;
+import com.green.campingsmore.user.review.model.ReviewSelRes;
+import com.green.campingsmore.user.review.model.ReviewUpdDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -96,7 +99,7 @@ public class ReviewService2 {
         int isMore = maxPage > dto.getPage() ? 1 : 0;
 
 
-        List<ReviewSelVo> list = MAPPER.selReview(dto);
+        List<ReviewSelRes> list = MAPPER.selReview(dto);
         return ReviewRes.builder()
                 .iitem(dto.getIitem())
 //                .maxPage(maxPage)
@@ -177,6 +180,7 @@ public class ReviewService2 {
 
     }
 
+*/
 /*
     public String updReviewPic(MultipartFile pic, ReviewPicDto dto) {
         ReviewEntity entity = new ReviewEntity();
@@ -215,9 +219,11 @@ public class ReviewService2 {
         }
         return savedFilePath;
     }
-*/
+*//*
+
 
 
 
 
 }
+*/

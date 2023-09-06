@@ -1,7 +1,8 @@
+/*
 package com.green.campingsmore.user.review;
 
 import com.green.campingsmore.review.model.*;
-import com.green.campingsmore.user.review.model.ReviewSelVo;
+import com.green.campingsmore.user.review.model.ReviewSelRes;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -13,10 +14,11 @@ public interface ReviewMapper {
     int selReviewCheck(ReviewEntity2 entity);
     int selReviewOrder(ReviewEntity2 entity);
     int selLastReview(Long iitem);
-    List<ReviewSelVo> selReview(ReviewPageDto dto);
+    List<ReviewSelRes> selReview(ReviewPageDto dto);
     int updReview(ReviewEntity2 entity);
     int updReviewPic(ReviewEntity2 entity);
     int delReview(ReviewDelDto dto);
 
 
 }
+*/

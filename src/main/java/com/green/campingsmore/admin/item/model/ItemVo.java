@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -14,6 +15,6 @@ public class ItemVo {
     private String name;
     private String pic;
     private Integer price;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     private Integer wish;
 }
