@@ -51,6 +51,22 @@ public class ItemDao {
     }
 
     public List<ItemVo> searchItem(Pageable page, Long cate, String text) {
+
+        // 찜하기 나타내기 위해서 요청 들어오자마자 로그인 유무를 확인한다.
+//        if(facade.getLoginUser() == null){  // 비로그인일 경우 false  ==> 찜하기 속성이 0? 인걸로 리스트 뱉어준다.
+//            System.out.println("비로그인 !!!!");
+//
+//
+//        } else { // 로그인 했을 경우 true ==> 로그인이 확인되었으니까 유저의 PK를 이제부터 조회할 수 있다.
+//            facade.getLoginUserPk(); // 유저의 PK를 불러 오는 메서드이다. Long 타입 반환
+//            log.info("로그를 찍어줘:{}",page);
+//        }
+
+        BooleanBuilder userBuilder = new BooleanBuilder();
+        if(facade.isLogin()){ // 로그인 했을 경우 true ==> 로그인이 확인되었으니까 유저의 PK를 이제부터 조회할 수 있다.
+            userBuilder.and(u.iuser.eq(facade.getLoginUserPk())).and(w.itemEntity.iitem.eq(i.iitem)); // 유저의 PK를 불러 오는 메서드이다. Long 타입 반환
+        }
+        
         BooleanBuilder searchBuilder = new BooleanBuilder();
         if(cate != null && text == null) {
             searchBuilder.and(c.iitemCategory.eq(cate));
@@ -61,9 +77,10 @@ public class ItemDao {
         }
 
 
+        
         JPQLQuery<ItemVo> query = jpaQueryFactory.select(Projections.bean(ItemVo.class,
                        i.iitem, i.name, i.pic, i.price,i.createdAt,
-                        ExpressionUtils.as(JPAExpressions.select(w.delYn).from(w).where(u.iuser.eq(facade.getLoginUserPk()).and(w.itemEntity.iitem.eq(i.iitem))), "wish")
+                        ExpressionUtils.as(JPAExpressions.select(w.delYn).from(w).where(userBuilder), "wish")
                 ))
                 .from(i)
                 .join(i.itemCategoryEntity, c)
