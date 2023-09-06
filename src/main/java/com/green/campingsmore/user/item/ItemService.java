@@ -32,8 +32,8 @@ public class ItemService {
         return list;
     }
 
-    public ItemSelDetailRes searchItem(Pageable page) {
-        List<ItemVo> list = itemDao.selItem(page);
+    public ItemSelDetailRes searchItem(Pageable page, Long cate, String text) {
+        List<ItemVo> list = itemDao.searchItem(page, cate, text);
         Integer startIdx = page.getPageNumber() * page.getPageSize();
         Integer count = itemDao.itemCount();
         Integer maxPage = (int)Math.ceil((double) count / page.getPageSize());
