@@ -1,8 +1,10 @@
 package com.green.campingsmore.order.payment;
 
 import com.green.campingsmore.admin.main.model.SelAggregateVO;
+import com.green.campingsmore.admin.main.model.SelOrderManageVo;
 import com.green.campingsmore.order.payment.model.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,4 +18,5 @@ public interface OrderRepositoryCustom {
     List<CartPaymentItemDto> selPaymentPageItemList(CartPKDto dto);
     SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorderItem);
     List<SelAggregateVO> selAggregateInfo();
+    List<SelOrderManageVo> SelOrderManageInfo(LocalDate startDate, LocalDate endDate, Integer listBox, Object keyword);
 }

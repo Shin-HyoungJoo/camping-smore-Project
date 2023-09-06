@@ -27,15 +27,22 @@ public class SignController {
     @PostMapping("/kakao")
     @Operation(summary = "카카오 로그인",
             description = "Try it out -> Execute 눌러주세요 \n\n " +
-                    "\"profile_nickname\": \"string\",\n\n" +
-                    "  \"profile_image\": \"string\",\n\n" +
-                    "  \"account_email\": \"string\",\n\n" +
-                    "  \"gender\": \"string\",\n\n" +
-                    "  \"age_range\": \"string\",\n\n" +
-                    "  \"birthday\": \"string\""  +
+                    "\"connected_at\": \"날짜 형식\",\n\n" +
+                    "  \"id\": \"61616468 숫자\",\n\n" +
+                    "  \"email\": \"rlahfld54@kakao.com 이런 형식\",\n\n" +
+                    "  \"access_token\": \"string\",\n\n" +
+                    "  \"refresh_token\": \"string\",\n\n" +
                     "\n\n 이 형식으로 오는 것 맞는지 확인해주세요!! - 황주은"
     )
     public int kakaoLogin(@RequestBody KaKaoLoginVo kaKaoLoginVo){
+//        if(FACADE.getLoginUser() == null){  // 비로그인일 경우 false  ==> 찜하기 속성이 0? 인걸로 리스트 뱉어준다.
+//            System.out.println("비로그인 !!!!");
+//
+//
+//        } else { // 로그인 했을 경우 true ==> 로그인이 확인되었으니까 유저의 PK를 이제부터 조회할 수 있다.
+//            FACADE.getLoginUserPk(); // 유저의 PK를 불러 오는 메서드이다. Long 타입 반환
+//            log.info("로그를 찍어줘:{}");
+//        }
         return SERVICE.kakaoLogin(kaKaoLoginVo);
     }
 
