@@ -44,14 +44,9 @@ public class SecurityConfiguration {
                                                 , "/swagger-ui/**"
                                                 , "/v3/api-docs/**"
 
-                                                , "/*/oauth2/code/*"
                                                 , "/oauth2/**"
                                                 , "/oauth/**"
-                                                , "/pic/**"
-                                                , "/error"
-                                                , "/err"
-                                                ,"/api/v1/auth/**"
-                                                ,"/api/v1/feed/**"
+                                                , "/*/oauth2/code/*"
 
                                                 ,"/api/notuser" // 비회원 방문 카운트 증가
                                                 ,"/api/oauth/authorize" //로그인
@@ -81,7 +76,8 @@ public class SecurityConfiguration {
                                         .requestMatchers("**exception**").permitAll()
                                         .requestMatchers("/api/admin/oauth/authorize").permitAll()
                                         .requestMatchers("/api/admin/manage").hasRole("ADMIN")
-                                        .anyRequest().hasAnyRole("USER", "ADMIN")
+//                                        .anyRequest().hasAnyRole("USER", "ADMIN") // 로그인한 사람만 수락
+                                        .anyRequest().permitAll()// 모든 권한 수락
                 ) //사용 권한 체크
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //세션 사용 X
                 .httpBasic(http -> http.disable()) //UI 있는 시큐리티 설정을 비활성화
