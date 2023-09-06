@@ -24,19 +24,18 @@ public class CommentEntity extends BaseEntity {
     private Long icomment;
 
     @JoinColumn(name = "iboard",nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @ToString.Exclude
     private BoardEntity boardEntity;
 
     @JoinColumn(name = "iuser",nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @ToString.Exclude
     private UserEntity userEntity;
 
     @Column(nullable = false, length = 100)
     private String ctnt;
 
-    @Column(length = 1, columnDefinition = "TINYINT")
-    @ColumnDefault("1")
+    @Column(length = 1, columnDefinition = "TINYINT not null CHECK(delyn in (0,1))")
     private Integer delYn;
 }

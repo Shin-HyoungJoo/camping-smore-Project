@@ -489,22 +489,22 @@ public class CampingService {
 //            log.info("Saved ReserveDayEntity with iday: {}", savedEntity.getIday());
 //        }
 //    }
-//    @Transactional(transactionManager="baseTransactionManager")
-//    @Scheduled(cron = "*/5 * * * * *")
-//    public void run() {
-//        log.info("Scheduler is running...");
-//        List<CampEntity> campgrounds = REP.findAll();
-//        LocalDate startDate = LocalDate.now().plusDays(32);
-//        for (int i = 0; i < campgrounds.size(); i++) {
-//            ReserveDayEntity reserveDayEntity = ReserveDayEntity.builder()
-//                    .date(startDate)
-//                    .dayQuantity(10)
-//                    .campEntity(campgrounds.get(i))
-//                    .build();
-//            ReserveDayEntity savedEntity = DAYREP.saveAndFlush(reserveDayEntity);
-//            log.info("{}" + reserveDayEntity);
-//
-//            log.info("Saved ReserveDayEntity with iday: {}", savedEntity);
-//        }
-//    }
+    @Transactional(transactionManager="baseTransactionManager")
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void run() {
+        log.info("Scheduler is running...");
+        List<CampEntity> campgrounds = REP.findAll();
+        LocalDate startDate = LocalDate.now().plusDays(31);
+        for (int i = 0; i < campgrounds.size(); i++) {
+            ReserveDayEntity reserveDayEntity = ReserveDayEntity.builder()
+                    .date(startDate)
+                    .dayQuantity(10)
+                    .campEntity(campgrounds.get(i))
+                    .build();
+            ReserveDayEntity savedEntity = DAYREP.saveAndFlush(reserveDayEntity);
+            log.info("{}" + reserveDayEntity);
+
+            log.info("Saved ReserveDayEntity with iday: {}", savedEntity);
+        }
+    }
 }

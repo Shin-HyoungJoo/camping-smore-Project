@@ -22,8 +22,7 @@ public class BoardImageEntity extends BaseEntity {
     private Long iboardPic;
 
     @JoinColumn(name = "iboard",nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @ToString.Exclude
+    @ManyToOne
     private BoardEntity boardEntity;
 
     @Column(nullable = false, length = 200)
