@@ -40,11 +40,10 @@ public class CampEntity {
     private String mainPic;
 
     @Column(name = "camp_phone",nullable = false)
-    @NotNull
     @Size(min = 9,max = 20)
     private String campPhone;
 
-    @NotNull
+    @Column(nullable = false)
     private Integer price;
 
 

@@ -22,11 +22,11 @@ public class ReserveDayEntity {
 
     private LocalDate date;
 
-    @Column(nullable = false,columnDefinition = "INT UNSIGNED")
+    @Column(name = "day_quantity",nullable = false,columnDefinition = "INT UNSIGNED")
     private Integer dayQuantity;
 
     @ManyToOne
-    @JoinColumn(name = "icamp")
+    @JoinColumn(name = "icamp",nullable = false)
     private CampEntity campEntity;
 
 }
