@@ -6,12 +6,9 @@ import lombok.Data;
 @Data
 @Builder
 public class KaKaoLoginVo {
-    private String profile_nickname;
-    private String profile_image;
-    private String account_email;
-    private String gender;
-    private String age_range;
-    private String birthday;
-//    private String accessToken;
-//    private String refreshToken;
+    private String connected_at;
+    private Long id;
+    private String email;
+    private String access_token;
+    private String refresh_token;
 }
