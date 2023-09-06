@@ -34,11 +34,11 @@ public class ItemEntity extends BaseEntity {
     private ItemCategoryEntity itemCategoryEntity;
 
     @Column(nullable = false,length = 100, name = "\"name\"")
-    @NotNull
+//    @NotNull
     private String name;
 
     @Column(nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
-    @NotNull
+//    @NotNull
     private Integer price;
 
     @Column

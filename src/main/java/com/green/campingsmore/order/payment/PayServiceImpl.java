@@ -7,7 +7,6 @@ import com.green.campingsmore.user.camping.ReserveRepository;
 import com.green.campingsmore.user.item.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -242,21 +241,21 @@ public class PayServiceImpl implements PayService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public refundRequestRes refundRequest(Long iorderItem, Long iuser) throws Exception {
-        OrderItemEntity entity = orderItemRepo.selByIorderitem(iorderItem);
-//        Optional<OrderItemEntity> optEntity = orderItemRepo.findById(iorderItem);
+//        OrderItemEntity entity = orderItemRepo.selByIorderitem(iorderItem);
+        Optional<OrderItemEntity> optEntity = orderItemRepo.findById(iorderItem);
 //
-//        if (optEntity.isEmpty()) {
-//            throw new Exception("PK에 해당하는 상세주문이 없습니다");
-//        }
-//
-//        OrderItemEntity entity = optEntity.get();
+        if (optEntity.isEmpty()) {
+            throw new Exception("PK에 해당하는 상세주문이 없습니다");
+        }
+
+        OrderItemEntity entity = optEntity.get();
 
         entity.setRefund(1);
         orderItemRepo.save(entity);
 
         RefundEntity refundEntity = RefundEntity.builder()
                 .userEntity(UserEntity.builder().iuser(iuser).build())
-                .orderItemEntity(OrderItemEntity.builder().iorderItem(entity.getIorderItem()).build())
+                .orderItemEntity(OrderItemEntity.builder().iorderitem(entity.getIorderitem()).build())
                 .refundStartDate(LocalDateTime.now())
                 .quantity(entity.getQuantity())
                 .totalPrice(entity.getTotalPrice())
@@ -265,7 +264,7 @@ public class PayServiceImpl implements PayService {
         refundRepo.save(refundEntity);
 
         return  refundRequestRes.builder()
-                .iorderItem(entity.getIorderItem())
+                .iorderItem(entity.getIorderitem())
                 .iitem(entity.getItemEntity().getIitem())
                 .refund(entity.getRefund())
                 .build();

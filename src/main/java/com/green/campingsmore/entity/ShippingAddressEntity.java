@@ -23,21 +23,18 @@ public class ShippingAddressEntity {
     private Long iaddress;
 
     @JoinColumn(name = "iuser")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private UserEntity userEntity;
 
-    @Column(length = 100)
-    @NotNull
+    @Column(nullable = false, length = 100)
     private String address;
 
-    @Column(length = 100)
+    @Column(name = "address_detail",length = 100)
     private String addressDetail;
 
-    @Column(length = 20)
-    @NotNull
+    @Column(nullable = false, length = 20)
     private String name;
 
-    @Column(length = 11)
-    @NotNull
+    @Column(nullable = false, length = 11)
     private String phone;
 }

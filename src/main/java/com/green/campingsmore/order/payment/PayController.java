@@ -241,7 +241,7 @@ public class PayController {
         return SERVICE.delAddress(iaddress);
     }
 
-    @PatchMapping("/payment-list/detail")
+    @PutMapping("/payment-list/detail")
     @Operation(summary = "해당 상세주문 환불 요청",
             description = "<h3> iorderItem : 상세 주문 PK\n" +
                     "<h3>-----------------------------------\n" +

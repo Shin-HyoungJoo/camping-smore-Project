@@ -45,14 +45,13 @@ public class RefundEntity {
     @Column(nullable = false, columnDefinition = "TINYINT", length = 2)
     private Integer quantity;
 
-    @Column(nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
+    @Column(name = "total_price", nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
     private Integer totalPrice;
 
-    @Column(columnDefinition = "TINYINT not null DEFAULT 0 CHECK(refund_status in (0,1,2,3))", length = 1)
+    @Column(name = "refund_status", columnDefinition = "TINYINT not null DEFAULT 0 CHECK(refund_status in (0,1,2,3))", length = 1)
     private Integer refundStatus;
 
-    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
+    @Column(name = "del_yn", nullable = false, columnDefinition = "TINYINT", length = 1)
     @ColumnDefault("1")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer delYn;
 }

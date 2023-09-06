@@ -36,22 +36,20 @@ public class OrderEntity extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String address;
 
-    @Column(length = 100)
+    @Column(name = "address_detail", length = 100)
     private String addressDetail;
 
-    @Column(nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
+    @Column(name = "total_price", nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
     private Integer totalPrice;
 
-    @Column(nullable = false, length = 10, columnDefinition = "INT UNSIGNED")
+    @Column(name = "shipping_price", nullable = false, length = 10, columnDefinition = "INT UNSIGNED")
     @ColumnDefault("3000")
     private Integer shippingPrice;
 
-    @Column(length = 100)
+    @Column(name = "shipping_memo", length = 100)
     private String shippingMemo;
 
-    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
-    @ColumnDefault("1")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @Column(name = "del_yn", columnDefinition = "TINYINT not null DEFAULT 0", length = 1)
     private Integer delYn;
 
     //KAKAO, CARD
