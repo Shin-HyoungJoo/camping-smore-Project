@@ -48,9 +48,7 @@ public class OrderItemEntity extends BaseEntity {
     private Integer totalPrice;
 
     //0 - default, 1 - 환불 진행중, 2 - 환불 완료, 3 - 환불 불가
-    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
-    @ColumnDefault("0")
-    @Check(constraints = "refund IN (0, 1, 2, 3)")
+    @Column(columnDefinition = "TINYINT not null DEFAULT 0 CHECK(refund in (0,1,2,3))", length = 1)
     private Integer refund;
 
     @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
