@@ -64,6 +64,8 @@ public class PayController {
     @Operation(summary = "전체 결제 내역 보기(마이 페이지)",
             description = "<h3> iorder : 주문 PK\n" +
                     "<h3>-----------------------------------\n" +
+                    "<h3> iorder : 주문 PK\n" +
+                    "<h3> shipping : 배송 상태 (0 : 배송 준비중, 1 : 배송중, 2 : 배송완료, 3 : 배송취소)\n" +
                     "<h3> itemList : 결제 내역 리스트 PK\n" +
                     "<h3>   └iitem : 아이템 PK\n" +
                     "<h3>   └name : 아이템 이름 PK\n" +

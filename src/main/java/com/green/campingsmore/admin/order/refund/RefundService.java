@@ -18,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RefundService {
     private final RefundRepository refundRepo;
+    private final OrderItemRepository orderItemRepo;
 
     public RefundRes insRefund(InsRefund dto) {
 
@@ -30,10 +31,11 @@ public class RefundService {
                 .refundStatus(0)
                 .delYn(1)
                 .build();
-
         refundRepo.save(entity);
 
-
+        OrderItemEntity orderItemEntity = orderItemRepo.findById(dto.getIorderItem()).get();
+        orderItemEntity.setRefund(1);
+        orderItemRepo.save(orderItemEntity);
 
         return RefundRes.builder()
                 .irefund(entity.getIrefund())
