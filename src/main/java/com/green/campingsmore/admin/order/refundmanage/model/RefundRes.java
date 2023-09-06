@@ -1,14 +1,9 @@
-package com.green.campingsmore.admin.order.refund.model;
+package com.green.campingsmore.admin.order.refundmanage.model;
 
-import com.green.campingsmore.entity.OrderItemEntity;
-import com.green.campingsmore.entity.UserEntity;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Check;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 

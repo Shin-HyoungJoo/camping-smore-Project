@@ -240,4 +240,22 @@ public class PayController {
     public Long delAddress(@PathVariable Long iaddress) {
         return SERVICE.delAddress(iaddress);
     }
+
+    @PatchMapping("/payment-list/detail")
+    @Operation(summary = "해당 상세주문 환불 요청",
+            description = "<h3> iorderItem : 상세 주문 PK\n" +
+                    "<h3>-----------------------------------\n" +
+                    "<h3>iorderItem : 주문 상세 PK\n" +
+                    "<h3>iitem : 아이템PK\n" +
+                    "<h3>refund : 환불 상태 \n" +
+                    "<h3>  └0 : 환불 전(기본값) \n" +
+                    "<h3>  └1 : 환불 진행중 \n" +
+                    "<h3>  └2 : 환불 완료 \n" +
+                    "<h3>  └3 : 환불 불가 \n" +
+                    "<h3>  ## refund가 1이 되면 관리자 측에 환불 정보가 넘어감 "
+    )
+    public refundRequestRes refundRequest (@AuthenticationPrincipal MyUserDetails user,
+                               @RequestBody patchRefundDto dto) throws Exception {
+        return SERVICE.refundRequest(dto.getIorderItem(), user.getIuser());
+    }
 }
