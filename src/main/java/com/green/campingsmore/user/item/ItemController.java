@@ -1,5 +1,6 @@
 package com.green.campingsmore.user.item;
 
+import com.green.campingsmore.admin.item.model.ItemVo;
 import com.green.campingsmore.item.model.ItemDetailReviewVo;
 import com.green.campingsmore.item.model.ItemSearchDto;
 import com.green.campingsmore.item.model.ItemSelDetailDto;
@@ -63,4 +64,13 @@ public class ItemController {
 
         return ResponseEntity.ok(service.selDetail(page, iitem));
     }
+
+    // 추천 아이템 ------------------------------------------------------------------------------------------------------
+    @GetMapping("/bestitem")
+    @Operation(summary = "추천 아이템 리스트"
+            , description = "" )
+    public ResponseEntity<List<ItemVo>> getBestItem() {
+        return ResponseEntity.ok(service.selBestItem());
+    }
+
 }

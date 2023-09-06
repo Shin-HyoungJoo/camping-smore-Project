@@ -21,16 +21,13 @@ import java.time.LocalDate;
 public class BestItemEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED")
-    @NotNull
-    private Long id;
+    @Column(name = "ibest_item",updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED")
+    private Long ibestItem;
 
-    @JoinColumn(name = "iitem")
+    @JoinColumn(name = "iitem", nullable = false)
     @ManyToOne
-    @NotNull
     private ItemEntity itemEntity;
 
-    @Column(nullable = false, columnDefinition = "DATE")
-    @NotNull
+    @Column(name = "month_like", nullable = false)
     private LocalDate monthLike;
 }

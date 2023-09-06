@@ -1,18 +1,15 @@
 package com.green.campingsmore.user.item;
 
-import com.green.campingsmore.admin.item.model.ItemDetailPicVo;
+import com.green.campingsmore.admin.item.model.AdminItemCateVo;
 import com.green.campingsmore.admin.item.model.ItemVo;
 import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.entity.*;
 import com.green.campingsmore.item.model.ItemSelDetailVo;
-import com.green.campingsmore.user.item.model.ItemSelAllParam;
 import com.green.campingsmore.user.item.model.ItemSelCateVo;
-import com.green.campingsmore.user.review.model.ReviewSelRes;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.ExpressionUtils;
-import com.querydsl.core.types.Order;
-import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -22,10 +19,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.querydsl.core.types.ExpressionUtils.count;
+import static java.time.LocalDate.now;
 
 @Slf4j
 @Component
@@ -37,7 +35,53 @@ public class ItemDao {
     private final QWishlistEntity w = QWishlistEntity.wishlistEntity;
     private final QItemDetailPicEntity dp = QItemDetailPicEntity.itemDetailPicEntity;
     private final QUserEntity u = QUserEntity.userEntity;
+
+    private final QBestItemEntity bi = QBestItemEntity.bestItemEntity;
+
     private final AuthenticationFacade facade;
+
+
+    // 관리자 아이템 ------------------------------------------------------------------------------------------------------
+
+    public List<AdminItemCateVo> selAdminCategory() {
+        JPQLQuery<AdminItemCateVo> query = jpaQueryFactory.select(Projections.bean(AdminItemCateVo.class,
+                        c.iitemCategory, c.name, c.status
+                ))
+                .from(c)
+                .orderBy(c.name.desc())
+                .where(c.status.eq(1).or(c.status.eq(2)));
+
+        return query.fetch();
+    }
+
+    public List<ItemVo> searchAdminItem(Pageable page, Long cate, String text, LocalDate searchStartDate, LocalDate searchEndDate) {
+
+
+
+        BooleanBuilder searchBuilder = new BooleanBuilder();
+        if(cate != null && text == null) {
+            searchBuilder.and(c.iitemCategory.eq(cate));
+        } else if (text != null && cate == null) {
+            searchBuilder.and(i.name.contains(text));
+        } else if (text != null && cate != null){
+            searchBuilder.and(c.iitemCategory.eq(cate)).and(i.name.contains(text));
+        }
+
+        JPQLQuery<ItemVo> query = jpaQueryFactory.select(Projections.bean(ItemVo.class,
+                        c.iitemCategory, i.iitem, i.name, i.pic, i.price,i.createdAt, i.status
+
+                ))
+                .from(i)
+                .join(i.itemCategoryEntity, c)
+                .where(searchBuilder.and(i.status.eq(1)).or(i.status.eq(2)))
+                .orderBy(getAllOrderSpecifiers(page))
+                .offset(page.getOffset())
+                .limit(page.getPageSize());
+
+        return query.fetch();
+    }
+
+    // 유저 아이템 ------------------------------------------------------------------------------------------------------
 
     public List<ItemSelCateVo> selCategory() {
         JPQLQuery<ItemSelCateVo> query = jpaQueryFactory.select(Projections.bean(ItemSelCateVo.class,
@@ -51,6 +95,14 @@ public class ItemDao {
     }
 
     public List<ItemVo> searchItem(Pageable page, Long cate, String text) {
+
+        BooleanBuilder userBuilder = new BooleanBuilder();
+        if(facade.getLoginUser() != null){
+            userBuilder.and(u.iuser.eq(facade.getLoginUserPk())).and(w.itemEntity.iitem.eq(i.iitem));
+        } else {
+            userBuilder.and(u.iuser.eq(0L));
+        }
+        
         BooleanBuilder searchBuilder = new BooleanBuilder();
         if(cate != null && text == null) {
             searchBuilder.and(c.iitemCategory.eq(cate));
@@ -60,10 +112,9 @@ public class ItemDao {
             searchBuilder.and(c.iitemCategory.eq(cate)).and(i.name.contains(text));
         }
 
-
         JPQLQuery<ItemVo> query = jpaQueryFactory.select(Projections.bean(ItemVo.class,
                        i.iitem, i.name, i.pic, i.price,i.createdAt,
-                        ExpressionUtils.as(JPAExpressions.select(w.delYn).from(w).where(u.iuser.eq(facade.getLoginUserPk()).and(w.itemEntity.iitem.eq(i.iitem))), "wish")
+                        ExpressionUtils.as(JPAExpressions.select(w.delYn).from(w).where(userBuilder), "wish")
                 ))
                 .from(i)
                 .join(i.itemCategoryEntity, c)
@@ -110,6 +161,32 @@ public class ItemDao {
                 .fetchOne());
 
     }
+
+    // 유저 추천 아이템 ------------------------------------------------------------------------------------------------------
+    public List<ItemVo> selBestItem() {
+
+        BooleanBuilder userBuilder = new BooleanBuilder();
+        if(facade.getLoginUser() != null){
+            userBuilder.and(u.iuser.eq(facade.getLoginUserPk())).and(w.itemEntity.iitem.eq(i.iitem));
+        } else {
+            userBuilder.and(u.iuser.eq(0L));
+        }
+
+        StringExpression likeDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m')", bi.monthLike);
+        StringExpression nowDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m')", now());
+
+        JPQLQuery<ItemVo> query = jpaQueryFactory.select(Projections.bean(ItemVo.class,
+                        i.iitem, i.name, i.pic, i.price,i.createdAt,
+                        ExpressionUtils.as(JPAExpressions.select(w.delYn).from(w).where(userBuilder), "wish")
+                ))
+                .from(bi)
+                .join(bi.itemEntity, i)
+                .where(likeDate.eq(nowDate))
+                .orderBy();
+
+        return query.fetch();
+    }
+
 }
 
 

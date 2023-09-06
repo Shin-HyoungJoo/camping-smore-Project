@@ -40,7 +40,8 @@ public class ItemService {
         Integer isMore = maxPage > page.getPageNumber()+1 ? 1 : 0;
 
         return ItemSelDetailRes.builder()
-//                .iitemCategory(param.getIitemCategory())
+                .iitemCategory(cate)
+                .text(text)
                 .startIdx(startIdx)
                 .isMore(isMore)
                 .page(page.getPageNumber())
@@ -61,5 +62,13 @@ public class ItemService {
                 .review(reviewRes)
                 .build();*/
         return null;
+    }
+
+
+    // 추천 아이템 ------------------------------------------------------------------------------------------------------
+
+    public List<ItemVo> selBestItem() {
+        List<ItemVo> list = itemDao.selBestItem();
+        return list;
     }
 }

@@ -28,17 +28,15 @@ public class ItemEntity extends BaseEntity {
     @Column(updatable = false,nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
     private Long iitem;
 
-    @JoinColumn(name = "iitemCategory")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "iitem_category")
+    @ManyToOne
     @ToString.Exclude
     private ItemCategoryEntity itemCategoryEntity;
 
     @Column(nullable = false,length = 100, name = "\"name\"")
-    @NotNull
     private String name;
 
     @Column(nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
-    @NotNull
     private Integer price;
 
     @Column
@@ -47,7 +45,7 @@ public class ItemEntity extends BaseEntity {
     @Column(length = 500)
     private String pic;
 
-    @Column(columnDefinition = "INT UNSIGNED",nullable = false)
+    @Column(nullable = false, columnDefinition = "INT UNSIGNED")
     private Integer stock;
 
     @Column(columnDefinition = "TINYINT not null DEFAULT 1 CHECK(status in (0,1,2))", length = 1)

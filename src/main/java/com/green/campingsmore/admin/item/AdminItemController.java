@@ -1,13 +1,19 @@
 package com.green.campingsmore.admin.item;
 
 import com.green.campingsmore.admin.item.model.*;
-import com.green.campingsmore.entity.ItemDetailPicEntity;
+import com.green.campingsmore.item.model.ItemSelDetailRes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -18,15 +24,44 @@ public class AdminItemController {
     private final AdminItemService service;
 
 
-    // 아이템 ------------------------------------------------------------------------------------------------------
+    // 카테고리 ------------------------------------------------------------------------------------------------------
 
     @PostMapping("/category")
     @Operation(summary = "아이템 카테고리 추가")
-    public ResponseEntity<ItemCategoryVo> postItemCategory(@RequestBody ItemCategoryInsDto dto) {
-        ItemCategoryVo vo = service.saveCategory(dto);
+    public ResponseEntity<String> postItemCategory(@RequestBody ItemCategoryInsDto dto) {
+        return ResponseEntity.ok(service.saveCategory(dto));
+    }
+
+    @GetMapping("/category")
+    @Operation(summary = "아이템 카테고리 리스트"
+            , description = ""+
+            "\"iitemCategory\": [-] 아이템 카테고리 PK,<br>" +
+            "\"name\": [-] 아이템 카테고리명,<br>" +
+            "\"status\": [-] 아이템 상태(판매중(1): 유저에게 노출 / 판매중지(2): 유저에게 노출되지않음),<br>" )
+    public ResponseEntity<List<AdminItemCateVo>> getCategory(){
+        return ResponseEntity.ok(service.selAdminCategory());
+    }
+
+    @PutMapping("/category")
+    @Operation(summary = "아이템 카테고리 리스트"
+            , description = "" +
+            "\"iitemCategory\": [-] 아이템 카테고리 PK,<br>" +
+            "\"name\": [-] 아이템 카테고리명,<br>" +
+            "\"status\": [-] 아이템 상태(삭제(0) / 판매중(1): 유저에게 노출 / 판매중지(2): 유저에게 노출되지않음),<br>")
+    public ResponseEntity<AdminItemCateVo> updCategory(@RequestBody AdminItemUpdCateDto dto) {
+        AdminItemCateVo vo = service.updCategory(dto);
         return ResponseEntity.ok(vo);
     }
 
+    @DeleteMapping("/category")
+    @Operation(summary = "아이템 카테고리 삭제"
+            , description = "" +
+            "\"iitemCategory\": [-] 아이템 카테고리 PK<br>")
+    public void delCategory(@RequestParam Long iitemCategory) {
+        service.delCategory(iitemCategory);
+    }
+
+    // 아이템 ------------------------------------------------------------------------------------------------------
 
     @PostMapping
     @Operation(summary = "아이템 추가"
@@ -41,6 +76,26 @@ public class AdminItemController {
     public ResponseEntity<ItemVo> postItem(@RequestBody ItemInsDto dto) {
         ItemVo vo = service.saveItem(dto);
         return ResponseEntity.ok(vo);
+    }
+
+    @GetMapping("/search")
+    @Operation(summary = "아이템 검색 및 검색리스트"
+            , description = "" +
+            "\"text\": [-] 검색어,<br>" +
+            "\"page\": [-] 리스트 페이지,<br>" +
+            "\"row\": [고정] 아이템 개수,<br>" +
+            "\"cate\": [-] 카테고리(11: 축산물, 16: 수산물, 13: 소스/드레싱, 18: 밀키트, 17: 농산물),<br>" +
+            "\"sort\": [1] 판매순 랭킹(iitem,DESC : 최신순(default), iitem,ASC: 오래된순, price,DESC: 높은가격순, price,ASC: 낮은가격순)  <br>"
+    )
+    public ResponseEntity<AdminItemSelDetailRes> getSearchItem(@RequestParam(value = "cate",required=false)Long cate,
+                                                          @RequestParam(value = "text",required=false)String text,
+                                                          @RequestParam(value = "searchStartDate", required = false, defaultValue = "18000101") @DateTimeFormat(pattern = "yyyyMMdd") LocalDate searchStartDate,
+                                                          @RequestParam(value = "searchEndDate", required = false, defaultValue = "99991231") @DateTimeFormat(pattern = "yyyyMMdd") LocalDate searchEndDate,
+                                                          @ParameterObject @PageableDefault(sort = "iitem", direction = Sort.Direction.DESC, size = 15) Pageable page) {
+
+
+
+        return ResponseEntity.ok(service.searchAdminItem(page, cate, text,searchStartDate,searchEndDate));
     }
 
     @PutMapping
@@ -69,11 +124,11 @@ public class AdminItemController {
         return ResponseEntity.ok(vo);
     }
 
-    @DeleteMapping("/{iitem}")
+    @DeleteMapping
     @Operation(summary = "아이템 삭제 - 관리자 페이지"
             , description = "" +
             "\"iitem\": [-] 아이템 PK<br>")
-    public void delItem(@PathVariable Long iitem) {
+    public void delItem(@RequestParam Long iitem) {
         service.delItem(iitem);
     }
 
