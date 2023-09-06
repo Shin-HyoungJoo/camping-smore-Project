@@ -30,11 +30,6 @@ public class WishlistEntity {
     @ManyToOne
     private ItemEntity itemEntity;
 
-    @CreatedDate
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "del_yn")
-    @ColumnDefault("1")
+    @Column(name = "del_yn",columnDefinition = "TINYINT not null DEFAULT 1 CHECK(status in (0,1))", length = 1)
     private Integer delYn;
 }

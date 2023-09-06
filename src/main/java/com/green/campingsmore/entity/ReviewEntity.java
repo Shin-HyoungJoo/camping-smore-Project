@@ -27,33 +27,29 @@ public class ReviewEntity extends BaseEntity {
     private Long ireview;
 
     @JoinColumn(name = "iuser")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private UserEntity userEntity;
 
     @JoinColumn(name = "iorder")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private OrderEntity orderEntity;
 
     @JoinColumn(name = "iitem")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private ItemEntity itemEntity;
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "review_ctnt",nullable = false, length = 200)
     private String reviewCtnt;
 
     @Column(length = 200)
     private String pic;
 
-    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
-    @Size(min = 0, max = 5)
-    @ColumnDefault("5")
+    @Column(name = "star_rating", columnDefinition = "TINYINT not null DEFAULT 1 CHECK(star_rating in (0,1,2,3,4,5))", length = 1)
     private Integer starRating;
 
-    @Column(nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
+    @Column(name = "review_like",nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
     private Integer reviewLike;
 
     @Column(name = "del_yn", columnDefinition = "TINYINT not null DEFAULT 1 CHECK(del_yn in (0,1))", length = 1)
-    @Size(min = 0, max = 1)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer delYn;
 }

@@ -22,13 +22,12 @@ public class ItemDetailPicEntity extends BaseEntity {
     @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
     private Long idetail;
 
-    @JoinColumn(name = "iitem")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "iitem", nullable = false)
+    @ManyToOne
     @ToString.Exclude
     private ItemEntity itemEntity;
 
 
-    @Column(columnDefinition="TEXT")
-    @NotNull
+    @Column(nullable = false, columnDefinition="TEXT")
     private String pic;
 }

@@ -22,8 +22,8 @@ public class ItemCategoryEntity {
     @NotNull
     private Long iitemCategory;
 
-    @Column(length = 50, name = "\"name\"")
-    @NotNull
+    @Column(name = "\"name\"", nullable = false, length = 50)
+
     private String name;
 
     @Column(columnDefinition = "TINYINT not null DEFAULT 1 CHECK(status in (0,1,2))", length = 1)

@@ -5,11 +5,16 @@ import com.green.campingsmore.entity.BestItemEntity;
 import com.green.campingsmore.entity.ItemCategoryEntity;
 import com.green.campingsmore.entity.ItemDetailPicEntity;
 import com.green.campingsmore.entity.ItemEntity;
+import com.green.campingsmore.item.model.ItemSelDetailRes;
+import com.green.campingsmore.user.item.ItemDao;
+import com.green.campingsmore.user.review.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,14 +27,56 @@ public class AdminItemService {
     private final AdminItemCategoryRepository adminItemCategoryRep;
     private final AdminItemDetailPicRepository adminItemDetailPicRep;
     private final AdminBestItemRepository adminBestItemRep;
+    private final ReviewService reviewService;
+    private final ItemDao itemDao;
 
-    public ItemCategoryVo saveCategory(ItemCategoryInsDto dto) {
-        ItemCategoryEntity entity = ItemCategoryEntity.builder()
-                .name(dto.getName())
-                .build();
-        adminItemCategoryRep.save(entity);
-        return null;
+
+    // 카테고리 ------------------------------------------------------------------------------------------------------
+
+    public String saveCategory(ItemCategoryInsDto dto) {
+        try {
+            ItemCategoryEntity entity = ItemCategoryEntity.builder()
+                    .name(dto.getName())
+                    .status(2)
+                    .build();
+            adminItemCategoryRep.save(entity);
+            return "아이템 카테고리 생성 완료";
+        } catch (Exception e){
+            return "아이템 카테고리 생성 실패";
+        }
+
     }
+
+    public List<AdminItemCateVo> selAdminCategory() {
+        List<AdminItemCateVo> list = itemDao.selAdminCategory();
+        return list;
+    }
+
+    public AdminItemCateVo updCategory(AdminItemUpdCateDto dto) {
+
+        Optional<ItemCategoryEntity> optEntity = adminItemCategoryRep.findById(dto.getIitemCategory());
+
+        ItemCategoryEntity entity = optEntity.get();
+        entity.setName(dto.getName());
+        entity.setStatus(dto.getStatus());
+
+        return AdminItemCateVo.builder()
+                .iitemCategory(entity.getIitemCategory())
+                .name(entity.getName())
+                .status(entity.getStatus())
+                .build();
+    }
+
+    public void delCategory(Long iitemCategory) {
+        Optional<ItemCategoryEntity> optEntity = adminItemCategoryRep.findById(iitemCategory);
+
+        ItemCategoryEntity entity = optEntity.get();
+        entity.setStatus(0);
+        adminItemCategoryRep.save(entity);
+
+    }
+
+    // 아이템 ------------------------------------------------------------------------------------------------------
 
     public ItemVo saveItem(ItemInsDto dto) {
         ItemCategoryEntity itemCategoryEntity = adminItemCategoryRep.findById(dto.getIitemCategory()).get();
@@ -56,6 +103,24 @@ public class AdminItemService {
         }
 
         return null;
+    }
+
+    public AdminItemSelDetailRes searchAdminItem(Pageable page, Long cate, String text, LocalDate searchStartDate, LocalDate searchEndDate) {
+        List<ItemVo> list = itemDao.searchAdminItem(page, cate, text,searchStartDate,searchEndDate);
+        Integer startIdx = page.getPageNumber() * page.getPageSize();
+        Integer count = itemDao.itemCount();
+        Integer maxPage = (int)Math.ceil((double) count / page.getPageSize());
+        Integer isMore = maxPage > page.getPageNumber()+1 ? 1 : 0;
+
+        return AdminItemSelDetailRes.builder()
+                .iitemCategory(cate)
+                .text(text)
+                .startIdx(startIdx)
+                .isMore(isMore)
+                .page(page.getPageNumber())
+                .row(page.getPageSize())
+                .itemList(list)
+                .build();
     }
 
     public ItemVo updItem(ItemUpdDto dto) {
