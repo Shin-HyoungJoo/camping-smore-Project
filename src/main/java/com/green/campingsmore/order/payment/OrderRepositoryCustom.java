@@ -16,7 +16,7 @@ public interface OrderRepositoryCustom {
     PaymentDetailDto selPaymentPageItem(Long iitem);
     SelReserveInfoVo selCampInfo(Long ireserve);
     List<CartPaymentItemDto> selPaymentPageItemList(CartPKDto dto);
-    SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorderItem);
+    SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorderitem);
     List<SelAggregateVO> selAggregateInfo();
     List<SelOrderManageVo> SelOrderManageInfo(LocalDate startDate, LocalDate endDate, Integer listBox, Object keyword);
 }

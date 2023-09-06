@@ -13,7 +13,7 @@ public class SelRefundManageVo {
     private String orderDate;
     private String refundStartDate;      //환불접수일
     private String refundEndDate;
-    private Long iorderItem;
+    private Long iorderitem;
     private String name;
     public Integer quantity;
     public Integer totalRefund;

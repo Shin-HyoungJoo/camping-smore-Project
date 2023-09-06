@@ -90,7 +90,7 @@
         ON A.iorder = B.iorder
         INNER JOIN item C
         ON A.iitem = C.iitem
-        WHERE A.iorder_item = #{iorderItem}
+        WHERE A.iorder_item = #{iorderitem}
     </select>
 
 

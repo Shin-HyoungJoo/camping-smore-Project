@@ -110,9 +110,9 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 .fetch();
     }
 
-    public SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorderItem) {
+    public SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorderitem) {
         return queryFactory.select(Projections.fields(SelDetailedItemPaymentInfoVo.class,
-                        orderItemEntity.iorderItem,
+                        orderItemEntity.iorderitem,
                         orderItemEntity.itemEntity.iitem,
                         itemEntity.name,
                         orderItemEntity.price,
@@ -128,7 +128,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 .from(orderItemEntity)
                 .join(orderEntity, orderEntity)
                 .join(itemEntity, itemEntity)
-                .where(orderItemEntity.iorderItem.eq(iorderItem))
+                .where(orderItemEntity.iorderitem.eq(iorderitem))
                 .fetchOne();
     }
 

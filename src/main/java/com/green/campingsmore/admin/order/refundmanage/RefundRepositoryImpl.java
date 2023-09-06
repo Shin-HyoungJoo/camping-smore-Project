@@ -59,7 +59,7 @@ public class RefundRepositoryImpl implements RefundRepositoryCustom {
                         dateC.as("orderDate"),
                         startDateA.as("refundStartDate"),
                         endDateA.as("refundEndDate"),
-                        C.iorderItem.as("iorderItem"),
+                        C.iorderitem.as("iorderitem"),
                         B.name.as("name"),
                         C.quantity.as("quantity"),
                         A.totalPrice.as("totalRefund"),
@@ -69,7 +69,7 @@ public class RefundRepositoryImpl implements RefundRepositoryCustom {
                 .innerJoin(B)
                 .on(A.userEntity.iuser.eq(B.iuser))
                 .innerJoin(C)
-                .on(A.orderItemEntity.iorderItem.eq(C.iorderItem))
+                .on(A.orderItemEntity.iorderitem.eq(C.iorderitem))
                 .where(
                         refundCreatedAtRange(startDate, endDate),
                         orderRepoImpl.pickListBox(listBox, keyword)

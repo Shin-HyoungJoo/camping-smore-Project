@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class refundRequestRes {
-    private Long iorderItem;
+    private Long iorderitem;
     private Long iitem;
     private Integer refund;
 }

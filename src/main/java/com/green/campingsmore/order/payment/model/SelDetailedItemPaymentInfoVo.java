@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class SelDetailedItemPaymentInfoVo {
-    private Long iorderItem;
+    private Long iorderitem;
     private Long iitem;
     private String name;
     private Integer price;

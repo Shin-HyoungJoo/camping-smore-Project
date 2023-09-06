@@ -80,11 +80,11 @@ public class PayController {
         return ResponseEntity.ok(SERVICE.selPaymentDetailAll(iuser));
     }
 
-    @GetMapping("/payment-list/detail/{iorderItem}")
+    @GetMapping("/payment-list/detail/{iorderitem}")
     @Operation(summary = "상세 결제 내역 보기(마이 페이지)",
-            description = "<h3> iorderItem : 상세 결제내역 PK\n" +
+            description = "<h3> iorderitem : 상세 결제내역 PK\n" +
                     "<h3>-----------------------------------\n" +
-                    "<h3> iorderItem : 상세 결제내역 PK\n" +
+                    "<h3> iorderitem : 상세 결제내역 PK\n" +
                     "<h3> iitem : 아이템 PK\n" +
                     "<h3> name : 아이템 이름\n" +
                     "<h3> price : 아이템 가격\n" +
@@ -98,19 +98,19 @@ public class PayController {
                     "<h3> shippingMemo : 배송 메모 PK\n"
 
     ) //유저마이페이지에서 조회
-    public SelDetailedItemPaymentInfoVo getDetailedItemPaymentInfo(@PathVariable Long iorderItem) {
-        return SERVICE.selDetailedItemPaymentInfo(iorderItem);
+    public SelDetailedItemPaymentInfoVo getDetailedItemPaymentInfo(@PathVariable Long iorderitem) {
+        return SERVICE.selDetailedItemPaymentInfo(iorderitem);
     }
 
-    @PutMapping("/payment-list/{iorderItem}")
+    @PutMapping("/payment-list/{iorderitem}")
     @Operation(summary = "전체 결제 내역에서 하나의 결제 내역 삭제(아이템별, 마이 페이지)",
-            description = "<h3> iorderItem : 상세 결제내역 PK\n" +
+            description = "<h3> iorderitem : 상세 결제내역 PK\n" +
                     "<h3>-----------------------------------\n" +
                     "<h3>CODE 1 : 선택한 결제내역 삭제\n" +
                     "<h3>CODE 0 : 삭제되지 않음\n"
     ) //유저마이페이지에서 조회
-    public Long delPaymentDetail(@PathVariable Long iorderItem) throws Exception {
-        return SERVICE.delPaymentDetail(iorderItem);
+    public Long delPaymentDetail(@PathVariable Long iorderitem) throws Exception {
+        return SERVICE.delPaymentDetail(iorderitem);
     }
 
     @PostMapping("/order/cart")
@@ -243,9 +243,9 @@ public class PayController {
 
     @PutMapping("/payment-list/detail")
     @Operation(summary = "해당 상세주문 환불 요청",
-            description = "<h3> iorderItem : 상세 주문 PK\n" +
+            description = "<h3> iorderitem : 상세 주문 PK\n" +
                     "<h3>-----------------------------------\n" +
-                    "<h3>iorderItem : 주문 상세 PK\n" +
+                    "<h3>iorderitem : 주문 상세 PK\n" +
                     "<h3>iitem : 아이템PK\n" +
                     "<h3>refund : 환불 상태 \n" +
                     "<h3>  └0 : 환불 전(기본값) \n" +
@@ -256,6 +256,6 @@ public class PayController {
     )
     public refundRequestRes refundRequest (@AuthenticationPrincipal MyUserDetails user,
                                @RequestBody patchRefundDto dto) throws Exception {
-        return SERVICE. refundRequest(dto.getIorderItem(), user.getIuser());
+        return SERVICE. refundRequest(dto.getIorderitem(), user.getIuser());
     }
 }

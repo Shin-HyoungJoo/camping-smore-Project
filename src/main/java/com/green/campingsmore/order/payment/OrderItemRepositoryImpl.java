@@ -17,7 +17,7 @@ public class OrderItemRepositoryImpl implements OrderItemRepositoryCustom {
     public OrderItemEntity selByIorderitem(Long iorderitem) {
          return queryFactory
                  .selectFrom(orderItemEntity)
-                 .where(orderItemEntity.iorderItem.eq(iorderitem))
+                 .where(orderItemEntity.iorderitem.eq(iorderitem))
                  .fetchOne();
     }
 }

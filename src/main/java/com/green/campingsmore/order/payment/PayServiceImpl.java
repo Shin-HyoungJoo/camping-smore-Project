@@ -174,9 +174,9 @@ public class PayServiceImpl implements PayService {
 
     @Override   //완
     @Transactional(rollbackFor = {Exception.class}) //jpa
-    public Long delPaymentDetail(Long iorderItem) throws Exception {
+    public Long delPaymentDetail(Long iorderitem) throws Exception {
         try {
-            Optional<OrderItemEntity> delYN = orderItemRepo.findById(iorderItem);
+            Optional<OrderItemEntity> delYN = orderItemRepo.findById(iorderitem);
             if (delYN.isEmpty()) {
                 return 0L;
             }
@@ -193,8 +193,8 @@ public class PayServiceImpl implements PayService {
     }
 
     @Override   //dsl
-    public SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorderItem) {
-        return orderRepo.selDetailedItemPaymentInfo(iorderItem);
+    public SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorderitem) {
+        return orderRepo.selDetailedItemPaymentInfo(iorderitem);
     }
 
     @Override   //jpa
@@ -240,9 +240,9 @@ public class PayServiceImpl implements PayService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public refundRequestRes refundRequest(Long iorderItem, Long iuser) throws Exception {
-//        OrderItemEntity entity = orderItemRepo.selByIorderitem(iorderItem);
-        Optional<OrderItemEntity> optEntity = orderItemRepo.findById(iorderItem);
+    public refundRequestRes refundRequest(Long iorderitem, Long iuser) throws Exception {
+//        OrderItemEntity entity = orderItemRepo.selByIorderitem(iorderitem);
+        Optional<OrderItemEntity> optEntity = orderItemRepo.findById(iorderitem);
 //
         if (optEntity.isEmpty()) {
             throw new Exception("PK에 해당하는 상세주문이 없습니다");
@@ -264,7 +264,7 @@ public class PayServiceImpl implements PayService {
         refundRepo.save(refundEntity);
 
         return  refundRequestRes.builder()
-                .iorderItem(entity.getIorderitem())
+                .iorderitem(entity.getIorderitem())
                 .iitem(entity.getItemEntity().getIitem())
                 .refund(entity.getRefund())
                 .build();

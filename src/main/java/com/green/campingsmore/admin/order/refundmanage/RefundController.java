@@ -39,7 +39,7 @@ public class RefundController {
                             "<h3> orderDate : 주문 날짜\n" +
                             "<h3> refundStartDate : 환불 시작 날짜\n" +
                             "<h3> refundEndDate : 환불 종료 날짜\n" +
-                            "<h3> iorderItem : 상세 주문 PK (주문 상세 번호)\n" +
+                            "<h3> iorderitem : 상세 주문 PK (주문 상세 번호)\n" +
                             "<h3> name : 주문자 이름\n" +
                             "<h3> quantity : 환불 개수\n" +
                             "<h3> totalRefund : 총 가격\n" +

@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class patchRefundDto {
-    private Long iorderItem;
+    private Long iorderitem;
 }
