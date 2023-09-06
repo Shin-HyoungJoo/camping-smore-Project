@@ -4,13 +4,14 @@ import com.green.campingsmore.config.security.model.LoginDto;
 import com.green.campingsmore.config.security.model.SearchUserDto;
 import com.green.campingsmore.config.security.model.SignUpDto;
 import com.green.campingsmore.sign.model.FinalUpdateUserInfo;
+import com.green.campingsmore.sign.model.KakaoIuser;
 import com.green.campingsmore.sign.model.UpdatePwDto;
 import com.green.campingsmore.sign.model.UserInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface UserDetailsMapper {
-    int kakaoLogin();
+    KakaoIuser kakaoLogin(String email);
     int signUp(SignUpDto dto);
     LoginDto getByUid(String uid);
     int delYnUser(int iuser);
