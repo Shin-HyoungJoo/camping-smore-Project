@@ -19,7 +19,6 @@ import org.hibernate.annotations.DynamicInsert;
 @Table(name = "user",uniqueConstraints = {@UniqueConstraint(name = "unique_user_user_id",columnNames = {"user_id"})})
 @Data
 @SuperBuilder
-@NoArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @DynamicInsert
@@ -59,14 +58,19 @@ public class UserEntity extends BaseEntity {
     //    @Column(name = "wishlist_array") // null true는 기본값이라서 설정안해줘도 된다.
 //    private String wishlistArray;
     @Column(name = "provider_type", length = 20,nullable = false)
-    @ColumnDefault("LOCAL")
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
     @JsonIgnore
     @Column(name = "role_type", length = 20,nullable = false)
-    @ColumnDefault("USER")
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
+
+    // 생성자
+    public UserEntity() {
+        this.roleType = RoleType.USER;
+        this.providerType = ProviderType.LOCAL;
+    }
+
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment 설정
 //    @Column(nullable = false, updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 15)
@@ -107,4 +111,5 @@ public class UserEntity extends BaseEntity {
 //    @Column(name = "role_type", length = 20)
 //    @Enumerated(EnumType.STRING)
 //    private RoleType roleType;
+    // 나머지 엔터티 코드
 }
