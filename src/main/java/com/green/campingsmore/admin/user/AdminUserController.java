@@ -45,6 +45,14 @@ public class AdminUserController {
         return SERVICE.selectAllusers();
     }
 
+    @GetMapping("/manage/users/{iuser}")
+    @Operation(summary = "관리자 - 유저 한 명 검색하기",
+            description = "Try it out -> Execute 눌러주세요 \n\n "
+    )
+    public UserDto selectUser(@PathVariable Long iuser){
+        return SERVICE.selectUser(iuser);
+    }
+
     @GetMapping("/manage/chart")
     @Operation(summary = "관리자 - 유저 현황 차트 (방문자, 성별 비율, 회원 나이 비율)",
             description = "Try it out -> Execute 눌러주세요 \n\n "+

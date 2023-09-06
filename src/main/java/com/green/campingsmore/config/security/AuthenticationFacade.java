@@ -11,6 +11,12 @@ public class AuthenticationFacade {
         // auth = null (로그인 안하면 null)
         //검증이 정상적으로 통과되었다면 인증된 authentication 객체를 기반으로 JWT 토큰을 생성합니다
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("Authentication auth = " + auth);
+
+        if(auth == null){
+            System.out.println("비로그인 상태");
+            return null;
+        }
         MyUserDetails userDetails = (MyUserDetails) auth.getPrincipal();
         return userDetails;
     }
