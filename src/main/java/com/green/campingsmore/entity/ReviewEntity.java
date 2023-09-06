@@ -41,7 +41,6 @@ public class ReviewEntity extends BaseEntity {
     @Column(name = "review_ctnt",nullable = false, length = 200)
     private String reviewCtnt;
 
-    @Column(length = 200)
     private String pic;
 
     @Column(name = "star_rating", columnDefinition = "TINYINT not null DEFAULT 1 CHECK(star_rating in (0,1,2,3,4,5))", length = 1)

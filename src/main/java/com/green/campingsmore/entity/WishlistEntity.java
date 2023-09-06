@@ -30,6 +30,6 @@ public class WishlistEntity {
     @ManyToOne
     private ItemEntity itemEntity;
 
-    @Column(name = "del_yn",columnDefinition = "TINYINT not null DEFAULT 1 CHECK(status in (0,1))", length = 1)
+    @Column(name = "del_yn",columnDefinition = "TINYINT not null DEFAULT 1 CHECK(del_yn in (0,1))", length = 1)
     private Integer delYn;
 }

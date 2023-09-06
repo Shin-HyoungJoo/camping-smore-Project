@@ -25,6 +25,6 @@ public class BoardImageEntity extends BaseEntity {
     @ManyToOne
     private BoardEntity boardEntity;
 
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false)
     private String pic;
 }

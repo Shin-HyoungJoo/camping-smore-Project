@@ -51,7 +51,6 @@ public class RefundEntity {
     @Column(name = "refund_status", columnDefinition = "TINYINT not null DEFAULT 0 CHECK(refund_status in (0,1,2,3))", length = 1)
     private Integer refundStatus;
 
-    @Column(name = "del_yn", nullable = false, columnDefinition = "TINYINT", length = 1)
-    @ColumnDefault("1")
+    @Column(name = "del_yn",  columnDefinition = "TINYINT NOT NULL DEFAULT 1", length = 1)
     private Integer delYn;
 }

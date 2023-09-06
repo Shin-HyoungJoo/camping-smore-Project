@@ -18,12 +18,10 @@ import lombok.experimental.SuperBuilder;
 public class ItemCategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "iitem_category", updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
-    @NotNull
+    @Column(nullable = false,name = "iitem_category", updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
     private Long iitemCategory;
 
     @Column(name = "\"name\"", nullable = false, length = 50)
-
     private String name;
 
     @Column(columnDefinition = "TINYINT not null DEFAULT 1 CHECK(status in (0,1,2))", length = 1)

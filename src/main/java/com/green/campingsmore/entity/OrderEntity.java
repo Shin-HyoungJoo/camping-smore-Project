@@ -49,7 +49,7 @@ public class OrderEntity extends BaseEntity {
     @Column(name = "shipping_memo", length = 100)
     private String shippingMemo;
 
-    @Column(name = "del_yn", columnDefinition = "TINYINT not null DEFAULT 0", length = 1)
+    @Column(name = "del_yn", columnDefinition = "TINYINT not null DEFAULT 1", length = 1)
     private Integer delYn;
 
     //KAKAO, CARD

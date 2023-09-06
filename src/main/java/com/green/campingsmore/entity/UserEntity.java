@@ -20,16 +20,16 @@ import org.hibernate.annotations.DynamicInsert;
 @Data
 @SuperBuilder
 @ToString(callSuper = true)
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @DynamicInsert
 public class UserEntity extends BaseEntity {
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment 설정
-    @Column(updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 15)
+    @Column(nullable = false, updatable = false, columnDefinition = "BIGINT UNSIGNED", length = 15)
     private Long iuser;
 
-    @Column(name = "user_id",updatable = false, length = 20,nullable = false)
+    @Column(name = "user_id", updatable = false, length = 20,nullable = false)
     private String uid;
 
     @Column(nullable = false) // length 기본값 세팅 255임
@@ -57,29 +57,20 @@ public class UserEntity extends BaseEntity {
     @Column(name = "user_address_detail", length = 100)
     private String userAddressDetail;
 
-    @Column(length = 10,nullable = false)
+    @Column(length = 10, nullable = false)
     @ColumnDefault("'ROLE_USER'")
     private String role;
 
     private String pic;
 
-    @Column(name = "del_yn",length = 1, columnDefinition = "TINYINT")
-    @ColumnDefault("1")
+    @Column(name = "del_yn",length = 1, columnDefinition = "TINYINT NOT NULL DEFAULT 1")
     @JsonIgnore
     private int delyn;
 
-    @Column(name = "provider_type", length = 20,nullable = false)
+    @Column(name = "provider_type", length = 20, nullable = false)
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
 
-    @JsonIgnore
-    @Column(name = "role_type", length = 20,nullable = false)
-    @Enumerated(EnumType.STRING)
-    private RoleType roleType;
 
-    // 생성자
-    public UserEntity() {
-        this.roleType = RoleType.USER;
-        this.providerType = ProviderType.LOCAL;
-    }
+
 }

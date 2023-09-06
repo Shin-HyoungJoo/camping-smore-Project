@@ -25,17 +25,15 @@ public class CommentEntity extends BaseEntity {
 
     @JoinColumn(name = "iboard",nullable = false)
     @ManyToOne
-    @ToString.Exclude
     private BoardEntity boardEntity;
 
     @JoinColumn(name = "iuser",nullable = false)
     @ManyToOne
-    @ToString.Exclude
     private UserEntity userEntity;
 
     @Column(nullable = false, length = 100)
     private String ctnt;
 
-    @Column(length = 1, columnDefinition = "TINYINT not null CHECK(delyn in (0,1))")
+    @Column(name = "del_yn",length = 1, columnDefinition = "TINYINT not null CHECK(del_yn in (0,1))")
     private Integer delYn;
 }

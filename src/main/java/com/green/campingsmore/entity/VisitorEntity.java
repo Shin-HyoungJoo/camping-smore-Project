@@ -21,7 +21,9 @@ public class VisitorEntity {
     @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 15)
     private Long ivisit;
 
+    @Column(name = "birth_date")
     private String birthDate;
+
 
     private Integer gender;
 }

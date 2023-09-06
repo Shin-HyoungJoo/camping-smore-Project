@@ -39,13 +39,13 @@ public class OrderItemEntity extends BaseEntity {
     @Column(columnDefinition = "TINYINT not null DEFAULT 0", length = 2)
     private Integer quantity;
 
-    @Column(name = "name", nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
+    @Column(name = "total_price", nullable = false, columnDefinition = "INT UNSIGNED", length = 10)
     private Integer totalPrice;
 
     //0 - default, 1 - 환불 진행중, 2 - 환불 완료, 3 - 환불 불가
-    @Column(columnDefinition = "TINYINT not null DEFAULT 0 CHECK(refund in (0,1,2))", length = 1)
+    @Column(columnDefinition = "TINYINT not null DEFAULT 0 CHECK(refund in (0,1,2,3))", length = 1)
     private Integer refund;
 
-    @Column(name = "del_yn", columnDefinition = "TINYINT not null DEFAULT 0", length = 1)
+    @Column(name = "del_yn", columnDefinition = "TINYINT not null DEFAULT 1", length = 1)
     private Integer delYn;
 }

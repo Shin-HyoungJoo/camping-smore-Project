@@ -26,13 +26,11 @@ public class BoardEntity extends BaseEntity {
     private Long iboard;
 
     @JoinColumn(name = "iuser",nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @ToString.Exclude
+    @ManyToOne
     private UserEntity userEntity;
 
     @JoinColumn(name = "icategory",nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @ToString.Exclude
+    @ManyToOne
     private BoardCategoryEntity boardCategoryEntity;
 
     @Column(nullable = false,length = 20)
@@ -41,9 +39,9 @@ public class BoardEntity extends BaseEntity {
     @Column(nullable = false, length = 300)
     private String ctnt;
 
-    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
+    @Column(name = "del_yn", nullable = false, columnDefinition = "TINYINT", length = 1)
     private Integer delYn;
 
-    @Column(updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
+    @Column(name = "board_view", updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
     private Long boardView;
 }
