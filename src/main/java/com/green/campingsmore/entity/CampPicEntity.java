@@ -22,6 +22,6 @@ public class CampPicEntity {
     private String pic;
 
     @JoinColumn(name = "icamp",nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private CampEntity campEntity;
 }

@@ -17,10 +17,8 @@ public class NationwideEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false,columnDefinition = "BIGINT UNSIGNED")
-    @NotNull
     private Long inationwide;
 
     @Column(updatable = false)
-    @NotNull
     private String city;
 }

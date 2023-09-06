@@ -22,12 +22,13 @@ import java.time.format.DateTimeFormatter;
 @NoArgsConstructor
 public class BaseEntity {
     @CreatedDate
-    @Column(updatable = false)
+    @Column(name = "created_At",updatable = false)
     @ColumnDefault("current_timestamp()")
     private LocalDateTime createdAt;
 
     @JsonIgnore
     @LastModifiedDate
+    @Column(name = "updated_At")
     @ColumnDefault("current_timestamp() ON UPDATE current_timestamp()")
     private LocalDateTime updatedAt;
 
