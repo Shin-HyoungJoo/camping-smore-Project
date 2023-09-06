@@ -4,18 +4,19 @@ package com.green.campingsmore.user.review;
 import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.config.utils.MyFileUtils;
 import com.green.campingsmore.entity.ReviewEntity;
+import com.green.campingsmore.entity.UserEntity;
 import com.green.campingsmore.order.payment.OrderRepository;
-import com.green.campingsmore.review.model.ReviewRes;
 import com.green.campingsmore.sign.SignRepository;
 import com.green.campingsmore.user.item.ItemRepository;
-import com.green.campingsmore.user.review.model.ReviewInsDto;
-import com.green.campingsmore.user.review.model.ReviewVo;
+import com.green.campingsmore.user.review.model.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -28,7 +29,7 @@ public class ReviewService {
     private final OrderRepository orderRep;
     private final ItemRepository itemRep;
     private final MyFileUtils myFileUtils;
-//    private final ReviewDao reviewDao;
+    private final ReviewDao reviewDao;
 
 
     public ReviewVo saveReview(ReviewInsDto dto, MultipartFile pic){
@@ -38,7 +39,7 @@ public class ReviewService {
                 .itemEntity(itemRep.getReferenceById(dto.getIitem()))
                 .reviewCtnt(dto.getReviewCtnt())
                 .starRating(dto.getStarRating())
-                .delYn(0)
+                .delYn(1)
                 .reviewLike(0)
                 .build();
 
@@ -65,16 +66,52 @@ public class ReviewService {
                 .build();
     }
 
-    public ReviewRes selectItemReview(Pageable pageable,Long iitem) {
+    public ReviewRes selectItemReview(Pageable page, Long iitem) {
+        List<ReviewSelRes> list = reviewDao.selReview(page, iitem);
+        Integer startIdx = page.getPageNumber() * page.getPageSize();
+        Integer count = reviewDao.reviewCount(iitem);
+        Integer maxPage = (int)Math.ceil((double) count / page.getPageSize());
+        Integer isMore = maxPage > page.getPageNumber()+1 ? 1 : 0;
 
-/*        int count =  reviewDao.selLastReview(iitem);
-        int maxPage = (int)Math.ceil((double) count /dto.getRow());*/
-        ReviewRes res = ReviewRes.builder()
+        return ReviewRes.builder()
                 .iitem(iitem)
-                .startIdx((pageable.getPageNumber()-1) * pageable.getPageSize())
-                .row(pageable.getPageSize())
+                .startIdx(startIdx)
+                .isMore(isMore)
+                .page(page.getPageNumber())
+                .row(page.getPageSize())
+                .list(list)
                 .build();
-        return res;
+    }
+
+
+    public String updReview(ReviewUpdDto dto, MultipartFile pic) {
+        UserEntity userEntity = signRep.getReferenceById(facade.getLoginUserPk());
+        if(reviewDao.reviewUser(userEntity.getIuser())) {
+            ReviewEntity entity = reviewRep.getReferenceById(dto.getIreview());
+            entity.setReviewCtnt(dto.getReviewCtnt());
+            entity.setStarRating(dto.getStarRating());
+
+
+            if(pic != null) {
+
+                String target = "user/"+ entity.getUserEntity().getIuser() +"/review/" + entity.getIreview();
+                String fileNm = myFileUtils.updTransferTo(pic, target);
+                entity.setPic(target+"/" + fileNm);
+
+            }
+            reviewRep.save(entity);
+            return "리뷰 수정완료";
+        }
+
+        return "유저를 확인해주세요";
+    }
+
+    public Integer delReview(Long ireview) {
+
+        ReviewEntity reviewEntity = reviewRep.getReferenceById(ireview);
+        reviewEntity.setDelYn(0);
+        reviewRep.save(reviewEntity);
+        return 1;
     }
 
 

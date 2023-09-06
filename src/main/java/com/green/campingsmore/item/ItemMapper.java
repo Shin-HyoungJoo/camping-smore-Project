@@ -1,3 +1,4 @@
+/*
 package com.green.campingsmore.item;
 
 import com.green.campingsmore.admin.item.model.ItemInsBestDto;
@@ -36,3 +37,4 @@ public interface ItemMapper {
     List<ItemVo> selBestItem();
 
 }
+*/

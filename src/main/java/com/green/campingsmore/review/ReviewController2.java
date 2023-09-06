@@ -1,6 +1,7 @@
+/*
 package com.green.campingsmore.review;
 
-import com.green.campingsmore.review.model.*;
+import com.green.campingsmore.user.review.model.ReviewUpdDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class ReviewController2 {
     private final ReviewService2 SERVICE;
 
+*/
 /*    @PostMapping
     @Operation(summary = "리뷰 추가"
             , description = "" +
@@ -26,8 +28,10 @@ public class ReviewController2 {
             "\"pic\": [-] 사진 이미지<br>")
     public String postReview(@RequestBody ReviewInsDto dto) {
         return SERVICE.insReview(dto);
-    }*/
+    }*//*
 
+
+*/
 /*    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "리뷰 추가"
             , description = "" +
@@ -40,9 +44,11 @@ public class ReviewController2 {
     public String postReview(@RequestPart ReviewPageDto.ReviewInsDto dto,
                            @RequestPart(required = false) MultipartFile pic) {
         return SERVICE.insReview(dto, pic);
-    }*/
+    }*//*
 
-    @GetMapping("/{iitem}/detail")
+
+*/
+/*    @GetMapping("/{iitem}/detail")
     @Operation(summary = "리뷰 리스트"
             , description = "" +
             "\"iitem\": [-] 아이템 PK<br>" )
@@ -54,9 +60,11 @@ public class ReviewController2 {
         dto.setPage(page);
         dto.setRow(row);
         return SERVICE.selReview(dto);
-    }
+    }*//*
 
-    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+
+*/
+/*    @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "리뷰 수정"
             , description = "" +
             "\"iuser\": [-] 유저 PK,<br>" +
@@ -68,7 +76,8 @@ public class ReviewController2 {
     public String updReview(@RequestPart ReviewUpdDto dto,
                              @RequestPart(required = false) MultipartFile pic) {
         return SERVICE.updReview(dto, pic);
-    }
+    }*//*
+
 
     @DeleteMapping
     @Operation(summary = "리뷰 삭제"
@@ -78,6 +87,7 @@ public class ReviewController2 {
         return SERVICE.delReview(ireview);
     }
 
+*/
 /*    @PutMapping(value = "리뷰 사진 수정",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "리뷰 사진 수정"
             , description = "" +
@@ -91,6 +101,8 @@ public class ReviewController2 {
         dto.setIuser(iuser);
         dto.setIreview(ireview);
         return SERVICE.updReviewPic(pic, dto);
-    }*/
+    }*//*
+
 
 }
+*/

@@ -25,4 +25,8 @@ public class ItemCategoryEntity {
     @Column(length = 50, name = "\"name\"")
     @NotNull
     private String name;
+
+    @Column(columnDefinition = "TINYINT not null DEFAULT 1 CHECK(status in (0,1,2))", length = 1)
+    private Integer status; // 삭제(0) / 노출됨(1) / 노출되지않음(2)
+
 }
