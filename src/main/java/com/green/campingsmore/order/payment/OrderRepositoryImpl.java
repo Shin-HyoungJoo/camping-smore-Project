@@ -1,15 +1,13 @@
 package com.green.campingsmore.order.payment;
 
 import com.green.campingsmore.admin.main.model.SelAggregateVO;
+import com.green.campingsmore.admin.main.model.SelOrderManageVo;
 import com.green.campingsmore.entity.*;
 import com.green.campingsmore.order.payment.model.*;
 import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
-import com.querydsl.core.types.dsl.CaseBuilder;
-import com.querydsl.core.types.dsl.DateTimePath;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.StringTemplate;
+import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +55,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
         return queryFactory
                 .select(Projections.fields(SelReserveCheckVO.class,
                         reserveEntity.ireserve
-                        ))
+                ))
                 .from(reserveEntity)
                 .where(reserveEntity.userEntity.iuser.eq(iuser)
                         .and(reserveEntity.payStatus.eq(PayStatus.valueOf("OK")))
@@ -136,7 +134,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
     @Override
     public List<SelAggregateVO> selAggregateInfo() {
-        QOrderEntity orderA =new QOrderEntity("orderA");
+        QOrderEntity orderA = new QOrderEntity("orderA");
         QOrderItemEntity orderItemB = new QOrderItemEntity("orderItemB");
         QRefundEntity refundC = new QRefundEntity("refundC");
         QOrderEntity orderAA = new QOrderEntity("orderAA");
@@ -151,38 +149,114 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
         return queryFactory.select(Projections.fields(SelAggregateVO.class,
                         orderADate.as("date"),
-                new CaseBuilder().when(orderA.shipping.in(0,1)).then(orderA.totalPrice).otherwise(0).sum().as("orderTotalPrice"),
-                ExpressionUtils.as(
-                        JPAExpressions
-                                .select(orderAA.iorder.count())
-                                .from(orderAA)
-                                .where(orderAA.shipping.in(0,1).and(orderADate.eq(orderAADate)))
-                        ,"orderTotalCount"),
-                new CaseBuilder().when(orderA.shipping.in(2)).then(orderA.totalPrice).otherwise(0).sum().as("shippingCompleteTotalPrice"),
-                ExpressionUtils.as(
-                        JPAExpressions
-                                .select(orderBB.iorder.count())
-                                .from(orderBB)
-                                .where(orderBB.shipping.in(2).and(orderADate.eq(orderBBDate)))
-                        ,"shippingCompleteTotalCount"),
-                ExpressionUtils.as(
-                        JPAExpressions
-                                .select(refundC.totalPrice.sum())
-                                .from(refundC)
-                                .where(refundCDate.eq(orderADate))
-                        ,"refundTotalPrice"),
-                ExpressionUtils.as(
-                        JPAExpressions
-                                .select(refundCC.irefund.count())
-                                .from(refundCC)
-                                .where(refundCCDate.eq(orderADate))
-                        ,"refundTotalCount")
+                        new CaseBuilder().when(orderA.shipping.in(0, 1)).then(orderA.totalPrice).otherwise(0).sum().as("orderTotalPrice"),
+                        ExpressionUtils.as(
+                                JPAExpressions
+                                        .select(orderAA.iorder.count())
+                                        .from(orderAA)
+                                        .where(orderAA.shipping.in(0, 1).and(orderADate.eq(orderAADate)))
+                                , "orderTotalCount"),
+                        new CaseBuilder().when(orderA.shipping.in(2)).then(orderA.totalPrice).otherwise(0).sum().as("shippingCompleteTotalPrice"),
+                        ExpressionUtils.as(
+                                JPAExpressions
+                                        .select(orderBB.iorder.count())
+                                        .from(orderBB)
+                                        .where(orderBB.shipping.in(2).and(orderADate.eq(orderBBDate)))
+                                , "shippingCompleteTotalCount"),
+                        ExpressionUtils.as(
+                                JPAExpressions
+                                        .select(refundC.totalPrice.sum())
+                                        .from(refundC)
+                                        .where(refundCDate.eq(orderADate))
+                                , "refundTotalPrice"),
+                        ExpressionUtils.as(
+                                JPAExpressions
+                                        .select(refundCC.irefund.count())
+                                        .from(refundCC)
+                                        .where(refundCCDate.eq(orderADate))
+                                , "refundTotalCount")
                 ))
                 .from(orderA)
                 .leftJoin(orderItemB).on(orderA.iorder.eq(orderItemB.orderEntity.iorder))
                 .groupBy(orderADate)
                 .orderBy(orderADate.desc())
                 .fetch();
+    }
+
+    @Override
+    public List<SelOrderManageVo> SelOrderManageInfo(LocalDate startDate, LocalDate endDate, Integer listBox, Object keyword) {
+        QOrderEntity A = new QOrderEntity("A");
+        QUserEntity B = new QUserEntity("B");
+        QOrderItemEntity C = new QOrderItemEntity("C");
+        StringTemplate date = getDateFormatPlusTime(A.createdAt);
+//서비스에서 리스트박스입력시 키워드도 입력하라고 막기
+
+        return queryFactory
+                .select(Projections.fields(SelOrderManageVo.class,
+                        date.as("orderDate"),
+                        A.iorder.as("iorder"),
+                        B.name.as("name"),
+                        C.totalPrice.sum().as("orderPrice"),
+                        A.totalPrice.as("totalPrice"),
+                        A.shipping.as("shippingStatus"),
+                        new CaseBuilder()
+                                .when(C.refund.eq(1)).then("환불 진행중")
+                                .when(C.refund.eq(2)).then("환불 완료")
+                                .when(C.refund.eq(2)).then("환불 불가")
+                                .otherwise("-")
+                                .as("refundStatus")
+                ))
+                .from(A)
+                .innerJoin(B)
+                .on(A.userEntity.iuser.eq(B.iuser))
+                .innerJoin(C)
+                .on(A.iorder.eq(C.orderEntity.iorder))
+                .where(
+                        createdAtRange(startDate, endDate),
+                        pickListBox(listBox, keyword)
+                )
+                .groupBy(C.orderEntity.iorder)
+                .fetch();
+    }
+
+    public BooleanExpression createdAtRange(LocalDate startDate, LocalDate endDate) {
+        QOrderEntity A = new QOrderEntity("A");
+        return endDate != null ? A.createdAt.between(startDate.atStartOfDay(), endDate.atStartOfDay()) : A.createdAt.between(startDate.atStartOfDay(), startDate.plusDays(1).atStartOfDay());
+    }
+
+    public BooleanExpression pickListBox(Integer listBox, Object keyword) {
+        Long getIorder = 0L;
+        String getName = "";
+        String getUserId = "";
+        String getNumber = "";
+        String getEmail = "";
+
+        QOrderEntity A = new QOrderEntity("A");
+        QUserEntity B = new QUserEntity("B");
+
+        if (listBox != null) {
+            if (listBox == 0) {
+                getIorder = Long.parseLong(String.valueOf(keyword));
+                return A.iorder.eq(getIorder);
+            } else if (listBox == 1) {
+                getName = String.valueOf(keyword);
+                return B.name.eq(getName);
+            } else if (listBox == 2) {
+                getUserId = String.valueOf(keyword);
+                return B.uid.eq(getUserId);
+            } else if (listBox == 3) {
+                getNumber = String.valueOf(keyword);
+                return B.phone.eq(getNumber);
+            } else if (listBox == 4) {
+                getEmail = String.valueOf(keyword);
+                return B.email.eq(getEmail);
+            }
+        }
+        return null;
+    }
+
+    public StringTemplate getDateFormatPlusTime(DateTimePath<LocalDateTime> date) {
+        return Expressions.stringTemplate("DATE_FORMAT( {0}, {1} )", date, ConstantImpl.create("%y-%m-%d %h:%m"));
     }
 
     public StringTemplate getDateFormat(DateTimePath<LocalDateTime> date) {
