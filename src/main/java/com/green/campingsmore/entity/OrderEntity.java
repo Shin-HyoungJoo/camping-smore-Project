@@ -59,8 +59,7 @@ public class OrderEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PayType type;
 
-    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
-    @Check(constraints = "shipping IN (0, 1, 2, 3)")
-    @ColumnDefault("0")
+    //0준비중 1배송중 2배송완료 3배송취소
+    @Column(columnDefinition = "TINYINT not null DEFAULT 0 CHECK(shipping in (0,1,2,3))", length = 1)
     private Integer shipping;
 }
