@@ -52,9 +52,29 @@ public class SignService {
         return MAPPER.IncreaseCount();
     }
 
-    public int kakaoLogin(KaKaoLoginVo kaKaoLoginVo){
-        MAPPER.kakaoLogin(); // 유저 조회
-        return 1;
+    public KakaoIuser kakaoLogin(KaKaoLoginVo kaKaoLoginVo){
+        // case 1 ) 카카오 로그인 이메일이 이미 가입된 회원과 같아서 일치할 경우
+        // case 2 ) 카카오 로그인 이메일이 없는 경우 회원가입 시켜준다.
+        KakaoIuser isUser = MAPPER.kakaoLogin(kaKaoLoginVo.getEmail());
+        if(isUser == null){ // case 2 ) 카카오 로그인 이메일이 없는 경우 회원가입 시켜준다.
+            SignUpDto signUpDto = SignUpDto.builder()
+                    .uid(String.valueOf(kaKaoLoginVo.getId()))
+                    .upw(String.valueOf(kaKaoLoginVo.getId()))
+                    .email(kaKaoLoginVo.getEmail())
+                    .name(String.valueOf(kaKaoLoginVo.getId()))
+                    .birth_date(String.valueOf(kaKaoLoginVo.getId()))
+                    .phone(String.valueOf(kaKaoLoginVo.getId()))
+                    .gender(1)
+                    .user_address("카카오 로그인 회원")
+                    .role("ROLE_USER")
+                    .build();
+            MAPPER.signUp(signUpDto);
+        }
+
+        // 이제 토큰들..Redis에 저장?? 그래야 권한 사용 가능??ㅋㅋ
+        // 토큰들  Redis 저장해서 써줘야할듯 함..?ㅋㅋㅋ 프론트에서 항상 넣어서 보내줘야하는데
+
+        return MAPPER.kakaoLogin(kaKaoLoginVo.getEmail());
     }
 
     public SignUpResultDto signUp(SignUpDto signUpDto) {
