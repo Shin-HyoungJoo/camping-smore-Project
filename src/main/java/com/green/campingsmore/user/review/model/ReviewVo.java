@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -16,4 +18,5 @@ public class ReviewVo {
     private String pic;
     private int starRating;
     private int reviewLike;
+    private LocalDateTime createdAt;
 }

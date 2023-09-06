@@ -1,29 +1,33 @@
 package com.green.campingsmore.order.payment;
 
-import static com.green.campingsmore.entity.QCampEntity.*;
-import static com.green.campingsmore.entity.QCartEntity.cartEntity;
-import static com.green.campingsmore.entity.QOrderItemEntity.*;
-
-import static com.green.campingsmore.entity.QItemEntity.*;
-
-import static com.green.campingsmore.entity.QReserveEntity.*;
-import static com.green.campingsmore.entity.QReviewEntity.*;
-
+import com.green.campingsmore.admin.main.model.SelAggregateVO;
 import com.green.campingsmore.entity.*;
 import com.green.campingsmore.order.payment.model.*;
+import com.querydsl.core.types.ConstantImpl;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.DateTimePath;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.green.campingsmore.entity.QCampEntity.campEntity;
+import static com.green.campingsmore.entity.QCartEntity.cartEntity;
+import static com.green.campingsmore.entity.QItemEntity.itemEntity;
 import static com.green.campingsmore.entity.QOrderEntity.orderEntity;
+import static com.green.campingsmore.entity.QOrderItemEntity.orderItemEntity;
+import static com.green.campingsmore.entity.QReserveEntity.reserveEntity;
+import static com.green.campingsmore.entity.QReviewEntity.reviewEntity;
 
 @Repository
 @RequiredArgsConstructor
@@ -131,9 +135,68 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     }
 
     @Override
+    public List<SelAggregateVO> selAggregateInfo() {
+        QOrderEntity orderA =new QOrderEntity("orderA");
+        QOrderItemEntity orderItemB = new QOrderItemEntity("orderItemB");
+        QRefundEntity refundC = new QRefundEntity("refundC");
+        QOrderEntity orderAA = new QOrderEntity("orderAA");
+        QOrderEntity orderBB = new QOrderEntity("orderBB");
+        QRefundEntity refundCC = new QRefundEntity("refundCC");
+
+        StringTemplate orderADate = getDateFormat(orderA.createdAt);
+        StringTemplate orderAADate = getDateFormat(orderAA.createdAt);
+        StringTemplate orderBBDate = getDateFormat(orderBB.createdAt);
+        StringTemplate refundCDate = getDateFormat(refundC.refundStartDate);
+        StringTemplate refundCCDate = getDateFormat(refundCC.refundEndDate);
+
+        return queryFactory.select(Projections.fields(SelAggregateVO.class,
+                        orderADate.as("date"),
+                new CaseBuilder().when(orderA.shipping.in(0,1)).then(orderA.totalPrice).otherwise(0).sum().as("orderTotalPrice"),
+                ExpressionUtils.as(
+                        JPAExpressions
+                                .select(orderAA.iorder.count())
+                                .from(orderAA)
+                                .where(orderAA.shipping.in(0,1).and(orderADate.eq(orderAADate)))
+                        ,"orderTotalCount"),
+                new CaseBuilder().when(orderA.shipping.in(2)).then(orderA.totalPrice).otherwise(0).sum().as("shippingCompleteTotalPrice"),
+                ExpressionUtils.as(
+                        JPAExpressions
+                                .select(orderBB.iorder.count())
+                                .from(orderBB)
+                                .where(orderBB.shipping.in(2).and(orderADate.eq(orderBBDate)))
+                        ,"shippingCompleteTotalCount"),
+                ExpressionUtils.as(
+                        JPAExpressions
+                                .select(refundC.totalPrice.sum())
+                                .from(refundC)
+                                .where(refundCDate.eq(orderADate))
+                        ,"refundTotalPrice"),
+                ExpressionUtils.as(
+                        JPAExpressions
+                                .select(refundCC.irefund.count())
+                                .from(refundCC)
+                                .where(refundCCDate.eq(orderADate))
+                        ,"refundTotalCount")
+                ))
+                .from(orderA)
+                .leftJoin(orderItemB).on(orderA.iorder.eq(orderItemB.orderEntity.iorder))
+                .groupBy(orderADate)
+                .orderBy(orderADate.desc())
+                .fetch();
+    }
+
+    public StringTemplate getDateFormat(DateTimePath<LocalDateTime> date) {
+        return Expressions.stringTemplate("DATE_FORMAT( {0}, {1} )", date, ConstantImpl.create("%m월 %d일"));
+    }
+
+    @Override
     public List<SelPaymentDetailDto> selPaymentDetailAll(Long iuser) {
-        List<Long> orderList = queryFactory
-                .select(orderEntity.iorder)
+        List<SelPaymentOrderDto> orderList = queryFactory
+                .select(Projections.fields(SelPaymentOrderDto.class,
+                        orderEntity.iorder,
+                        orderEntity.shipping
+
+                ))
                 .from(orderEntity)
                 .where(orderEntity.userEntity.iuser.eq(iuser)
                         .and(orderEntity.delYn.eq(1)))
@@ -143,7 +206,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
         List<SelPaymentDetailDto> result = new ArrayList<>();
 
-        for (Long iorder : orderList) {
+        for (SelPaymentOrderDto list : orderList) {
             List<PaymentDetailDto2> dto = queryFactory
                     .select(Projections.fields(PaymentDetailDto2.class,
                             itemEntity.iitem,
@@ -161,11 +224,12 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                     .from(orderItemEntity)
                     .innerJoin(itemEntity).on(orderItemEntity.itemEntity.iitem.eq(itemEntity.iitem))
                     .innerJoin(orderEntity).on(orderItemEntity.orderEntity.iorder.eq(orderEntity.iorder))
-                    .where(orderEntity.iorder.eq(iorder).and(orderItemEntity.delYn.eq(1)))
+                    .where(orderEntity.iorder.eq(list.getIorder()).and(orderItemEntity.delYn.eq(1)))
                     .fetch();
 
             SelPaymentDetailDto item = SelPaymentDetailDto.builder()    //조립
-                    .iorder(iorder)
+                    .iorder(list.getIorder())
+                    .shipping(list.getShipping())
                     .itemList(dto)
                     .build();
 

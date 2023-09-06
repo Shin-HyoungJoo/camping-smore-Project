@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -464,5 +465,25 @@ public class CampingService {
         }
 
         return reservations;
+    }
+    @Scheduled(cron = "0 0 0 * * *")
+    public void run(){
+        log.info("Scheduler is running...");
+        List<DailyRes> reservations = new ArrayList<>();
+        List<CampEntity> campgrounds = REP.findAll();
+        LocalDate startDate = LocalDate.now();
+        for (CampEntity campground : campgrounds) {
+            LocalDate reservationDate = startDate.plusDays(31);
+            ReserveDayEntity reserveDayEntity = ReserveDayEntity.builder()
+                    .date(reservationDate)
+                    .dayQuantity(10)
+                    .campEntity(campground)
+                    .build();
+            DAYREP.save(reserveDayEntity);
+            reservations.add(DailyRes.builder().iday(reserveDayEntity.getIday())
+                    .campEntity(reserveDayEntity.getCampEntity())
+                    .date(reserveDayEntity.getDate())
+                    .dayQuantity(reserveDayEntity.getDayQuantity()).build());
+        }
     }
 }

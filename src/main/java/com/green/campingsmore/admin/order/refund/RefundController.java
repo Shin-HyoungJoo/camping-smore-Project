@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -42,8 +43,10 @@ public class RefundController {
     }
 
     @GetMapping
-    public List<SelRefundVo> selRefund(@AuthenticationPrincipal MyUserDetails user) {
-        return SERVICE.selRefund(user.getIuser());
+    public Long selRefund(@AuthenticationPrincipal MyUserDetails user, @RequestParam Object aaa) {
+        Long aa = Long.parseLong(String.valueOf(aaa));
+        return aa;
+//        return SERVICE.selRefund(user.getIuser());
     }
 
 }

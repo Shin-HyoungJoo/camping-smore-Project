@@ -9,5 +9,6 @@ import java.util.List;
 @Builder
 public class SelPaymentDetailDto {
     private Long iorder;
+    private Integer shipping;
     private List<PaymentDetailDto2> itemList;
 }

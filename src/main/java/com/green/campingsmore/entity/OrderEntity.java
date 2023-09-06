@@ -55,11 +55,12 @@ public class OrderEntity extends BaseEntity {
     private Integer delYn;
 
     //KAKAO, CARD
-    @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
+    @Column(nullable = false, length = 1)
+    @Enumerated(EnumType.STRING)
     private PayType type;
 
     @Column(nullable = false, columnDefinition = "TINYINT", length = 1)
-    @Check(constraints = "shipping IN (0, 1, 2)")
+    @Check(constraints = "shipping IN (0, 1, 2, 3)")
     @ColumnDefault("0")
     private Integer shipping;
 }

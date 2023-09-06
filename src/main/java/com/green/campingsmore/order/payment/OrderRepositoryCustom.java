@@ -1,5 +1,6 @@
 package com.green.campingsmore.order.payment;
 
+import com.green.campingsmore.admin.main.model.SelAggregateVO;
 import com.green.campingsmore.order.payment.model.*;
 
 import java.util.List;
@@ -14,4 +15,5 @@ public interface OrderRepositoryCustom {
     SelReserveInfoVo selCampInfo(Long ireserve);
     List<CartPaymentItemDto> selPaymentPageItemList(CartPKDto dto);
     SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorderItem);
+    List<SelAggregateVO> selAggregateInfo();
 }
