@@ -1,14 +1,18 @@
 package com.green.campingsmore.admin.main;
 
 import com.green.campingsmore.admin.main.model.SelAggregateVO;
+import com.green.campingsmore.admin.main.model.SelOrderManageVo;
 import com.green.campingsmore.admin.main.model.SevenDaysTotalAverage;
 import com.green.campingsmore.admin.main.model.SevenDaysTotalSum;
 import com.green.campingsmore.order.payment.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -60,5 +64,16 @@ public class MainService {
 
         log.info("{}", result);
         return result;
+    }
+
+    @Transactional(rollbackFor = {Exception.class})
+    public List<SelOrderManageVo> selOrderManageList(LocalDate startDate, LocalDate endDate, Integer listBox, Object keyword) throws Exception {
+        if (listBox == null && keyword != null) {
+            throw new Exception("리스트 박스를 입력해주세요.");
+        } else if (listBox != null && keyword == null) {
+            throw new Exception("키워드를 입력해주세요.");
+        }
+
+        return orderRepo.SelOrderManageInfo(startDate, endDate, listBox, keyword);
     }
 }
