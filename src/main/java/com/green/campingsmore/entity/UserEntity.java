@@ -59,12 +59,10 @@ public class UserEntity extends BaseEntity {
     //    @Column(name = "wishlist_array") // null true는 기본값이라서 설정안해줘도 된다.
 //    private String wishlistArray;
     @Column(name = "provider_type", length = 20,nullable = false)
-    @ColumnDefault("LOCAL")
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
     @JsonIgnore
     @Column(name = "role_type", length = 20,nullable = false)
-    @ColumnDefault("USER")
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
 //    @Id
