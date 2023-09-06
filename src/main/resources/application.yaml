@@ -26,12 +26,6 @@ springboot:
     token-type: Bearer
 
 spring:
-  thymeleaf:
-    check-template-location: true
-    prefix: classpath:templates/
-    suffix: .html
-    mode: HTML
-    cache: false
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
