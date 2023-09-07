@@ -22,6 +22,7 @@ import org.hibernate.annotations.DynamicInsert;
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @DynamicInsert
+@NoArgsConstructor
 public class UserEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto_increment 설정
