@@ -2,14 +2,15 @@ package com.green.campingsmore.admin.order.ordermanage;
 
 import com.green.campingsmore.admin.order.ordermanage.model.SelAggregateVO;
 import com.green.campingsmore.admin.order.ordermanage.model.SelOrderManageVo;
+import com.green.campingsmore.admin.order.refundmanage.model.PatchShipping;
+import com.green.campingsmore.admin.order.refundmanage.model.ShippingRes;
+import com.green.campingsmore.config.security.model.MyUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -55,5 +56,31 @@ public class OrderManageCotroller {
                                                      @RequestParam(required = false) Integer listBox,
                                                      @RequestParam(required = false) Object keyword) throws Exception {
         return SERVICE.selOrderManageList(startDate, endDate, listBox, keyword);
+    }
+
+    @PatchMapping
+    @Operation(summary = "배송 상태 변경",
+            description =
+                            "<h3> iorder : 주문 PK\n" +
+                            "<h3> shipping : 배송 상태" +
+                            "<h3>   └0 : 배송 준비중\n" +
+                            "<h3>   └1 : 배송 중\n" +
+                            "<h3>   └2 : 배송 완료\n" +
+                            "<h3>   └3 : 배송 취소\n" +
+                            "<h3> ## 0 일땐 1과 3으로만 변경가능(1 : 배송 중, 3 : 배송 취소) \n"+
+                            "<h3> ## 1 일땐 2로만 변경가능(2 : 배송 완료) \n"+
+                            "<h3> ## 2, 3일땐 변경 불가 \n" +
+                            "<h3>-----------------------------------\n" +
+                            "<h3> iorder : 주문 PK \n" +
+                                    "<h3> shipping : 배송 상태" +
+                                    "<h3>   └0 : 배송 준비중\n" +
+                                    "<h3>   └1 : 배송 중\n" +
+                                    "<h3>   └2 : 배송 완료\n" +
+                                    "<h3>   └3 : 배송 취소\n"
+    )
+    public ShippingRes patchShipping(@AuthenticationPrincipal MyUserDetails user,
+                                     @RequestBody PatchShipping dto) throws Exception{
+        dto.setIuser(user.getIuser());
+        return SERVICE.patchShipping(dto);
     }
 }
