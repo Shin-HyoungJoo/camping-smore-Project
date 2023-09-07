@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RestController
-@Tag(name = "리뷰")
+@Tag(name = "유저 - 리뷰")
 @RequestMapping("/api/review")
 @RequiredArgsConstructor
 public class ReviewController {
@@ -29,7 +29,6 @@ public class ReviewController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "리뷰 추가"
             , description = "" +
-            "\"iuser\": [-] 유저 PK,<br>" +
             "\"iorder\": [-]  주문 PK,<br>" +
             "\"iitem\": [-] 아이템 PK,<br>" +
             "\"reviewCtnt\": [-] 리뷰 내용,<br>" +
@@ -65,9 +64,7 @@ public class ReviewController {
     @PutMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "리뷰 수정"
             , description = "" +
-            "\"iuser\": [-] 유저 PK,<br>" +
-            "\"iorder\": [-]  아이템 썸네일 pic url,<br>" +
-            "\"iitem\": [-] 아이템 PK,<br>" +
+            "\"ireview\": [-] 리뷰 PK,<br>" +
             "\"reviewCtnt\": [-] 리뷰 내용,<br>" +
             "\"starRating\": [-] 별점,<br>" +
             "\"pic\": [-] 사진 이미지<br>")

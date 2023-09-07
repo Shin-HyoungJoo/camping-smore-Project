@@ -10,12 +10,14 @@ import com.green.campingsmore.item.model.ItemSelDetailVo;
 import com.green.campingsmore.user.item.model.ItemSelCateVo;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -75,12 +77,8 @@ public class ItemDao {
 
     public List<AdminItemVo> searchAdminItem(Pageable page, Long cate, String text, Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
         //검색날짜
-        StringExpression createDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m-%d')", i.createdAt);
-        StringExpression nowDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m-%d')", now());
 
-
-
-        BooleanBuilder DateBuilder = new BooleanBuilder();
+/*        BooleanBuilder DateBuilder = new BooleanBuilder();
         if(date != null) {
             LocalDateTime addDate = LocalDateTime.now().minus(date, ChronoUnit.DAYS);
             if(date == 0) {
@@ -93,27 +91,20 @@ public class ItemDao {
             LocalDateTime searchEndDateTime = searchEndDate.atTime(LocalTime.MAX);
 
             DateBuilder.and(i.createdAt.between(searchStartDateTime,searchEndDateTime));
-        }
+            log.info("date---------------------------------:{}",date);
 
+        }*/
 
-        BooleanBuilder searchBuilder = new BooleanBuilder();
-        if(cate != null && text == null) {
-            searchBuilder.and(c.iitemCategory.eq(cate));
-        } else if (text != null && cate == null) {
-            searchBuilder.and(i.name.contains(text));
-        } else if (text != null && cate != null){
-            searchBuilder.and(c.iitemCategory.eq(cate)).and(i.name.contains(text));
-        } else if (text != null && cate != null) {
-            searchBuilder.and(c.iitemCategory.eq(cate)).and(i.name.contains(text));
-        }
 
         JPQLQuery<AdminItemVo> query = jpaQueryFactory.select(Projections.bean(AdminItemVo.class,
                         c.name.as("categoryName"), i.iitem, i.name, i.pic, i.price, i.createdAt, i.status
-
-                ))
+                         ))
                 .from(i)
                 .join(i.itemCategoryEntity, c)
-                .where(searchBuilder.and(DateBuilder).and(i.status.between(1,2))
+                .where(findCate(cate),
+                        findDate(date),
+                        findName(text),
+                        findSearchDate(searchStartDate,searchEndDate)
                 )
                 .orderBy(getAllOrderSpecifiers(page))
                 .offset(page.getOffset())
@@ -122,8 +113,51 @@ public class ItemDao {
         return query.fetch();
     }
 
+    private BooleanExpression findName(String text) {
+        if(StringUtils.isEmpty(text)) {
+            return null;
+        }
+        return i.name.contains(text);
+    }
+    private BooleanExpression findCate(Long cate) {
+        if (cate == null) {
+            return null;
+        }
+        return c.iitemCategory.eq(cate);
+    }
 
-    // 유저 아이템 ------------------------------------------------------------------------------------------------------
+    private BooleanExpression findDate(Integer date) {
+        if (date == null) {
+            return null;
+        }
+        StringExpression createDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m-%d')", i.createdAt);
+        StringExpression nowDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m-%d')", now());
+        LocalDateTime addDate = LocalDateTime.now().minus(date, ChronoUnit.DAYS);
+        if(date == 0) {
+            return createDate.eq(nowDate);
+        } else if(date == 3 || date ==7 || date ==30 || date ==90 || date ==360){
+           return i.createdAt.between(addDate,LocalDateTime.now());
+        }
+        return null;
+    }
+
+    private BooleanExpression findSearchDate(LocalDate searchStartDate, LocalDate searchEndDate) {
+        if(searchStartDate == null || searchEndDate == null ||(searchStartDate == null && searchEndDate == null)) {
+            return null;
+        }
+        LocalDateTime searchStartDateTime = searchStartDate.atStartOfDay();
+        LocalDateTime searchEndDateTime = searchEndDate.atTime(LocalTime.MAX);
+
+        BooleanExpression startDateTimeBoolean = i.createdAt.goe(LocalDateTime.of(searchStartDate, LocalTime.MIN));
+        BooleanExpression endDateTimeBoolean = i.createdAt.loe(LocalDateTime.of(searchEndDate, LocalTime.MAX).withNano(0));
+
+        return Expressions.allOf(startDateTimeBoolean,endDateTimeBoolean);
+    }
+
+
+
+
+///// 유저 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public List<ItemSelCateVo> selCategory() {
         JPQLQuery<ItemSelCateVo> query = jpaQueryFactory.select(Projections.bean(ItemSelCateVo.class,
@@ -190,10 +224,17 @@ public class ItemDao {
         JPQLQuery<ItemSelDetailVo> query = jpaQueryFactory.select(Projections.bean(ItemSelDetailVo.class,
                     i.iitem, i.name, i.pic, i.price, i.createdAt))
                 .from(i)
-                .join(dp.itemEntity, i)
-                .where(i.itemEntity.iitem.eq(iitem).and(i.status.eq(1)));
+                .where(i.iitem.eq(iitem).and(i.status.eq(1)));
 
         return query.fetchOne();
+    }
+
+    public List<String> selItemDetailPicList(Long iitem) {
+        JPQLQuery<String> query = jpaQueryFactory.select(
+                        dp.pic)
+                .from(dp)
+                .where(dp.itemEntity.iitem.eq(iitem));
+        return query.fetch();
     }
 
     public Integer itemCount() {

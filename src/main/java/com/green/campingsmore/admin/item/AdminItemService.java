@@ -211,5 +211,23 @@ public class AdminItemService {
         adminBestItemRep.save(entity);
         return null;
     }
+    public ItemBestVo updBestItem(AdminItemUpdBestDto dto) {
+        Optional<BestItemEntity> optEntity = adminBestItemRep.findById(dto.getIbestItem());
+
+        BestItemEntity entity = optEntity.get();
+        entity.setItemEntity(adminItemRep.findById(dto.getIitem()).get());
+        entity.setMonthLike(dto.getMonthLike());
+        adminBestItemRep.save(entity);
+
+        return ItemBestVo.builder()
+                .ibestItem(entity.getIbestItem())
+                .iitem(entity.getItemEntity().getIitem())
+                .monthLike(entity.getMonthLike())
+                .build();
+    }
+
+    public void delBestItem(Long ibestItem) {
+        adminBestItemRep.deleteById(ibestItem);
+    }
 
 }
