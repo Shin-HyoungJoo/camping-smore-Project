@@ -44,9 +44,10 @@ public class SecurityConfiguration {
                                                 , "/swagger-ui/**"
                                                 , "/v3/api-docs/**"
 
+                                                , "/*/oauth2/code/*"
                                                 , "/oauth2/**"
                                                 , "/oauth/**"
-                                                , "/*/oauth2/code/*"
+                                                , "/main"
 
                                                 ,"/api/notuser" // 비회원 방문 카운트 증가
                                                 ,"/api/oauth/authorize" //로그인
