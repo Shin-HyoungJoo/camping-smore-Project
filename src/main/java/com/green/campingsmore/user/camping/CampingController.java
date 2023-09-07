@@ -1,6 +1,5 @@
 package com.green.campingsmore.user.camping;
 
-import com.green.campingsmore.config.security.model.MyUserDetails;
 import com.green.campingsmore.user.camping.model.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -110,5 +108,10 @@ public class CampingController {
     public ResponseEntity<List<DailyRes>> InsCampMain(){
         return ResponseEntity.ok(SERVICE.InsMainCamp());
 
+    }
+    @GetMapping("/iday")
+    @Operation(summary = "iday 찾기 오늘포함 30일")
+    public ResponseEntity<List<List<DailyList>>> selIday(){
+        return ResponseEntity.ok(SERVICE.selIday());
     }
 }

@@ -52,6 +52,12 @@ public class AdminItemService {
         return list;
     }
 
+    public AdminItemCateDetailVo selAdminCategoryDetail(Long iitemcategory) {
+//        AdminItemCateDetailVo vo = itemDao.selAdminCategoryDetail(iitemcategory);
+//        return list;
+        return null;
+    }
+
     public AdminItemCateVo updCategory(AdminItemUpdCateDto dto) {
 
         Optional<ItemCategoryEntity> optEntity = adminItemCategoryRep.findById(dto.getIitemCategory());
@@ -105,8 +111,8 @@ public class AdminItemService {
         return null;
     }
 
-    public AdminItemSelDetailRes searchAdminItem(Pageable page, Long cate, String text, LocalDate searchStartDate, LocalDate searchEndDate) {
-        List<ItemVo> list = itemDao.searchAdminItem(page, cate, text,searchStartDate,searchEndDate);
+    public AdminItemSelDetailRes searchAdminItem(Pageable page, Long cate, String text, Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
+        List<ItemVo> list = itemDao.searchAdminItem(page, cate, text, date,searchStartDate,searchEndDate);
         Integer startIdx = page.getPageNumber() * page.getPageSize();
         Integer count = itemDao.itemCount();
         Integer maxPage = (int)Math.ceil((double) count / page.getPageSize());
