@@ -94,8 +94,8 @@ public class AdminItemController {
             "\"cate\": [-] 카테고리(11: 축산물, 16: 수산물, 13: 소스/드레싱, 18: 밀키트, 17: 농산물),<br>"+
             "\"text\": [-] 검색어,<br>" +
             "\"date\": [-] 검색 기간 선택( 0: 오늘, 3: 3일, 7: 7일, 30: 1개월, 90:3개월, 없으면 전체),<br>" +
-            "\"searchStartDate\": [8] 검색 시작 날짜,<br>" +
-            "\"searchEndDate\": [8] 검색 끝 날짜,<br>" +
+            "\"searchStartDate\": [8] 검색 시작 날짜 ex) 2023-09-05,<br>" +
+            "\"searchEndDate\": [8] 검색 끝 날짜 ex) 2023-09-05,<br>" +
             "\"page\": [-] 리스트 페이지,<br>" +
             "\"size\": [-] 아이템 개수,<br>" +
             "\"sort\": [1] 판매순 랭킹( iitem,DESC : 최신순(default), iitem,ASC: 오래된순, price,DESC: 높은가격순, price,ASC: 낮은가격순)  <br>"
@@ -103,8 +103,8 @@ public class AdminItemController {
     public ResponseEntity<AdminItemSelDetailRes> getSearchItem(@RequestParam(value = "cate",required=false)Long cate,
                                                           @RequestParam(value = "text",required=false)String text,
                                                           @RequestParam(value = "date", required = false)Integer date,
-                                                          @RequestParam(value = "searchStartDate", required = false) @DateTimeFormat(pattern = "yyyyMMdd") LocalDate searchStartDate,
-                                                          @RequestParam(value = "searchEndDate", required = false) @DateTimeFormat(pattern = "yyyyMMdd") LocalDate searchEndDate,
+                                                          @RequestParam(value = "searchStartDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate searchStartDate,
+                                                          @RequestParam(value = "searchEndDate", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate searchEndDate,
                                                           @ParameterObject @PageableDefault(sort = "iitem", direction = Sort.Direction.DESC, size = 15) Pageable page) {
 
 
