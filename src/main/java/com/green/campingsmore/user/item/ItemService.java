@@ -27,11 +27,20 @@ public class ItemService {
     private final ItemDao itemDao;
     private final ItemCategoryRepository itemCategoryRep;
     private final ReviewService reviewService;
+
+
+    // 카테고리 ------------------------------------------------------------------------------------------------------
+
     public List<ItemSelCateVo> selCategory() {
-        List<ItemSelCateVo> list = itemDao.selCategory();
-        return list;
+        try {
+            List<ItemSelCateVo> list = itemDao.selCategory();
+            return list;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
+    // 아이템 ------------------------------------------------------------------------------------------------------
     public ItemSelDetailRes searchItem(Pageable page, Long cate, String text) {
         List<ItemVo> list = itemDao.searchItem(page, cate, text);
         Integer startIdx = page.getPageNumber() * page.getPageSize();
@@ -53,15 +62,18 @@ public class ItemService {
 
     public ItemDetailReviewVo selDetail(Pageable page, Long iitem) {
         ItemSelDetailVo itemSelDetailVo = itemDao.selItemDetail(iitem);
+        List<String> picList = itemDao.selItemDetailPicList(iitem);
         ItemDetailVo detailVo = ItemDetailVo.builder()
+                .itemSelDetailVo(itemSelDetailVo)
+                .picList(picList)
                 .build();
         ReviewRes reviewRes = reviewService.selectItemReview(page,iitem);
 
-/*        return ItemDetailReviewVo.builder()
-                .item()
+        return ItemDetailReviewVo.builder()
+                .item(detailVo)
                 .review(reviewRes)
-                .build();*/
-        return null;
+                .build();
+
     }
 
 

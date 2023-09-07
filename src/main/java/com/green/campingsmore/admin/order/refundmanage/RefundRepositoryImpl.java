@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.green.campingsmore.entity.QRefundEntity.*;
+import static com.green.campingsmore.entity.QUserEntity.*;
 
 @RequiredArgsConstructor
 public class RefundRepositoryImpl implements RefundRepositoryCustom {
@@ -41,7 +42,7 @@ public class RefundRepositoryImpl implements RefundRepositoryCustom {
     }
 
     @Override
-    public List<SelRefundManageVo> SelRefundManageList(LocalDate startDate, LocalDate endDate, Integer listBox, Object keyword) {
+    public List<SelRefundManageVo> selRefundManageList(LocalDate startDate, LocalDate endDate, Integer listBox, Object keyword) {
         QRefundEntity A = new QRefundEntity("A");
         QUserEntity B = new QUserEntity("B");
         QOrderItemEntity C = new QOrderItemEntity("C");
@@ -56,6 +57,7 @@ public class RefundRepositoryImpl implements RefundRepositoryCustom {
 
         return queryFactory
                 .select(Projections.fields(SelRefundManageVo.class,
+                        A.irefund.as("irefund"),
                         dateC.as("orderDate"),
                         startDateA.as("refundStartDate"),
                         endDateA.as("refundEndDate"),
@@ -75,6 +77,15 @@ public class RefundRepositoryImpl implements RefundRepositoryCustom {
                         orderRepoImpl.pickListBox(listBox, keyword)
                 )
                 .fetch();
+    }
+
+    @Override
+    public String selUserName(Long iuser) {
+        return queryFactory
+                .select(userEntity.name)
+                .from(userEntity)
+                .where(userEntity.iuser.eq(iuser))
+                .fetchOne();
     }
 
     public BooleanExpression refundCreatedAtRange(LocalDate startDate, LocalDate endDate) {

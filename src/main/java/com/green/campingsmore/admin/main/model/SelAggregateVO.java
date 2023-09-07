@@ -1,4 +1,4 @@
-package com.green.campingsmore.admin.order.ordermanage.model;
+package com.green.campingsmore.admin.main.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SevenDaysTotalSum {
+public class SelAggregateVO {
+    private String date;
     private Integer orderTotalPrice;
     private Long orderTotalCount;
     private Integer shippingCompleteTotalPrice;

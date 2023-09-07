@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface RefundRepositoryCustom {
     List<SelRefundVo> selRefund(Long iuser);
-    List<SelRefundManageVo> SelRefundManageList(LocalDate startDate, LocalDate endDate, Integer listBox, Object keyword);
+    List<SelRefundManageVo> selRefundManageList(LocalDate startDate, LocalDate endDate, Integer listBox, Object keyword);
+    String selUserName(Long iuser);
+
 }

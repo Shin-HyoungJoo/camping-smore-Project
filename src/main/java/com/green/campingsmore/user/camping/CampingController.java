@@ -114,4 +114,9 @@ public class CampingController {
     public ResponseEntity<List<List<DailyList>>> selIday(){
         return ResponseEntity.ok(SERVICE.selIday());
     }
+    @GetMapping("/icampday")
+    @Operation(summary = "icamp로 iday 찾기")
+    public ResponseEntity<List<DailyList>> selIcampDay(Long icamp){
+        return ResponseEntity.ok(SERVICE.selIcampDay(icamp));
+    }
 }
