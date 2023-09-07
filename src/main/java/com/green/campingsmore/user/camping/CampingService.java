@@ -464,6 +464,27 @@ public class CampingService {
 
         return dailyLists;
     }
+    public List<DailyList> selIcampDay(Long icamp) {
+        // 현재 날짜를 구합니다.
+        LocalDate currentDate = LocalDate.now();
+
+        // 30일 뒤의 날짜를 계산합니다.
+        LocalDate thirtyDaysFromToday = currentDate.plus(30, ChronoUnit.DAYS);
+
+        // 데이터를 저장할 리스트를 생성합니다.
+        List<DailyList> dailyList = new ArrayList<>();
+
+        // 현재 날짜부터 30일 뒤까지 데이터를 가져와서 리스트에 추가합니다.
+        LocalDate date = currentDate;
+
+        while (!date.isAfter(thirtyDaysFromToday)) {
+            List<DailyList> dailyListForDate = REP.selIcampDay(icamp, date);
+            dailyList.addAll(dailyListForDate); // 하루씩 가져온 리스트를 dailyList에 추가
+            date = date.plusDays(1); // 하루씩 다음 날짜로 이동
+        }
+        return dailyList;
+    }
+
 
 
 
