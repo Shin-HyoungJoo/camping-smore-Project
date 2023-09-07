@@ -21,6 +21,7 @@ import org.hibernate.annotations.DynamicInsert;
 @SuperBuilder
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
 @DynamicInsert
 public class UserEntity extends BaseEntity {
     @Id
