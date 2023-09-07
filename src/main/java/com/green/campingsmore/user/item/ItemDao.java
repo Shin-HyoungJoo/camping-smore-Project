@@ -1,6 +1,8 @@
 package com.green.campingsmore.user.item;
 
+import com.green.campingsmore.admin.item.model.AdminItemCateDetailVo;
 import com.green.campingsmore.admin.item.model.AdminItemCateVo;
+import com.green.campingsmore.admin.item.model.AdminItemVo;
 import com.green.campingsmore.admin.item.model.ItemVo;
 import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.entity.*;
@@ -22,6 +24,9 @@ import org.springframework.jdbc.support.SQLErrorCodes;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -52,12 +57,43 @@ public class ItemDao {
                 ))
                 .from(c)
                 .orderBy(c.name.desc())
-                .where(c.status.eq(1).or(c.status.eq(2)));
+                .where(c.status.between(1,2));
 
         return query.fetch();
     }
 
-    public List<ItemVo> searchAdminItem(Pageable page, Long cate, String text, Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
+    public AdminItemCateVo selAdminCategoryDetail(Long iitemCategory) {
+        JPQLQuery<AdminItemCateVo> query = jpaQueryFactory.select(Projections.bean(AdminItemCateVo.class,
+                        c.iitemCategory, c.name, c.status
+                ))
+                .from(c)
+                .orderBy(c.name.desc())
+                .where(c.iitemCategory.eq(iitemCategory).and(c.status.between(1,2)));
+
+        return query.fetchOne();
+    }
+
+    public List<AdminItemVo> searchAdminItem(Pageable page, Long cate, String text, Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
+        //검색날짜
+        StringExpression createDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m-%d')", i.createdAt);
+        StringExpression nowDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m-%d')", now());
+
+
+
+        BooleanBuilder DateBuilder = new BooleanBuilder();
+        if(date != null) {
+            LocalDateTime addDate = LocalDateTime.now().minus(date, ChronoUnit.DAYS);
+            if(date == 0) {
+                DateBuilder.and(createDate.eq(nowDate));
+            } else if(date == 3 || date ==7 || date ==30 || date ==90 || date ==360){
+                DateBuilder.and(i.createdAt.between(addDate,LocalDateTime.now()));
+            }
+        }else if(searchStartDate != null && searchStartDate != null) {
+            LocalDateTime searchStartDateTime = searchStartDate.atStartOfDay();
+            LocalDateTime searchEndDateTime = searchEndDate.atTime(LocalTime.MAX);
+
+            DateBuilder.and(i.createdAt.between(searchStartDateTime,searchEndDateTime));
+        }
 
 
         BooleanBuilder searchBuilder = new BooleanBuilder();
@@ -71,15 +107,14 @@ public class ItemDao {
             searchBuilder.and(c.iitemCategory.eq(cate)).and(i.name.contains(text));
         }
 
-
-
-        JPQLQuery<ItemVo> query = jpaQueryFactory.select(Projections.bean(ItemVo.class,
+        JPQLQuery<AdminItemVo> query = jpaQueryFactory.select(Projections.bean(AdminItemVo.class,
                         c.name.as("categoryName"), i.iitem, i.name, i.pic, i.price, i.createdAt, i.status
 
                 ))
                 .from(i)
                 .join(i.itemCategoryEntity, c)
-                .where(searchBuilder.and(i.status.eq(1)).or(i.status.eq(2)))
+                .where(searchBuilder.and(DateBuilder).and(i.status.between(1,2))
+                )
                 .orderBy(getAllOrderSpecifiers(page))
                 .offset(page.getOffset())
                 .limit(page.getPageSize());
@@ -87,22 +122,6 @@ public class ItemDao {
         return query.fetch();
     }
 
-    private BooleanBuilder searchDateBuilder(Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
-
-        StringExpression createDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m-%d')", i.createdAt);
-        StringExpression nowDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m-%d')", now());
-        DateTemplate<Date> addDate = Expressions.dateTemplate(Date.class, "ADD_DATE({0},{1})", now(), Expressions.asNumber(-date));
-
-
-        BooleanBuilder DateBuilder = new BooleanBuilder();
-        if(date == 0) {
-            DateBuilder.and(createDate.eq(nowDate));
-            log.info("nowDate:---------------------------------------------{}",nowDate);
-        } else if(date == 1){
-//            DateBuilder.and(createDate.eq(nowDate).between(createDate.eq());
-        }
-        return DateBuilder;
-    }
 
     // 유저 아이템 ------------------------------------------------------------------------------------------------------
 

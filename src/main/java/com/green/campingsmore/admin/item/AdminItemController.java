@@ -42,7 +42,7 @@ public class AdminItemController {
         return ResponseEntity.ok(service.selAdminCategory());
     }
 
-    @GetMapping("/category/{iitem-category}/detail")
+    @GetMapping("/category/{iitemcategory}/detail")
     @Operation(summary = "아이템 카테고리 디테일"
             , description = ""+
             "\"iitemCategory\": [-] 아이템 카테고리 PK,<br>" +
@@ -100,8 +100,8 @@ public class AdminItemController {
     public ResponseEntity<AdminItemSelDetailRes> getSearchItem(@RequestParam(value = "cate",required=false)Long cate,
                                                           @RequestParam(value = "text",required=false)String text,
                                                           @RequestParam(value = "date", required = false)Integer date,
-                                                          @RequestParam(value = "searchStartDate", required = false, defaultValue = "18000101") @DateTimeFormat(pattern = "yyyyMMdd") LocalDate searchStartDate,
-                                                          @RequestParam(value = "searchEndDate", required = false, defaultValue = "99991231") @DateTimeFormat(pattern = "yyyyMMdd") LocalDate searchEndDate,
+                                                          @RequestParam(value = "searchStartDate", required = false ) @DateTimeFormat(pattern = "yyyyMMdd") LocalDate searchStartDate,
+                                                          @RequestParam(value = "searchEndDate", required = false ) @DateTimeFormat(pattern = "yyyyMMdd") LocalDate searchEndDate,
                                                           @ParameterObject @PageableDefault(sort = "iitem", direction = Sort.Direction.DESC, size = 15) Pageable page) {
 
 

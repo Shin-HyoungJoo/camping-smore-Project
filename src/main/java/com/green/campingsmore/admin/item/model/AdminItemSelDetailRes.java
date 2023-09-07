@@ -15,5 +15,5 @@ public class AdminItemSelDetailRes {
     private int isMore;
     private int page;
     private int row;
-    private List<ItemVo> itemList;
+    private List<AdminItemVo> itemList;
 }
