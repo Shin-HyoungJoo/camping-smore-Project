@@ -42,8 +42,18 @@ public class AdminItemController {
         return ResponseEntity.ok(service.selAdminCategory());
     }
 
+    @GetMapping("/category/{iitem-category}/detail")
+    @Operation(summary = "아이템 카테고리 디테일"
+            , description = ""+
+            "\"iitemCategory\": [-] 아이템 카테고리 PK,<br>" +
+            "\"name\": [-] 아이템 카테고리명,<br>" +
+            "\"status\": [-] 아이템 상태(판매중(1): 유저에게 노출 / 판매중지(2): 유저에게 노출되지않음),<br>" )
+    public ResponseEntity<AdminItemCateDetailVo> getCategoryDetail(@PathVariable Long iitemcategory){
+        return ResponseEntity.ok(service.selAdminCategoryDetail(iitemcategory));
+    }
+
     @PutMapping("/category")
-    @Operation(summary = "아이템 카테고리 리스트"
+    @Operation(summary = "아이템 카테고리 업데이트"
             , description = "" +
             "\"iitemCategory\": [-] 아이템 카테고리 PK,<br>" +
             "\"name\": [-] 아이템 카테고리명,<br>" +

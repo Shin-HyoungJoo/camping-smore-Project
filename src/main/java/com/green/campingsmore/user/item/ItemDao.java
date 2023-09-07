@@ -8,6 +8,7 @@ import com.green.campingsmore.item.model.ItemSelDetailVo;
 import com.green.campingsmore.user.item.model.ItemSelCateVo;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.JPAExpressions;
@@ -17,9 +18,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.support.SQLErrorCodes;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -88,13 +91,15 @@ public class ItemDao {
 
         StringExpression createDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m-%d')", i.createdAt);
         StringExpression nowDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m-%d')", now());
-        StringExpression addDate = Expressions.stringTemplate("FUNCTION('DATE_ADD', {0}, INTERVAL {1} DAY)", now(),date);
+        DateTemplate<Date> addDate = Expressions.dateTemplate(Date.class, "ADD_DATE({0},{1})", now(), Expressions.asNumber(-date));
+
 
         BooleanBuilder DateBuilder = new BooleanBuilder();
         if(date == 0) {
             DateBuilder.and(createDate.eq(nowDate));
+            log.info("nowDate:---------------------------------------------{}",nowDate);
         } else if(date == 1){
-//            DateBuilder.and(createDate.eq(nowDate).between(createDate.eq(addDate)))
+//            DateBuilder.and(createDate.eq(nowDate).between(createDate.eq());
         }
         return DateBuilder;
     }

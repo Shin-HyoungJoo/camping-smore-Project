@@ -52,6 +52,12 @@ public class AdminItemService {
         return list;
     }
 
+    public AdminItemCateDetailVo selAdminCategoryDetail(Long iitemcategory) {
+//        AdminItemCateDetailVo vo = itemDao.selAdminCategoryDetail(iitemcategory);
+//        return list;
+        return null;
+    }
+
     public AdminItemCateVo updCategory(AdminItemUpdCateDto dto) {
 
         Optional<ItemCategoryEntity> optEntity = adminItemCategoryRep.findById(dto.getIitemCategory());
