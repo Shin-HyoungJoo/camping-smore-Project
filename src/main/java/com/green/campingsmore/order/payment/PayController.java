@@ -1,10 +1,13 @@
 package com.green.campingsmore.order.payment;
 
 import com.green.campingsmore.config.security.model.MyUserDetails;
+import com.green.campingsmore.order.payment.model.kakao.KakaoApproveResponseDto;
+import com.green.campingsmore.order.payment.model.kakao.KakaoReadyResponseDto;
 import com.green.campingsmore.order.payment.model.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +22,11 @@ import java.util.Optional;
 public class PayController {
 
     private final PayService SERVICE;
+    private final KakaoPayService kakaoPayService;
 
-    @PostMapping    //Check, if문 분기(카카오, 예약시) 필요, 미완
+    @PostMapping    //Check, if문 분기(카카오, 예약시) 필요
     @Operation(summary = "결제 정보 저장하기",
             description =
-                    "<h3> ireserve : 캠핑 예약번호 (없을 경우 그대로 둘 것)\n" +
                             "<h3> address : 배송지\n" +
                             "<h3> addressDetail : 상세 배송지\n" +
                             "<h3> totalPrice : 총 결제 금액\n" +
@@ -257,5 +260,49 @@ public class PayController {
     public refundRequestRes refundRequest (@AuthenticationPrincipal MyUserDetails user,
                                @PathVariable Long iorderitem) throws Exception {
         return SERVICE.refundRequest(iorderitem, user.getIuser());
+    }
+
+
+
+
+
+
+
+
+
+
+    @PostMapping("/kakao/ready")
+    @Operation(summary = "카카오 페이 요청",
+    description = "<h3> ireserve : 캠핑 예약번호 (없을 경우 그대로 둘 것)\n" +
+            "<h3> address : 배송지\n" +
+            "<h3> addressDetail : 상세 배송지\n" +
+            "<h3> totalPrice : 총 결제 금액\n" +
+            "<h3> shippingPrice : 배송비\n" +
+            "<h3> shippingMemo : 배송 메모\n" +
+            "<h3> type : 결제 타입 (KAKAO, CARD) 택 1\n" +
+            "<h3> ReceiveCampingYn : 캠핑지로 받을건지 여부 (0 : 일반 배송지, 1 : 캠핑지) \n" +
+            "<h3> purchaseList : 구입 목록\n" +
+            "<h3>   └iitem : 결제한 아이템 PK\n" +
+            "<h3>   └quantity : 아이템 수량\n" +
+            "<h3>   └totalPrice : 아이템별 총 가격\n" +
+            "<h3>-----------------------------------\n" +
+            "<h3>   CODE 1 : DB 정보 저장 성공\n" +
+            "<h3>   CODE 0 : DB 정보 저장 실패\n"
+    )
+    public KakaoReadyResponseDto readyToKakaoPay(@AuthenticationPrincipal MyUserDetails user,
+                                                 @RequestBody InsPayInfoDto dto) {
+        dto.setIuser(user.getIuser());
+        return kakaoPayService.kakaoPayReady(dto);
+    }
+
+    /**
+     * 결제 성공
+     */
+    @GetMapping("/kakao/success")
+    public ResponseEntity afterPayRequest(@RequestParam("pg_token") String pgToken) throws Exception {
+
+        KakaoApproveResponseDto kakaoApprove = kakaoPayService.approveResponse(pgToken);
+
+        return new ResponseEntity<>(kakaoApprove, HttpStatus.OK);
     }
 }

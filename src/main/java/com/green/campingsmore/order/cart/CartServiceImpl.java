@@ -31,7 +31,7 @@ public class CartServiceImpl implements CartService {
 
         return Optional.ofNullable(CartRes.builder()
                 .icart(entity.getIcart())
-                .iuser(entity.getItemEntity().getIitem())
+                .iuser(dto.getIuser())
                 .iitem(entity.getItemEntity().getIitem())
                 .quantity(entity.getQuantity())
                 .build());
