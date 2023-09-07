@@ -53,9 +53,14 @@ public class AdminItemService {
     }
 
     public AdminItemCateDetailVo selAdminCategoryDetail(Long iitemcategory) {
-//        AdminItemCateDetailVo vo = itemDao.selAdminCategoryDetail(iitemcategory);
-//        return list;
-        return null;
+        AdminItemCateVo vo = itemDao.selAdminCategoryDetail(iitemcategory);
+        String url = "http://주소들어갈예정/" + iitemcategory.toString();
+        return AdminItemCateDetailVo.builder()
+                .iitemCategory(vo.getIitemCategory())
+                .name(vo.getName())
+                .url(url)
+                .status(vo.getStatus())
+                .build();
     }
 
     public AdminItemCateVo updCategory(AdminItemUpdCateDto dto) {
@@ -112,7 +117,7 @@ public class AdminItemService {
     }
 
     public AdminItemSelDetailRes searchAdminItem(Pageable page, Long cate, String text, Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
-        List<ItemVo> list = itemDao.searchAdminItem(page, cate, text, date,searchStartDate,searchEndDate);
+        List<AdminItemVo> list = itemDao.searchAdminItem(page, cate, text, date,searchStartDate,searchEndDate);
         Integer startIdx = page.getPageNumber() * page.getPageSize();
         Integer count = itemDao.itemCount();
         Integer maxPage = (int)Math.ceil((double) count / page.getPageSize());
@@ -205,6 +210,24 @@ public class AdminItemService {
                 .build();
         adminBestItemRep.save(entity);
         return null;
+    }
+    public ItemBestVo updBestItem(AdminItemUpdBestDto dto) {
+        Optional<BestItemEntity> optEntity = adminBestItemRep.findById(dto.getIbestItem());
+
+        BestItemEntity entity = optEntity.get();
+        entity.setItemEntity(adminItemRep.findById(dto.getIitem()).get());
+        entity.setMonthLike(dto.getMonthLike());
+        adminBestItemRep.save(entity);
+
+        return ItemBestVo.builder()
+                .ibestItem(entity.getIbestItem())
+                .iitem(entity.getItemEntity().getIitem())
+                .monthLike(entity.getMonthLike())
+                .build();
+    }
+
+    public void delBestItem(Long ibestItem) {
+        adminBestItemRep.deleteById(ibestItem);
     }
 
 }

@@ -11,7 +11,6 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface UserDetailsMapper {
-    KakaoIuser kakaoLogin(String email);
     int signUp(SignUpDto dto);
     LoginDto getByUid(String uid);
     int delYnUser(int iuser);

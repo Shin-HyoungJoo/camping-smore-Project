@@ -24,6 +24,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        System.out.println("OAuth2User loadUser" + userRequest);
         OAuth2User user = super.loadUser(userRequest);
 
         try {
@@ -37,7 +38,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private OAuth2User process(OAuth2UserRequest userRequest, OAuth2User user) {
+        System.out.println("userRequest = " + userRequest);
+        System.out.println("userRequest.getClientRegistration().getRegistrationId().toUpperCase() = " + userRequest.getClientRegistration().getRegistrationId().toUpperCase());
         ProviderType providerType = ProviderType.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
+        System.out.println("providerType = " + providerType);
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
         UserEntity savedUser = rep.findByProviderTypeAndUid(providerType, userInfo.getId());

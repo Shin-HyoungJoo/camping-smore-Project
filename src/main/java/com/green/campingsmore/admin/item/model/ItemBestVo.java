@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Builder
 @Getter
 public class ItemBestVo {
-    private Long id;
-    private ItemEntity itemEntity;
+    private Long ibestItem;
+    private Long iitem;
     private LocalDate monthLike;
 }

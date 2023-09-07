@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
-@Tag(name = "환불 아직 건들지 마시오")
+@Tag(name = "관리자 - 환불")
 @RestController
 @RequestMapping("/api/admin/refund")
 @RequiredArgsConstructor
@@ -36,6 +36,7 @@ public class RefundController {
                             "<h3> ## 오늘 날만 찍을때는 startDate에만 오늘날짜 기입 \n" +
                             "<h3> ## listBox 기입시 keyword 기입도 필수 \n" +
                             "<h3>-----------------------------------\n" +
+                            "<h3> irefund : 환불 데이터 PK\n" +
                             "<h3> orderDate : 주문 날짜\n" +
                             "<h3> refundStartDate : 환불 시작 날짜\n" +
                             "<h3> refundEndDate : 환불 종료 날짜\n" +
@@ -56,19 +57,38 @@ public class RefundController {
         return SERVICE.selRefundManageList(startDate, endDate, listBox, keyword);
     }
 
-//    @PostMapping
-//    public RefundRes postRefund(@AuthenticationPrincipal MyUserDetails user,
-//                                @RequestBody InsRefund dto) {
-//        dto.setIuser(user.getIuser());
-//        return SERVICE.insRefund(dto);
-//    }
-//
-//    @PatchMapping
-//    public RefundRes patchRefund(@AuthenticationPrincipal MyUserDetails user,
-//                                 @RequestBody PatchRefund dto) throws Exception{
-//        dto.setIuser(user.getIuser());
-//        return SERVICE.patchRefund(dto);
-//    }
+    @PatchMapping
+    @Operation(summary = "환불 상태 변경",
+            description =
+                    "<h3> irefund : 환불 데이터 PK" +
+                            "<h3> refundStatus : 환불 상태 (환불 시작 날짜 기준)\n" +
+                            "<h3>    └0 : 환불 대기(신청 들어온 상태)\n" +
+                            "<h3>    └1 : 환불 처리중(관리자가 확인하고 처리중인 상태)\n" +
+                            "<h3>    └2 : 환불 완료(환불이 완료된 상태)\n" +
+                            "<h3>    └2 : 환불 불가(환불이 불가된 상태)\n" +
+                            "<h3> ## 0 -> 1 -> 2 or 3 순으로 진행  \n" +
+                            "<h3> ## 유저가 환불 요청시 refundStatus가 0인 환불데이터가 생김\n" +
+                            "<h3> ## 환불 관리창에서 적용해야함 \n" +
+                            "<h3>-----------------------------------\n" +
+                            "<h3> irefund : 환불 데이터 PK\n" +
+                            "<h3> iuser : 유저 PK\n" +
+                            "<h3> name : 유저 이름\n" +
+                            "<h3> iorderitem : 상세 주문 PK(환불할 상세 주문)\n" +
+                            "<h3> refundStartDate : 환불 신청일\n" +
+                            "<h3> refundEndDate : 환불 종료일\n" +
+                            "<h3> quantity : 개수\n" +
+                            "<h3> totalPrice : 총 가격\n" +
+                            "<h3> refundStatus : 환불 상태\n" +
+                            "<h3>    └0 : 환불 대기(신청 들어온 상태)\n" +
+                            "<h3>    └1 : 환불 처리중(관리자가 확인하고 처리중인 상태)\n" +
+                            "<h3>    └2 : 환불 완료(환불이 완료된 상태)\n" +
+                            "<h3>    └2 : 환불 불가(환불이 불가된 상태)\n"
+    )
+    public RefundRes patchRefund(@AuthenticationPrincipal MyUserDetails user,
+                                 @RequestBody PatchRefund dto) throws Exception{
+        dto.setIuser(user.getIuser());
+        return SERVICE.patchRefund(dto);
+    }
 //
 //    @DeleteMapping("/{irefund}")
 //    public Long delRefund(@PathVariable Long irefund) {

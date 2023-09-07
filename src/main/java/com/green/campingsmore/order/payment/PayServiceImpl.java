@@ -3,6 +3,7 @@ package com.green.campingsmore.order.payment;
 import com.green.campingsmore.admin.order.refundmanage.RefundRepository;
 import com.green.campingsmore.entity.*;
 import com.green.campingsmore.order.payment.model.*;
+import com.green.campingsmore.sign.SignRepository;
 import com.green.campingsmore.user.camping.ReserveRepository;
 import com.green.campingsmore.user.item.ItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,16 +25,18 @@ public class PayServiceImpl implements PayService {
     private final OrderItemRepository orderItemRepo;
     private final ReserveRepository resRepo;
     private final ShippingAddressRepository shippingRepo;
-    private final ItemRepository ItemRepo;
+    private final ItemRepository itemRepo;
     private final RefundRepository refundRepo;
+    private final SignRepository userRepo;
 
     @Override       //dsl
     @Transactional(rollbackFor = {Exception.class})
     public Long insPayInfo(InsPayInfoDto dto) throws Exception {
 
+        UserEntity userEntity = userRepo.findById(dto.getIuser()).get();
+
         OrderEntity orderEntity = OrderEntity.builder()
-                .userEntity(UserEntity.builder().iuser(dto.getIuser()).build())
-                .reserveEntity(null)
+                .userEntity(userEntity)
                 .address(dto.getAddress())
                 .addressDetail(dto.getAddressDetail())
                 .totalPrice(dto.getTotalPrice())
@@ -44,14 +47,13 @@ public class PayServiceImpl implements PayService {
                 .shipping(0)
                 .build();
 
-        if (dto.getReceiveCampingYn() != null) {
+        if (dto.getReceiveCamp() != null) {
 
-
-            if (dto.getReceiveCampingYn() < 0 || dto.getReceiveCampingYn() > 1) {
-                throw new Exception("ReceiveCampingYn은 0,1만 가능");
+            if (dto.getReceiveCamp() < 0 || dto.getReceiveCamp() > 1) {
+                throw new Exception("receiveCamp는 0,1만 가능");
             }
 
-            if (dto.getReceiveCampingYn() == 1) {   //캠핑지로 주소입력함
+            if (dto.getReceiveCamp() == 1) {   //캠핑지로 주소입력함
                 SelReserveCheckVO reserveCheck = orderRepo.selReserveCheck(dto.getIuser());
 
                 ReserveEntity reserveEntity = resRepo.findById(reserveCheck.getIreserve()).get();
@@ -68,7 +70,7 @@ public class PayServiceImpl implements PayService {
         Long iorder = orderEntity.getIorder();
 
         for (PayDetailInfoVo item : purchaseItem) {
-            ItemEntity itemResult = ItemRepo.findById(item.getIitem()).get();
+            ItemEntity itemResult = itemRepo.findById(item.getIitem()).get();
 
             Integer itemStock = itemResult.getStock();
             Integer purchaseStock = item.getQuantity();
@@ -78,13 +80,13 @@ public class PayServiceImpl implements PayService {
             }
 
             itemResult.setStock(itemStock - purchaseStock);
-            ItemRepo.save(itemResult);
+            itemRepo.save(itemResult);
 
 
             OrderItemEntity result = OrderItemEntity.builder()
                     .orderEntity(OrderEntity.builder().iorder(iorder).build())
                     .itemEntity(ItemEntity.builder().iitem(item.getIitem()).build())
-                    .price(ItemRepo.selPriceFromItem(item.getIitem()))
+                    .price(itemRepo.selPriceFromItem(item.getIitem()))
                     .quantity(item.getQuantity())
                     .totalPrice(item.getTotalPrice())
                     .delYn(1)
@@ -110,13 +112,14 @@ public class PayServiceImpl implements PayService {
 
     @Override   //querydsl
     public PaymentDetailDto selPaymentPageItem(Long iitem, Integer quantity, Long iuser) {
-        Integer shppingPrice = 3000;
+        Integer shippingPrice = 3000;
 
         SelReserveCheckVO reserveCheck = orderRepo.selReserveCheck(iuser);
 
         if (reserveCheck == null) {
             PaymentDetailDto result = orderRepo.selPaymentPageItem(iitem);
             result.setQuantity(quantity);
+            result.setShippingPrice(shippingPrice);
             result.setTotalPrice(result.getPrice() * quantity);
             result.setReserveYn(0);
             return result;
@@ -124,8 +127,8 @@ public class PayServiceImpl implements PayService {
 
         PaymentDetailDto result = orderRepo.selPaymentPageItem(iitem);
         result.setQuantity(quantity);
-        result.setShippingPrice(shppingPrice);
-        result.setTotalPrice(result.getPrice() * quantity + shppingPrice);
+        result.setShippingPrice(shippingPrice);
+        result.setTotalPrice(result.getPrice() * quantity + shippingPrice);
         result.setReserveYn(1);
 
         SelReserveInfoVo campInfoResult = orderRepo.selCampInfo(reserveCheck.getIreserve());
@@ -251,8 +254,8 @@ public class PayServiceImpl implements PayService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public refundRequestRes refundRequest(Long iorderitem, Long iuser) throws Exception {
-//        OrderItemEntity entity = orderItemRepo.selByIorderitem(iorderitem);
-        Optional<OrderItemEntity> optEntity = orderItemRepo.findById(iorderitem);
+        Optional<OrderItemEntity> optEntity = Optional.ofNullable(orderItemRepo.selByIorderitem(iorderitem));
+//        Optional<OrderItemEntity> optEntity = orderItemRepo.findById(iorderitem);
 //
         if (optEntity.isEmpty()) {
             throw new Exception("PK에 해당하는 상세주문이 없습니다");
@@ -269,6 +272,8 @@ public class PayServiceImpl implements PayService {
                 .refundStartDate(LocalDateTime.now())
                 .quantity(entity.getQuantity())
                 .totalPrice(entity.getTotalPrice())
+                .refundStatus(0)
+                .delYn(1)
                 .build();
 
         refundRepo.save(refundEntity);

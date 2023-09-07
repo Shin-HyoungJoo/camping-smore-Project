@@ -25,7 +25,12 @@ springboot:
     header-scheme-name: Authorization
     token-type: Bearer
 
+server:
+  port: 8080
+
 spring:
+  application:
+    name: webserver
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
@@ -103,14 +108,17 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+
+
 file:
   dir: /home/download/
+
+
 # swagger
 springdoc:
   swagger-ui:
     path: /swagger.html
-server:
-  port: 8080
+
 # KaKao
 KaKao:
   Auth: 0fc03c2467ca0d7ca9999c9d1ed64911
