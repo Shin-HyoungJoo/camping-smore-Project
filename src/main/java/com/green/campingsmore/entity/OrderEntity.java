@@ -53,7 +53,7 @@ public class OrderEntity extends BaseEntity {
     private Integer delYn;
 
     //KAKAO, CARD
-    @Column(nullable = false, length = 1)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PayType type;
 
