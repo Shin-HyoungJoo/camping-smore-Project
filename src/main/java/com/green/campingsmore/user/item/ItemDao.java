@@ -8,6 +8,7 @@ import com.green.campingsmore.item.model.ItemSelDetailVo;
 import com.green.campingsmore.user.item.model.ItemSelCateVo;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.*;
+import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.JPAExpressions;
@@ -17,9 +18,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.jdbc.support.SQLErrorCodes;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,8 +57,7 @@ public class ItemDao {
         return query.fetch();
     }
 
-    public List<ItemVo> searchAdminItem(Pageable page, Long cate, String text, LocalDate searchStartDate, LocalDate searchEndDate) {
-
+    public List<ItemVo> searchAdminItem(Pageable page, Long cate, String text, Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
 
 
         BooleanBuilder searchBuilder = new BooleanBuilder();
@@ -65,10 +67,14 @@ public class ItemDao {
             searchBuilder.and(i.name.contains(text));
         } else if (text != null && cate != null){
             searchBuilder.and(c.iitemCategory.eq(cate)).and(i.name.contains(text));
+        } else if (text != null && cate != null) {
+            searchBuilder.and(c.iitemCategory.eq(cate)).and(i.name.contains(text));
         }
 
+
+
         JPQLQuery<ItemVo> query = jpaQueryFactory.select(Projections.bean(ItemVo.class,
-                        c.iitemCategory, i.iitem, i.name, i.pic, i.price,i.createdAt, i.status
+                        c.name.as("categoryName"), i.iitem, i.name, i.pic, i.price, i.createdAt, i.status
 
                 ))
                 .from(i)
@@ -79,6 +85,23 @@ public class ItemDao {
                 .limit(page.getPageSize());
 
         return query.fetch();
+    }
+
+    private BooleanBuilder searchDateBuilder(Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
+
+        StringExpression createDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m-%d')", i.createdAt);
+        StringExpression nowDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m-%d')", now());
+        DateTemplate<Date> addDate = Expressions.dateTemplate(Date.class, "ADD_DATE({0},{1})", now(), Expressions.asNumber(-date));
+
+
+        BooleanBuilder DateBuilder = new BooleanBuilder();
+        if(date == 0) {
+            DateBuilder.and(createDate.eq(nowDate));
+            log.info("nowDate:---------------------------------------------{}",nowDate);
+        } else if(date == 1){
+//            DateBuilder.and(createDate.eq(nowDate).between(createDate.eq());
+        }
+        return DateBuilder;
     }
 
     // 유저 아이템 ------------------------------------------------------------------------------------------------------
@@ -125,6 +148,7 @@ public class ItemDao {
 
         return query.fetch();
     }
+
 
     private OrderSpecifier[] getAllOrderSpecifiers(Pageable pageable) {
         List<OrderSpecifier> orders = new LinkedList();
