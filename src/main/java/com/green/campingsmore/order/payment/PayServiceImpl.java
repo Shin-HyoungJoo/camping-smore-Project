@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,34 +44,30 @@ public class PayServiceImpl implements PayService {
                 .shipping(0)
                 .build();
 
-        if(dto.getReceiveCampingYn() < 0 || dto.getReceiveCampingYn() > 1) {
-            throw new Exception("ReceiveCampingYn은 0,1만 가능");
+        if (dto.getReceiveCampingYn() != null) {
+
+
+            if (dto.getReceiveCampingYn() < 0 || dto.getReceiveCampingYn() > 1) {
+                throw new Exception("ReceiveCampingYn은 0,1만 가능");
+            }
+
+            if (dto.getReceiveCampingYn() == 1) {   //캠핑지로 주소입력함
+                SelReserveCheckVO reserveCheck = orderRepo.selReserveCheck(dto.getIuser());
+
+                ReserveEntity reserveEntity = resRepo.findById(reserveCheck.getIreserve()).get();
+
+                orderEntity.setReserveEntity(reserveEntity);
+            }
+            orderRepo.save(orderEntity);    //결제정보저장
+        } else {
+            orderRepo.save(orderEntity);
         }
-
-        if (dto.getReceiveCampingYn() == 1) {   //캠핑지로 주소입력함
-            SelReserveCheckVO reserveCheck = orderRepo.selReserveCheck(dto.getIuser());
-
-            ReserveEntity reserveEntity = resRepo.findById(reserveCheck.getIreserve()).get();
-
-            orderEntity.setReserveEntity(reserveEntity);
-        }
-
-        orderRepo.save(orderEntity);    //결제정보저장
 
         List<PayDetailInfoVo> purchaseItem = dto.getPurchaseList();
+        List<OrderItemEntity> entities = new ArrayList<>();
+        Long iorder = orderEntity.getIorder();
 
         for (PayDetailInfoVo item : purchaseItem) {
-
-            OrderItemEntity result = OrderItemEntity.builder()
-                    .orderEntity(OrderEntity.builder().iorder(orderEntity.getIorder()).build())
-                    .itemEntity(ItemEntity.builder().iitem(item.getIitem()).build())
-                    .price(orderRepo.selPriceFromItem(item.getIitem()))
-                    .quantity(item.getQuantity())
-                    .totalPrice(item.getTotalPrice())
-                    .delYn(1)
-                    .refund(0)
-                    .build();
-
             ItemEntity itemResult = ItemRepo.findById(item.getIitem()).get();
 
             Integer itemStock = itemResult.getStock();
@@ -83,8 +80,21 @@ public class PayServiceImpl implements PayService {
             itemResult.setStock(itemStock - purchaseStock);
             ItemRepo.save(itemResult);
 
-            orderItemRepo.save(result);
+
+            OrderItemEntity result = OrderItemEntity.builder()
+                    .orderEntity(OrderEntity.builder().iorder(iorder).build())
+                    .itemEntity(ItemEntity.builder().iitem(item.getIitem()).build())
+                    .price(ItemRepo.selPriceFromItem(item.getIitem()))
+                    .quantity(item.getQuantity())
+                    .totalPrice(item.getTotalPrice())
+                    .delYn(1)
+                    .refund(0)
+                    .build();
+
+            entities.add(result);
         }
+
+        orderItemRepo.saveAll(entities);
         return 1L;
     }
 
@@ -263,7 +273,7 @@ public class PayServiceImpl implements PayService {
 
         refundRepo.save(refundEntity);
 
-        return  refundRequestRes.builder()
+        return refundRequestRes.builder()
                 .iorderitem(entity.getIorderitem())
                 .iitem(entity.getItemEntity().getIitem())
                 .refund(entity.getRefund())
