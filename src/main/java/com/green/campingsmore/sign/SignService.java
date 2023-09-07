@@ -18,10 +18,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,34 +56,51 @@ public class SignService {
         return MAPPER.IncreaseCount();
     }
 
-    public KakaoIuser kakaoLogin(KaKaoLoginVo kaKaoLoginVo){
-        // case 1 ) 카카오 로그인 이메일이 이미 가입된 회원과 같아서 일치할 경우
-        // case 2 ) 카카오 로그인 이메일이 없는 경우 회원가입 시켜준다.
-        KakaoIuser isUser = MAPPER.kakaoLogin(kaKaoLoginVo.getEmail());
-        if(isUser == null){ // case 2 ) 카카오 로그인 이메일이 없는 경우 회원가입 시켜준다.
-            SignUpDto signUpDto = SignUpDto.builder()
-                    .uid(String.valueOf(kaKaoLoginVo.getId()))
-                    .upw(String.valueOf(kaKaoLoginVo.getId()))
-                    .email(kaKaoLoginVo.getEmail())
-                    .name(String.valueOf(kaKaoLoginVo.getId()))
-                    .birth_date(String.valueOf(kaKaoLoginVo.getId()))
-                    .phone(String.valueOf(kaKaoLoginVo.getId()))
-                    .gender(1)
-                    .user_address("카카오 로그인 회원")
-                    .role("ROLE_USER")
-                    .build();
-            MAPPER.signUp(signUpDto);
-        }
+    public void kakaoLogin(KakaoAuthenticCodeVo kakaoAuthenticCodeVo){
 
-        // 이제 토큰들..Redis에 저장?? 그래야 권한 사용 가능??ㅋㅋ
-        // 토큰들  Redis 저장해서 써줘야할듯 함..?ㅋㅋㅋ 프론트에서 항상 넣어서 보내줘야하는데
-
-
-        // 로그인한 회원 방문자 카운트 증가 시키기
-        MAPPER.IncreaseUserCount(0,"0");
-
-        return MAPPER.kakaoLogin(kaKaoLoginVo.getEmail());
     }
+
+//    public void kakaoAuthenticationCode(String code){
+//        WebClient client = WebClient.builder()
+//                .baseUrl("https://kauth.kakao.com")
+//                .defaultCookie("cookieKey", "cookieValue")
+//                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+//                .defaultUriVariables(Collections.singletonMap("url", "https://kauth.kakao.com"))
+//                .build();
+//
+//        Mono<String> result = client.get().uri("").retrieve().bodyToMono(String.class);
+//    }
+//
+//    public KakaoIuser kakaoLogin(KaKaoLoginVo kaKaoLoginVo){
+//        return null;
+//        // case 1 ) 카카오 로그인 이메일이 이미 가입된 회원과 같아서 일치할 경우
+//        // case 2 ) 카카오 로그인 이메일이 없는 경우 회원가입 시켜준다.
+//        KakaoIuser isUser = MAPPER.kakaoLogin(kaKaoLoginVo.getEmail());
+//        if(isUser == null){ // case 2 ) 카카오 로그인 이메일이 없는 경우 회원가입 시켜준다.
+//            SignUpDto signUpDto = SignUpDto.builder()
+//                    .uid(String.valueOf(kaKaoLoginVo.getId()))
+//                    .upw(String.valueOf(kaKaoLoginVo.getId()))
+//                    .email(kaKaoLoginVo.getEmail())
+//                    .name(String.valueOf(kaKaoLoginVo.getId()))
+//                    .birth_date(String.valueOf(kaKaoLoginVo.getId()))
+//                    .phone(String.valueOf(kaKaoLoginVo.getId()))
+//                    .gender(1)
+//                    .user_address("카카오 로그인 회원")
+//                    .role("ROLE_USER")
+//                    .build();
+//            MAPPER.signUp(signUpDto);
+//        }
+//
+//        // 이제 토큰들..Redis에 저장?? 그래야 권한 사용 가능??ㅋㅋ
+//        // 토큰들  Redis 저장해서 써줘야할듯 함..?ㅋㅋㅋ 프론트에서 항상 넣어서 보내줘야하는데
+//        // 카카오 로그인을 했는데 Authentication auth = null  비로그인 상태가 됨
+//        // ==> ouath2 filter를 사용한다는데.. 애초에 여기까지 안감 ㅋㅋㅋ ㅅㅂ
+//
+//        // 로그인한 회원 방문자 카운트 증가 시키기
+//        MAPPER.IncreaseUserCount(0,"0");
+//
+//        return MAPPER.kakaoLogin(kaKaoLoginVo.getEmail());
+//    }
 
     public SignUpResultDto signUp(SignUpDto signUpDto) {
         log.info("[getSignUpResult] signDataHandler로 회원 정보 요청");
@@ -92,6 +113,7 @@ public class SignService {
                 .phone(signUpDto.getPhone())
                 .gender(signUpDto.getGender())
                 .user_address(signUpDto.getUser_address())
+                .user_address_detail(signUpDto.getUser_address_detail())
                 .role(String.format("ROLE_%s", signUpDto.getRole().toUpperCase()))
                 .build();
         int result = MAPPER.signUp(user);

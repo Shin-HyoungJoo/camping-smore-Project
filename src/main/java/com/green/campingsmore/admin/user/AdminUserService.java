@@ -8,6 +8,7 @@ import com.green.campingsmore.admin.user.model.UserDto;
 import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.config.security.JwtTokenProvider;
 import com.green.campingsmore.config.security.model.LoginDto;
+import com.green.campingsmore.config.security.model.MyUserDetails;
 import com.green.campingsmore.config.security.redis.RedisService;
 import com.green.campingsmore.config.security.redis.model.RedisJwtVo;
 import com.green.campingsmore.sign.model.SignInResultDto;
@@ -59,17 +60,21 @@ public class AdminUserService {
             throw new RuntimeException("관리자 권한이 없습니다.");
         }
 
-//        if(user.getRole().equals("ROLE_ADMIN")){
-//            System.out.println("관리자 권한이 있다...");
-//        } else{
-//            throw new RuntimeException("관리자 권한이 없습니다.");
-//        }
-
         // 비밀번호 일치하는지 확인
         if(!PW_ENCODER.matches(password, user.getUpw())) {
             throw new RuntimeException("비밀번호 다름"); // return문 대신에 throw 예욍처리해도 된다.
         }
         log.info("[getSignInResult] 패스워드 일치");
+
+        MyUserDetails myUserDetails = MyUserDetails.builder()
+                .iuser(user.getIuser())
+                .uid(user.getUid())
+                .upw(user.getUpw())
+                .name(user.getName())
+                .roles(Collections.singletonList(user.getRole()))
+                .build();
+
+        System.out.println("로그인 유지되고 있어야하는데...myUserDetails = " + myUserDetails);
 
         // RT가 이미 있을 경우
         String redisKey = String.format("RT(%s):%s:%s", "Server", user.getIuser(), ip);
@@ -103,8 +108,6 @@ public class AdminUserService {
 
         log.info("[getSignInResult] SignInResultDto 객체 값 주입");
         setSuccessResult(dto);
-
-        System.out.println("로그인 확인 = " + FACADE.isLogin());
 
         return dto;
     }
