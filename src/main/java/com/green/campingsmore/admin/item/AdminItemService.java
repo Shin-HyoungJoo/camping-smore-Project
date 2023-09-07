@@ -105,8 +105,8 @@ public class AdminItemService {
         return null;
     }
 
-    public AdminItemSelDetailRes searchAdminItem(Pageable page, Long cate, String text, LocalDate searchStartDate, LocalDate searchEndDate) {
-        List<ItemVo> list = itemDao.searchAdminItem(page, cate, text,searchStartDate,searchEndDate);
+    public AdminItemSelDetailRes searchAdminItem(Pageable page, Long cate, String text, Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
+        List<ItemVo> list = itemDao.searchAdminItem(page, cate, text, date,searchStartDate,searchEndDate);
         Integer startIdx = page.getPageNumber() * page.getPageSize();
         Integer count = itemDao.itemCount();
         Integer maxPage = (int)Math.ceil((double) count / page.getPageSize());

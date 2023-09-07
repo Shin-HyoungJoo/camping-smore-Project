@@ -54,8 +54,7 @@ public class ItemDao {
         return query.fetch();
     }
 
-    public List<ItemVo> searchAdminItem(Pageable page, Long cate, String text, LocalDate searchStartDate, LocalDate searchEndDate) {
-
+    public List<ItemVo> searchAdminItem(Pageable page, Long cate, String text, Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
 
 
         BooleanBuilder searchBuilder = new BooleanBuilder();
@@ -65,10 +64,14 @@ public class ItemDao {
             searchBuilder.and(i.name.contains(text));
         } else if (text != null && cate != null){
             searchBuilder.and(c.iitemCategory.eq(cate)).and(i.name.contains(text));
+        } else if (text != null && cate != null) {
+            searchBuilder.and(c.iitemCategory.eq(cate)).and(i.name.contains(text));
         }
 
+
+
         JPQLQuery<ItemVo> query = jpaQueryFactory.select(Projections.bean(ItemVo.class,
-                        c.iitemCategory, i.iitem, i.name, i.pic, i.price,i.createdAt, i.status
+                        c.name.as("categoryName"), i.iitem, i.name, i.pic, i.price, i.createdAt, i.status
 
                 ))
                 .from(i)
@@ -79,6 +82,21 @@ public class ItemDao {
                 .limit(page.getPageSize());
 
         return query.fetch();
+    }
+
+    private BooleanBuilder searchDateBuilder(Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
+
+        StringExpression createDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m-%d')", i.createdAt);
+        StringExpression nowDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m-%d')", now());
+        StringExpression addDate = Expressions.stringTemplate("FUNCTION('DATE_ADD', {0}, INTERVAL {1} DAY)", now(),date);
+
+        BooleanBuilder DateBuilder = new BooleanBuilder();
+        if(date == 0) {
+            DateBuilder.and(createDate.eq(nowDate));
+        } else if(date == 1){
+//            DateBuilder.and(createDate.eq(nowDate).between(createDate.eq(addDate)))
+        }
+        return DateBuilder;
     }
 
     // 유저 아이템 ------------------------------------------------------------------------------------------------------
@@ -125,6 +143,7 @@ public class ItemDao {
 
         return query.fetch();
     }
+
 
     private OrderSpecifier[] getAllOrderSpecifiers(Pageable pageable) {
         List<OrderSpecifier> orders = new LinkedList();

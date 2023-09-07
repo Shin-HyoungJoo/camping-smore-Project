@@ -89,13 +89,14 @@ public class AdminItemController {
     )
     public ResponseEntity<AdminItemSelDetailRes> getSearchItem(@RequestParam(value = "cate",required=false)Long cate,
                                                           @RequestParam(value = "text",required=false)String text,
+                                                          @RequestParam(value = "date", required = false)Integer date,
                                                           @RequestParam(value = "searchStartDate", required = false, defaultValue = "18000101") @DateTimeFormat(pattern = "yyyyMMdd") LocalDate searchStartDate,
                                                           @RequestParam(value = "searchEndDate", required = false, defaultValue = "99991231") @DateTimeFormat(pattern = "yyyyMMdd") LocalDate searchEndDate,
                                                           @ParameterObject @PageableDefault(sort = "iitem", direction = Sort.Direction.DESC, size = 15) Pageable page) {
 
 
 
-        return ResponseEntity.ok(service.searchAdminItem(page, cate, text,searchStartDate,searchEndDate));
+        return ResponseEntity.ok(service.searchAdminItem(page, cate, text, date, searchStartDate, searchEndDate));
     }
 
     @PutMapping
