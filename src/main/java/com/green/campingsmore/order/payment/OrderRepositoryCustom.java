@@ -1,6 +1,6 @@
 package com.green.campingsmore.order.payment;
 
-import com.green.campingsmore.admin.order.ordermanage.model.SelAggregateVO;
+import com.green.campingsmore.admin.main.model.SelAggregateVO;
 import com.green.campingsmore.admin.order.ordermanage.model.SelOrderManageVo;
 import com.green.campingsmore.order.payment.model.*;
 
@@ -18,5 +18,5 @@ public interface OrderRepositoryCustom {
     List<CartPaymentItemDto> selPaymentPageItemList(CartPKDto dto);
     SelDetailedItemPaymentInfoVo selDetailedItemPaymentInfo(Long iorderitem);
     List<SelAggregateVO> selAggregateInfo();
-    List<SelOrderManageVo> SelOrderManageInfo(LocalDate startDate, LocalDate endDate, Integer listBox, Object keyword);
+    List<SelOrderManageVo> selOrderManageInfo(LocalDate startDate, LocalDate endDate, Integer listBox, Object keyword);
 }

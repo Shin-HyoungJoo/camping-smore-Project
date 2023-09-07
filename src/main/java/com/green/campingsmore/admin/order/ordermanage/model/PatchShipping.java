@@ -1,4 +1,4 @@
-package com.green.campingsmore.admin.order.refundmanage.model;
+package com.green.campingsmore.admin.order.ordermanage.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

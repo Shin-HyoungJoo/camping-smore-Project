@@ -1,8 +1,7 @@
 package com.green.campingsmore.admin.order.ordermanage;
 
-import com.green.campingsmore.admin.order.ordermanage.model.SelAggregateVO;
 import com.green.campingsmore.admin.order.ordermanage.model.SelOrderManageVo;
-import com.green.campingsmore.admin.order.refundmanage.model.PatchShipping;
+import com.green.campingsmore.admin.order.ordermanage.model.PatchShipping;
 import com.green.campingsmore.admin.order.refundmanage.model.ShippingRes;
 import com.green.campingsmore.config.security.model.MyUserDetails;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,18 +15,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Slf4j
-@Tag(name= "관리자 - 주문")
+@Tag(name = "관리자 - 주문")
 @RestController
 @RequestMapping("/api/admin/order")
 @RequiredArgsConstructor
 public class OrderManageCotroller {
     private final OrderManageService SERVICE;
-
-//    @GetMapping
-//    @Operation(summary = "아직 미완")
-//    public List<SelAggregateVO> selAggregate() {
-//        return SERVICE.selAggregate();
-//    }
 
     @GetMapping
     @Operation(summary = "주문 관리",
@@ -41,7 +34,7 @@ public class OrderManageCotroller {
                             "<h3>   └주문자 휴대전화 : 3\n" +
                             "<h3>   └주문서 이메일 : 4\n" +
                             "<h3> keyword : 검색어\n" +
-                            "<h3> ## 오늘 날만 찍을때는 startDate에만 오늘날짜 기입 \n"+
+                            "<h3> ## 오늘 날만 찍을때는 startDate에만 오늘날짜 기입 \n" +
                             "<h3> ## listBox 기입시 keyword 기입도 필수 \n" +
                             "<h3>-----------------------------------\n" +
                             "<h3> orderDate : 주문 날짜\n" +
@@ -54,32 +47,34 @@ public class OrderManageCotroller {
     public List<SelOrderManageVo> selOrderManageList(@RequestParam LocalDate startDate,
                                                      @RequestParam(required = false) LocalDate endDate,
                                                      @RequestParam(required = false) Integer listBox,
-                                                     @RequestParam(required = false) Object keyword) throws Exception {
+                                                     @RequestParam(required = false) Object keyword
+//                                                     @RequestParam Integer page, @RequestParam Integer row
+                                                     ) throws Exception {
         return SERVICE.selOrderManageList(startDate, endDate, listBox, keyword);
     }
 
     @PatchMapping
     @Operation(summary = "배송 상태 변경",
             description =
-                            "<h3> iorder : 주문 PK\n" +
+                    "<h3> iorder : 주문 PK\n" +
                             "<h3> shipping : 배송 상태" +
                             "<h3>   └0 : 배송 준비중\n" +
                             "<h3>   └1 : 배송 중\n" +
                             "<h3>   └2 : 배송 완료\n" +
                             "<h3>   └3 : 배송 취소\n" +
-                            "<h3> ## 0 일땐 1과 3으로만 변경가능(1 : 배송 중, 3 : 배송 취소) \n"+
-                            "<h3> ## 1 일땐 2로만 변경가능(2 : 배송 완료) \n"+
+                            "<h3> ## 0 일땐 1과 3으로만 변경가능(1 : 배송 중, 3 : 배송 취소) \n" +
+                            "<h3> ## 1 일땐 2로만 변경가능(2 : 배송 완료) \n" +
                             "<h3> ## 2, 3일땐 변경 불가 \n" +
                             "<h3>-----------------------------------\n" +
                             "<h3> iorder : 주문 PK \n" +
-                                    "<h3> shipping : 배송 상태" +
-                                    "<h3>   └0 : 배송 준비중\n" +
-                                    "<h3>   └1 : 배송 중\n" +
-                                    "<h3>   └2 : 배송 완료\n" +
-                                    "<h3>   └3 : 배송 취소\n"
+                            "<h3> shipping : 배송 상태" +
+                            "<h3>   └0 : 배송 준비중\n" +
+                            "<h3>   └1 : 배송 중\n" +
+                            "<h3>   └2 : 배송 완료\n" +
+                            "<h3>   └3 : 배송 취소\n"
     )
     public ShippingRes patchShipping(@AuthenticationPrincipal MyUserDetails user,
-                                     @RequestBody PatchShipping dto) throws Exception{
+                                     @RequestBody PatchShipping dto) throws Exception {
         dto.setIuser(user.getIuser());
         return SERVICE.patchShipping(dto);
     }
