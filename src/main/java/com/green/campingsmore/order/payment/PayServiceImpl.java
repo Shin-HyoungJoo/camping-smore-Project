@@ -251,8 +251,8 @@ public class PayServiceImpl implements PayService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public refundRequestRes refundRequest(Long iorderitem, Long iuser) throws Exception {
-//        OrderItemEntity entity = orderItemRepo.selByIorderitem(iorderitem);
-        Optional<OrderItemEntity> optEntity = orderItemRepo.findById(iorderitem);
+        Optional<OrderItemEntity> optEntity = Optional.ofNullable(orderItemRepo.selByIorderitem(iorderitem));
+//        Optional<OrderItemEntity> optEntity = orderItemRepo.findById(iorderitem);
 //
         if (optEntity.isEmpty()) {
             throw new Exception("PK에 해당하는 상세주문이 없습니다");
@@ -269,6 +269,8 @@ public class PayServiceImpl implements PayService {
                 .refundStartDate(LocalDateTime.now())
                 .quantity(entity.getQuantity())
                 .totalPrice(entity.getTotalPrice())
+                .refundStatus(0)
+                .delYn(1)
                 .build();
 
         refundRepo.save(refundEntity);

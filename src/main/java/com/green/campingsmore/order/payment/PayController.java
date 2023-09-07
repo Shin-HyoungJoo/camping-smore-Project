@@ -241,7 +241,7 @@ public class PayController {
         return SERVICE.delAddress(iaddress);
     }
 
-    @PutMapping("/payment-list/detail")
+    @PatchMapping("/payment-list/detail/{iorderitem}")
     @Operation(summary = "해당 상세주문 환불 요청",
             description = "<h3> iorderitem : 상세 주문 PK\n" +
                     "<h3>-----------------------------------\n" +
@@ -255,7 +255,7 @@ public class PayController {
                     "<h3>  ## refund가 1이 되면 관리자 측에 환불 정보가 넘어감 "
     )
     public refundRequestRes refundRequest (@AuthenticationPrincipal MyUserDetails user,
-                               @RequestBody patchRefundDto dto) throws Exception {
-        return SERVICE. refundRequest(dto.getIorderitem(), user.getIuser());
+                               @PathVariable Long iorderitem) throws Exception {
+        return SERVICE.refundRequest(iorderitem, user.getIuser());
     }
 }

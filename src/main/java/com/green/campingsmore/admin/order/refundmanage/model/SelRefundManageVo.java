@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SelRefundManageVo {
+    private Long irefund;
     private String orderDate;
     private String refundStartDate;      //환불접수일
     private String refundEndDate;
