@@ -39,7 +39,7 @@ public class BoardEntity extends BaseEntity {
     @Column(nullable = false, length = 300)
     private String ctnt;
 
-    @Column(name = "del_yn", nullable = false, columnDefinition = "TINYINT", length = 1)
+    @Column(name = "del_yn",columnDefinition = "TINYINT not null DEFAULT 1 CHECK(del_yn in (0,1))", length = 1)
     private Integer delYn;
 
     @Column(name = "board_view", updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED", length = 20)
