@@ -111,4 +111,9 @@ public class CampingController {
         return ResponseEntity.ok(SERVICE.InsMainCamp());
 
     }
+    @GetMapping("/iday")
+    @Operation(summary = "iday 찾기 오늘포함 30일")
+    public ResponseEntity<List<List<DailyList>>> selIday(){
+        return ResponseEntity.ok(SERVICE.selIday());
+    }
 }

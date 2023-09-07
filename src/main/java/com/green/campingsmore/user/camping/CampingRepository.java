@@ -1,10 +1,7 @@
 package com.green.campingsmore.user.camping;
 
 import com.green.campingsmore.entity.CampEntity;
-import com.green.campingsmore.user.camping.model.CampingDetailList;
-import com.green.campingsmore.user.camping.model.CampingList;
-import com.green.campingsmore.user.camping.model.CampingMyList;
-import com.green.campingsmore.user.camping.model.CampingRes;
+import com.green.campingsmore.user.camping.model.*;
 import io.lettuce.core.dynamic.annotation.Param;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,4 +30,7 @@ public interface CampingRepository extends JpaRepository<CampEntity,Long>{
     @Query("select new com.green.campingsmore.user.camping.model.CampingList(c.icamp,c.name, c.address, c.campPhone,c.mainPic,n.city,c.delyn)"+
             " from CampEntity c join c.nationwideEntity n " + " where c.name LIKE CONCAT('%', :name, '%') and c.delyn = :delyn")
     List<CampingList> selTitleCamping(@Param("name") String name, @Param("delyn") Integer delyn);
+    @Query("select new com.green.campingsmore.user.camping.model.DailyList(d.iday, d.date, d.dayQuantity)"+
+    " from ReserveDayEntity  d" + " where d.date = :date")
+    List<DailyList> selIday(LocalDate date);
 }
