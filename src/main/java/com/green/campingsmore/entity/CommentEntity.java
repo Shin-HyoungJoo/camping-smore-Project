@@ -34,6 +34,6 @@ public class CommentEntity extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String ctnt;
 
-    @Column(name = "del_yn",length = 1, columnDefinition = "TINYINT not null CHECK(del_yn in (0,1))")
+    @Column(name = "del_yn",length = 1,columnDefinition = "TINYINT not null DEFAULT 1 CHECK(del_yn in (0,1))")
     private Integer delYn;
 }
