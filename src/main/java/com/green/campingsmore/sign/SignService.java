@@ -56,16 +56,20 @@ public class SignService {
         return MAPPER.IncreaseCount();
     }
 
-    public void kakaoAuthenticationCode(String code){
-        WebClient client = WebClient.builder()
-                .baseUrl("https://kauth.kakao.com")
-                .defaultCookie("cookieKey", "cookieValue")
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultUriVariables(Collections.singletonMap("url", "https://kauth.kakao.com"))
-                .build();
+    public void kakaoLogin(KakaoAuthenticCodeVo kakaoAuthenticCodeVo){
 
-        Mono<String> result = client.get().uri("").retrieve().bodyToMono(String.class);
     }
+
+//    public void kakaoAuthenticationCode(String code){
+//        WebClient client = WebClient.builder()
+//                .baseUrl("https://kauth.kakao.com")
+//                .defaultCookie("cookieKey", "cookieValue")
+//                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+//                .defaultUriVariables(Collections.singletonMap("url", "https://kauth.kakao.com"))
+//                .build();
+//
+//        Mono<String> result = client.get().uri("").retrieve().bodyToMono(String.class);
+//    }
 //
 //    public KakaoIuser kakaoLogin(KaKaoLoginVo kaKaoLoginVo){
 //        return null;

@@ -5,6 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class KakaoIuser {
-    private Integer iuser;
+public class KakaoAuthenticCodeVo {
+    private String authorize_code;
+    private String accessToken;
 }
