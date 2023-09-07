@@ -19,7 +19,6 @@ import org.hibernate.annotations.DynamicInsert;
 @Table(name = "user",uniqueConstraints = {@UniqueConstraint(name = "unique_user_user_id",columnNames = {"user_id"})})
 @Data
 @SuperBuilder
-@NoArgsConstructor
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
 @DynamicInsert
