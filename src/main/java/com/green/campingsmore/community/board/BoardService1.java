@@ -435,5 +435,7 @@ public class BoardService1 {
             return 0L; // 예시로 간단히 null 반환
         }
     }//게시글 삭제
-
+    public List<CategoryList> getCategory(){
+        return mapper.getCategory();
+    }
 }

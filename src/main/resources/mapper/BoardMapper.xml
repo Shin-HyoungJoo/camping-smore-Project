@@ -169,4 +169,8 @@
         set del_yn=0
         where iboard=#{iboard}
     </update>
+    <select id="getCategory">
+        select icategory, name
+        from board_category
+    </select>
 </mapper>

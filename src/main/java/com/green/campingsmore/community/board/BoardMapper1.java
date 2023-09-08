@@ -55,4 +55,5 @@ public interface BoardMapper1 {
     Long selNoticeCount1(Long icategory);
     Long selNoticeCount(Long icategory);
     Long delAdminBoard(Long iboard);
+    List<CategoryList> getCategory();
 }

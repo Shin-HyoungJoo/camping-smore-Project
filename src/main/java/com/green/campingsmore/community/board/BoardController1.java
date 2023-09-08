@@ -146,4 +146,9 @@ public class BoardController1 {
     public Long delAdminBoard(@PathVariable Long iboard) {
         return service.delAdminBoard(iboard);
     }
+    @GetMapping("/selcategory")
+    @Operation(summary = "카테고리 조회")
+    public List<CategoryList> getCategory(){
+        return service.getCategory();
+    }
 }
