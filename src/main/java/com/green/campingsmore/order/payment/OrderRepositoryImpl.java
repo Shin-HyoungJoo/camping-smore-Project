@@ -221,7 +221,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
     public BooleanExpression createdAtRange(LocalDate startDate, LocalDate endDate) {
         QOrderEntity A = new QOrderEntity("A");
-        return endDate != null ? A.createdAt.between(startDate.atStartOfDay(), endDate.atStartOfDay()) : A.createdAt.between(startDate.atStartOfDay(), startDate.plusDays(1).atStartOfDay());
+        return endDate != null ? A.createdAt.between(startDate.atStartOfDay(), endDate.atStartOfDay().plusDays(1)) : A.createdAt.between(startDate.atStartOfDay(), startDate.plusDays(1).atStartOfDay());
     }
 
     public BooleanExpression pickListBox(Integer listBox, Object keyword) {
