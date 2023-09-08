@@ -27,82 +27,18 @@ import java.util.Collections;
 public class SignController {
     private final SignService SERVICE;
     private final AuthenticationFacade FACADE;
-    private final String KAKAO_REST_API_KEY = "0fc03c2467ca0d7ca9999c9d1ed64911";
-    private final String KAKA0_REDIRECT_URI = "http://localhost:8080/login/oauth2/code/kakao";
 
     // 프론트에서 해주는 인가코드 받는것도 내가 하고 이후에 액세스 토큰은 프론트에 보내주고
     // 회원정보 받아와서 우리 디비에 저장해주고 엮어줘야함
-    @GetMapping("/kakao")
-    @Operation(summary = "카카오 로그인 요청",description = "Try it out -> Execute 눌러주세요 \n\n ")
-    public void kakaoLogin(){
-
-//        WebClient webClient = WebClient.builder().build();
-//
-//        Mono resultMono = webClient.get()
-//                .uri("www.example.com")
-//                .retrieve()
-//                .bodyToMono(String.class);
-//
-//        Object result = resultMono.block();
-//        System.out.println(result);
-
-//        // webClient로 인가코드 요청해야함
-//        WebClient client = WebClient.builder()
-//                .baseUrl("https://kauth.kakao.com")
-//                .defaultCookie("cookieKey", "cookieValue")
-//                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-//                .defaultUriVariables(Collections.singletonMap("url", "https://kauth.kakao.com"))
-//                .build();
-//
-//        Mono<String> result = client.get().uri("/oauth/authorize?client_id=" + KAKAO_REST_API_KEY
-//                                + "&redirect_uri=" + KAKA0_REDIRECT_URI
-//                                + "&response_type=code").retrieve().bodyToMono(String.class);
-//
-//        System.out.println("result = "+client.get().uri("/oauth/authorize").retrieve());
-//        return result;
-
-
-//        WebClient webclient = WebClientUtil.getBaseUrl("https://kauth.kakao.com");
-//        String token = webclient.get()
-//                .uri(
-//                        "/oauth/authorize?client_id=" + KAKAO_REST_API_KEY
-//                                + "&redirect_uri=" + KAKA0_REDIRECT_URI
-//                                + "&response_type=code")
-//                .retrieve()
-//                .bodyToMono(String.class)
-//                .block();
-//        System.out.println("token = " + token);
+    @PostMapping("/kakao")
+    @Operation(summary = "카카오 인가코드를 받아 액세스 토큰을 반환",description = "Try it out -> Execute 눌러주세요 \n\n ")
+    public KakaoToken kakaoLogin(@RequestBody KakaoAuthenticCodeVo kakaoAuthenticCodeVo){
+//        {
+//            "authorize_code": "vKG9N4oFXwwt9ACGZfWGyc7GA81SYtYqCvUZClRTP8Mv9S9mgbTUFj64lzObN1GuVUoh6gorDR8AAAGKb1iOVA",
+//                "accessToken": "string"
+//        }
+        return SERVICE.kakaoLogin(kakaoAuthenticCodeVo);
     }
-
-//    @GetMapping("/kakao")
-//    @Operation(summary = "카카오 인가코드",description = "Try it out -> Execute 눌러주세요 \n\n " +
-//            "블로그 글보니까 이거 Get으로 보내줘야한다고 한다고 하네욥.."
-//    )
-//    public ResponseEntity<?> kakaoAuthenticationCode(@RequestParam String code){
-//        SERVICE.kakaoAuthenticationCode(code);
-//        return ResponseEntity.status(HttpStatus.OK).build();
-//    }
-
-//    @PostMapping("/kakao")
-//    @Operation(summary = "카카오 로그인",
-//            description = "Try it out -> Execute 눌러주세요 \n\n " +
-////                    "\"connected_at\": \"날짜 형식\",\n\n" +
-////                    "  \"id\": \"61616468 숫자\",\n\n" +
-////                    "  \"email\": \"rlahfld54@kakao.com 이런 형식\",\n\n" +
-////                    "  \"access_token\": \"string\",\n\n" +
-////                    "  \"refresh_token\": \"string\",\n\n" +
-//                    "\n\n 이 형식으로 오는 것 맞는지 확인해주세요!! - 황주은"
-//    )
-//    public KakaoIuser kakaoLogin(HttpServletRequest req,@RequestBody KaKaoLoginVo kaKaoLoginVo){
-////        {
-////            "connected_at": "2023-09-05T03:45:28Z",
-////                "id": 3005481399,
-////                "email": "tkddbs2009@naver.com",
-////                "access_token": "drpg55zdPKBosEnn2pYNf9YtTPuTjl7jf7aTdJByCj102wAAAYppY_kF",
-////                "refresh_token": "ogabrABi3DvdXEdq6UcFdKU4RhcZTnJLkN7xhhVUCj102wAAAYppY_kE"
-////        }
-//        return SERVICE.kakaoLogin(kaKaoLoginVo);
-//    }
 
     //ApiParam은 문서 자동화를 위한 Swagger에서 쓰이는 어노테이션이고
     //RequestParam은 http 로부터 요청 온 정보를 받아오기 위한 스프링 어노테이션이다.

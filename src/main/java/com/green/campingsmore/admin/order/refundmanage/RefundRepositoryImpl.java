@@ -90,6 +90,6 @@ public class RefundRepositoryImpl implements RefundRepositoryCustom {
 
     public BooleanExpression refundCreatedAtRange(LocalDate startDate, LocalDate endDate) {
         QRefundEntity A = new QRefundEntity("A");
-        return endDate != null ? A.refundStartDate.between(startDate.atStartOfDay(), endDate.atStartOfDay()) : A.refundStartDate.between(startDate.atStartOfDay(), startDate.plusDays(1).atStartOfDay());
+        return endDate != null ? A.refundStartDate.between(startDate.atStartOfDay(), endDate.atStartOfDay().plusDays(1)) : A.refundStartDate.between(startDate.atStartOfDay(), startDate.plusDays(1).atStartOfDay());
     }
 }

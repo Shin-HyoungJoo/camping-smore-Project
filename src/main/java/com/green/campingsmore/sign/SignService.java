@@ -47,6 +47,11 @@ public class SignService {
     private final MailApi mail;
     @Value("${file.dir}")
     private String fileDir;
+    //    rest api키 = 58abeedd61fb371489a99bb736791694
+//    인가코드가 리다이렉트된 url = http://localhost:8080/login/oauth2/code/kakao
+    private final String KAKAO_REST_API_KEY = "58abeedd61fb371489a99bb736791694";
+    private final String KAKA0_REDIRECT_URI = "http://localhost:8080/login/oauth2/code/kakao";
+    private final String authorize_code = "vKG9N4oFXwwt9ACGZfWGyc7GA81SYtYqCvUZClRTP8Mv9S9mgbTUFj64lzObN1GuVUoh6gorDR8AAAGKb1iOVA";
 
     public void test() {
         log.info("service-test-iuser : {}", FACADE.getLoginUserPk());
@@ -56,16 +61,31 @@ public class SignService {
         return MAPPER.IncreaseCount();
     }
 
-    public void kakaoAuthenticationCode(String code){
+    public KakaoToken kakaoLogin(KakaoAuthenticCodeVo kakaoAuthenticCodeVo){
+        kakaoAuthenticCodeVo.getAuthorize_code(); //인가코드
+        // 이제 인가코드로 사용자의 정보를 얻어야한다.
         WebClient client = WebClient.builder()
                 .baseUrl("https://kauth.kakao.com")
-                .defaultCookie("cookieKey", "cookieValue")
-                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultUriVariables(Collections.singletonMap("url", "https://kauth.kakao.com"))
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
                 .build();
 
-        Mono<String> result = client.get().uri("").retrieve().bodyToMono(String.class);
+        // post으로 토큰 요청
+        return client.post()
+                .uri("/oauth/token?grant_type=authorization_code&client_id="+KAKAO_REST_API_KEY+"&redirect_uri="+KAKA0_REDIRECT_URI+"&code="+authorize_code)
+                .retrieve()
+                .bodyToMono(KakaoToken.class).block();
     }
+
+//    public void kakaoAuthenticationCode(String code){
+//        WebClient client = WebClient.builder()
+//                .baseUrl("https://kauth.kakao.com")
+//                .defaultCookie("cookieKey", "cookieValue")
+//                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+//                .defaultUriVariables(Collections.singletonMap("url", "https://kauth.kakao.com"))
+//                .build();
+//
+//        Mono<String> result = client.get().uri("").retrieve().bodyToMono(String.class);
+//    }
 //
 //    public KakaoIuser kakaoLogin(KaKaoLoginVo kaKaoLoginVo){
 //        return null;

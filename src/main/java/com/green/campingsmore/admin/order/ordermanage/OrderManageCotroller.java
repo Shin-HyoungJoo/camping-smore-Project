@@ -36,6 +36,7 @@ public class OrderManageCotroller {
                             "<h3> keyword : 검색어\n" +
                             "<h3> ## 오늘 날만 찍을때는 startDate에만 오늘날짜 기입 \n" +
                             "<h3> ## listBox 기입시 keyword 기입도 필수 \n" +
+                            "<h3> ## listBox에 문자 입력시엔 큰따옴표 붙여서 입력할것 ex)\" 문자 \", \"asd\" \n" +
                             "<h3>-----------------------------------\n" +
                             "<h3> orderDate : 주문 날짜\n" +
                             "<h3> iorder : 주문 PK (주문번호)\n" +
