@@ -181,7 +181,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                                         .select(refundCC.irefund.count())
                                         .from(refundCC)
                                         .where(refundCCDate.eq(orderADate)
-                                                .and(refundC.refundStatus.eq(2)))
+                                                .and(refundCC.refundStatus.eq(2)))
                                 , "refundTotalCount")
                 ))
                 .from(orderA)
