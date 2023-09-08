@@ -1,15 +1,13 @@
 package com.green.campingsmore.admin.main;
 
-import com.green.campingsmore.admin.main.model.SelAggregateVO;
-import com.green.campingsmore.admin.main.model.SevenDaysTotalAverage;
-import com.green.campingsmore.admin.main.model.SevenDaysTotalSum;
+import com.green.campingsmore.admin.main.model.*;
 import com.green.campingsmore.order.payment.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -20,22 +18,18 @@ public class MainService {
 
     private final OrderRepository orderRepo;
 
-    public List<SelAggregateVO> selAggregate() {
-        List<SelAggregateVO> result = orderRepo.selAggregateInfo();
+    public SelAggregateFinalVO selAggregate() {
+        List<SelAggregateVO> statistics = orderRepo.selAggregateInfo();
+        List<SelAggregateVO> result = new ArrayList<>();
 
-//        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-//
-//        Calendar cal = Calendar.getInstance();
-//
-//        for (int i = 1; i <= 7; i++) {
-//            cal.add(Calendar.DAY_OF_MONTH, +1);
-//            System.out.println(format.format(cal.getTime()));
-//        }
-
+        //일주일 합계
         SevenDaysTotalSum sevenSum = new SevenDaysTotalSum(0, 0L, 0, 0L, 0, 0L);
+
+        //일주일 평균
         SevenDaysTotalAverage sevenAverage = new SevenDaysTotalAverage(0, 0L, 0, 0L, 0, 0L);
 
-        for (SelAggregateVO list : result) {
+        // null을  0으로 세팅
+        for (SelAggregateVO list : statistics) {
             if (list.getOrderTotalPrice() == null) {    //널 <-> 0변환
                 list.setOrderTotalPrice(0);
             }
@@ -54,7 +48,33 @@ public class MainService {
             if (list.getRefundTotalCount() == null) {
                 list.setRefundTotalCount(0L);
             }
+        }
 
+        // 일주일치 통계 세팅
+        SimpleDateFormat format = new SimpleDateFormat("MM월 dd일");
+
+        Calendar cal = Calendar.getInstance();
+        List<String> sysDate = new ArrayList<>();
+
+        for (int i = 1; i <= 7; i++) {
+            sysDate.add(format.format(cal.getTime()));
+            System.out.println(format.format(cal.getTime()));
+            cal.add(Calendar.DAY_OF_MONTH, -1);
+        }
+
+        loop:
+        for (String date : sysDate) {
+
+            for (SelAggregateVO list : statistics) {
+                if (date.equals(list.getDate())) {    //둘이 날짜 일치하면
+                    result.add(list);
+                    continue loop;
+                }
+            }
+            result.add(new SelAggregateVO(date, 0, 0L, 0, 0L, 0, 0L));
+        }
+
+        for (SelAggregateVO list : result) {
             sevenSum.setOrderTotalPrice(sevenSum.getOrderTotalPrice() + list.getOrderTotalPrice());
             sevenSum.setOrderTotalCount(sevenSum.getOrderTotalCount() + list.getOrderTotalCount());
             sevenSum.setShippingCompleteTotalPrice(sevenSum.getShippingCompleteTotalPrice() + list.getShippingCompleteTotalPrice());
@@ -62,16 +82,24 @@ public class MainService {
             sevenSum.setRefundTotalPrice(sevenSum.getRefundTotalPrice() + list.getRefundTotalPrice());
             sevenSum.setRefundTotalCount(sevenSum.getRefundTotalCount() + list.getRefundTotalCount());
 
-            sevenAverage.setOrderTotalPrice(sevenSum.getOrderTotalPrice() / result.size());
-            sevenAverage.setOrderTotalCount(sevenSum.getOrderTotalCount() / result.size());
-            sevenAverage.setShippingCompleteTotalPrice(sevenSum.getShippingCompleteTotalPrice() / result.size());
-            sevenAverage.setShippingCompleteTotalCount(sevenSum.getShippingCompleteTotalCount() / result.size());
-            sevenAverage.setRefundTotalPrice(sevenSum.getRefundTotalPrice() / result.size());
-            sevenAverage.setRefundTotalCount(sevenSum.getRefundTotalCount() / result.size());
-
+            sevenAverage.setOrderTotalPrice(sevenSum.getOrderTotalPrice() / statistics.size());
+            sevenAverage.setOrderTotalCount(sevenSum.getOrderTotalCount() / statistics.size());
+            sevenAverage.setShippingCompleteTotalPrice(sevenSum.getShippingCompleteTotalPrice() / statistics.size());
+            sevenAverage.setShippingCompleteTotalCount(sevenSum.getShippingCompleteTotalCount() / statistics.size());
+            sevenAverage.setRefundTotalPrice(sevenSum.getRefundTotalPrice() / statistics.size());
+            sevenAverage.setRefundTotalCount(sevenSum.getRefundTotalCount() / statistics.size());
         }
 
-        log.info("{}", result);
-        return result;
+        SelAggregateFinalVO finalStatistics = new SelAggregateFinalVO();
+        finalStatistics.setStatistics(result);
+        finalStatistics.setSevenSum(sevenSum);
+        finalStatistics.setSevenAverage(sevenAverage);
+
+        log.info("{}", finalStatistics);
+        return finalStatistics;
+    }
+
+    public SelTodayVo selTodayInfo() {
+        return orderRepo.selTodayInfo();
     }
 }
