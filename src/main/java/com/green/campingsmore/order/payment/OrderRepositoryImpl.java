@@ -1,6 +1,7 @@
 package com.green.campingsmore.order.payment;
 
 import com.green.campingsmore.admin.main.model.SelAggregateVO;
+import com.green.campingsmore.admin.main.model.SelTodayVo;
 import com.green.campingsmore.admin.order.ordermanage.model.SelOrderManageVo;
 import com.green.campingsmore.entity.*;
 import com.green.campingsmore.order.payment.model.*;
@@ -11,6 +12,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -19,14 +21,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.green.campingsmore.entity.QBoardEntity.*;
 import static com.green.campingsmore.entity.QCampEntity.campEntity;
 import static com.green.campingsmore.entity.QCartEntity.cartEntity;
 import static com.green.campingsmore.entity.QItemEntity.itemEntity;
 import static com.green.campingsmore.entity.QOrderEntity.orderEntity;
 import static com.green.campingsmore.entity.QOrderItemEntity.orderItemEntity;
+import static com.green.campingsmore.entity.QRefundEntity.*;
 import static com.green.campingsmore.entity.QReserveEntity.reserveEntity;
 import static com.green.campingsmore.entity.QReviewEntity.reviewEntity;
+import static com.green.campingsmore.entity.QUserEntity.userEntity;
 
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class OrderRepositoryImpl implements OrderRepositoryCustom {
@@ -167,20 +173,82 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                                 JPAExpressions
                                         .select(refundC.totalPrice.sum())
                                         .from(refundC)
-                                        .where(refundCDate.eq(orderADate))
+                                        .where(refundCDate.eq(orderADate)
+                                                .and(refundC.refundStatus.eq(2)))
                                 , "refundTotalPrice"),
                         ExpressionUtils.as(
                                 JPAExpressions
                                         .select(refundCC.irefund.count())
                                         .from(refundCC)
-                                        .where(refundCCDate.eq(orderADate))
+                                        .where(refundCCDate.eq(orderADate)
+                                                .and(refundCC.refundStatus.eq(2)))
                                 , "refundTotalCount")
                 ))
                 .from(orderA)
                 .leftJoin(orderItemB).on(orderA.iorder.eq(orderItemB.orderEntity.iorder))
                 .groupBy(orderADate)
                 .orderBy(orderADate.desc())
+                .limit(7)
                 .fetch();
+    }
+
+    @Override
+    public SelTodayVo selTodayInfo() {
+        Long userCount = queryFactory
+                .select(userEntity.iuser.count())
+                .from(userEntity)
+                .fetchOne();
+
+        Long shippingBefore = queryFactory
+                .select(orderEntity.iorder.count())
+                .from(orderEntity)
+                .where(orderEntity.shipping.eq(0)
+                        .and(orderEntity.delYn.eq(1)))
+                .fetchOne();
+
+        Long shipping = queryFactory
+                .select(orderEntity.iorder.count())
+                .from(orderEntity)
+                .where(orderEntity.shipping.eq(1)
+                        .and(orderEntity.delYn.eq(1)))
+                .fetchOne();
+
+        Long refundBefore = queryFactory
+                .select(refundEntity.irefund.count())
+                .from(refundEntity)
+                .where(refundEntity.refundStatus.eq(0)
+                        .and(refundEntity.delYn.eq(1)))
+                .fetchOne();
+
+        Long soldOut = queryFactory
+                .select(itemEntity.iitem.count())
+                .from(itemEntity)
+                .where(itemEntity.stock.eq(0)
+                        .and(itemEntity.status.eq(1)))
+                .fetchOne();
+
+        Long newBoard = queryFactory
+                .select(boardEntity.iboard.count())
+                .from(boardEntity)
+                .where(getDateFormatPlusTime(boardEntity.createdAt).eq(getDateFormatPlusTime(LocalDateTime.now()))
+                        .and(boardEntity.delYn.eq(1)))
+                .fetchOne();
+
+        Long newReserve = queryFactory
+                .select(reserveEntity.ireserve.count())
+                .from(reserveEntity)
+                .where(getDateFormatPlusTime(reserveEntity.createdAt).eq(getDateFormatPlusTime(LocalDateTime.now())))
+                .fetchOne();
+
+        return SelTodayVo.builder()
+                .userCount(userCount)
+                .shippingBefore(shippingBefore)
+                .shipping(shipping)
+                .refundBefore(refundBefore)
+                .soldOut(soldOut)
+                .newBoard(newBoard)
+                .newReserve(newReserve)
+                .build();
     }
 
     @Override
@@ -256,6 +324,10 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     }
 
     public StringTemplate getDateFormatPlusTime(DateTimePath<LocalDateTime> date) {
+        return Expressions.stringTemplate("DATE_FORMAT( {0}, {1} )", date, ConstantImpl.create("%y-%m-%d %h:%m"));
+    }
+
+    public StringTemplate getDateFormatPlusTime(LocalDateTime date) {
         return Expressions.stringTemplate("DATE_FORMAT( {0}, {1} )", date, ConstantImpl.create("%y-%m-%d %h:%m"));
     }
 
