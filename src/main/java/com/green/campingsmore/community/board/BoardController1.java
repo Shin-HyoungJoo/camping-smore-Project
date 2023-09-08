@@ -6,10 +6,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -151,4 +153,12 @@ public class BoardController1 {
     public List<CategoryList> getCategory(){
         return service.getCategory();
     }
+//    @GetMapping("/admin-board")
+//    @Operation(summary = "보드관리자")
+//    public List<BoardListVo> admin(@RequestParam(required=false)Long icategory,
+//                                   @RequestParam(required=false)String title,
+//                                   @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+//                                   @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate){
+//        return service.admin(startDate, endDate, title, icategory);
+//    }
 }

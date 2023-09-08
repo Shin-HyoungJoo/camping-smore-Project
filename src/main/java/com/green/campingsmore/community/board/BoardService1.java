@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -438,4 +439,7 @@ public class BoardService1 {
     public List<CategoryList> getCategory(){
         return mapper.getCategory();
     }
+//    public List<BoardListVo> admin(LocalDate startDate, LocalDate endDate,String title, Long icategory){
+//        return mapper.admin(startDate, endDate, title, icategory);
+//    }
 }
