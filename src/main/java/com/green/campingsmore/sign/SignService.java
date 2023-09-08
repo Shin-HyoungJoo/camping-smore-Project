@@ -59,7 +59,7 @@ public class SignService {
     public KakaoToken kakaoLogin(KakaoAuthenticCodeVo kakaoAuthenticCodeVo){
 
         String KAKAO_REST_API_KEY = "58abeedd61fb371489a99bb736791694"; // 상윤씨 rest-api
-        String KAKA0_REDIRECT_URI = "http://localhost:3000/kakaoauth"; // 프론트 리다이렉트
+        String KAKA0_REDIRECT_URI = "http://localhost:8080/kakaoauth"; // 프론트 리다이렉트
         String authorize_code = kakaoAuthenticCodeVo.getAuthorize_code(); //인가코드
         // 이제 인가코드로 사용자의 정보를 얻어야한다.
         WebClient client = WebClient.builder()
