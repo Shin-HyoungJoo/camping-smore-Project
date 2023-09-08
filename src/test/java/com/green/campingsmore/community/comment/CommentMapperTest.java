@@ -1,7 +1,9 @@
 package com.green.campingsmore.community.comment;
 
-import com.green.campingsmore.community.comment.model.*;
 import com.green.campingsmore.config.security.AuthenticationFacade;
+import com.green.campingsmore.user.community.comment.model.CommentEntity2;
+import com.green.campingsmore.user.community.comment.model.CommentPageDto;
+import com.green.campingsmore.user.community.comment.model.CommentVo;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CommentMapperTest {
 
     @Autowired
-    private CommentMapper mapper;
+    private CommentMapper1 mapper;
 
     @MockBean
     private AuthenticationFacade FACADE;
