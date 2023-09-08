@@ -30,13 +30,9 @@ public class SignController {
 
     // 프론트에서 해주는 인가코드 받는것도 내가 하고 이후에 액세스 토큰은 프론트에 보내주고
     // 회원정보 받아와서 우리 디비에 저장해주고 엮어줘야함
-    @PostMapping("/kakao")
+    @PostMapping("/kakaoauth")
     @Operation(summary = "카카오 인가코드를 받아 액세스 토큰을 반환",description = "Try it out -> Execute 눌러주세요 \n\n ")
     public KakaoToken kakaoLogin(@RequestBody KakaoAuthenticCodeVo kakaoAuthenticCodeVo){
-//        {
-//            "authorize_code": "vKG9N4oFXwwt9ACGZfWGyc7GA81SYtYqCvUZClRTP8Mv9S9mgbTUFj64lzObN1GuVUoh6gorDR8AAAGKb1iOVA",
-//                "accessToken": "string"
-//        }
         return SERVICE.kakaoLogin(kakaoAuthenticCodeVo);
     }
 
