@@ -49,9 +49,9 @@ public class KakaoPayService {
         parameters.add("total_amount", dto.getTotalPrice());  //총금액       ////@@@@@@@@@@@@@@
         parameters.add("vat_amount", 0); //부가세       ////@@@@@@@@@@@@@@
         parameters.add("tax_free_amount", 0); //상품 비과세 금액       ////@@@@@@@@@@@@@@
-        parameters.add("approval_url", "http://localhost:8080/api/payment/kakao/success"); // 성공 시 redirect url
-        parameters.add("cancel_url", "http://localhost:8080/payment/cancel"); // 취소 시 redirect url
-        parameters.add("fail_url", "http://localhost:8080/payment/fail"); // 실패 시 redirect url
+        parameters.add("approval_url", "http://192.168.0.144:5005/api/payment/kakao/success"); // 성공 시 redirect url
+        parameters.add("cancel_url", "http://192.168.0.144:5005/payment/cancel"); // 취소 시 redirect url
+        parameters.add("fail_url", "http://192.168.0.144:5005/payment/fail"); // 실패 시 redirect url
         this.insPayInfoDto = dto;
         log.info("11");
         // 파라미터, 헤더
