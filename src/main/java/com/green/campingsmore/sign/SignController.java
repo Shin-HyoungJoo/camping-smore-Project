@@ -27,17 +27,18 @@ import java.util.Collections;
 public class SignController {
     private final SignService SERVICE;
     private final AuthenticationFacade FACADE;
-    private final String KAKAO_REST_API_KEY = "0fc03c2467ca0d7ca9999c9d1ed64911";
-    private final String KAKA0_REDIRECT_URI = "http://localhost:8080/login/oauth2/code/kakao";
 
     // 프론트에서 해주는 인가코드 받는것도 내가 하고 이후에 액세스 토큰은 프론트에 보내주고
     // 회원정보 받아와서 우리 디비에 저장해주고 엮어줘야함
     @PostMapping("/kakao")
-    @Operation(summary = "카카오 인가코드 받기",description = "Try it out -> Execute 눌러주세요 \n\n ")
-    public void kakaoLogin(@RequestBody KakaoAuthenticCodeVo kakaoAuthenticCodeVo){
-        SERVICE.kakaoLogin(kakaoAuthenticCodeVo);
+    @Operation(summary = "카카오 인가코드를 받아 액세스 토큰을 반환",description = "Try it out -> Execute 눌러주세요 \n\n ")
+    public KakaoToken kakaoLogin(@RequestBody KakaoAuthenticCodeVo kakaoAuthenticCodeVo){
+//        {
+//            "authorize_code": "vKG9N4oFXwwt9ACGZfWGyc7GA81SYtYqCvUZClRTP8Mv9S9mgbTUFj64lzObN1GuVUoh6gorDR8AAAGKb1iOVA",
+//                "accessToken": "string"
+//        }
+        return SERVICE.kakaoLogin(kakaoAuthenticCodeVo);
     }
-
 
     //ApiParam은 문서 자동화를 위한 Swagger에서 쓰이는 어노테이션이고
     //RequestParam은 http 로부터 요청 온 정보를 받아오기 위한 스프링 어노테이션이다.
