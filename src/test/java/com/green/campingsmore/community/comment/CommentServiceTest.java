@@ -1,7 +1,7 @@
 package com.green.campingsmore.community.comment;
 
-import com.green.campingsmore.community.comment.model.*;
 import com.green.campingsmore.config.security.AuthenticationFacade;
+import com.green.campingsmore.user.community.comment.model.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +20,14 @@ import static org.mockito.Mockito.verify;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@Import({CommentService.class})
+@Import({CommentService1.class})
 class CommentServiceTest {
 
     @MockBean
-    private CommentMapper mapper;
+    private CommentMapper1 mapper;
 
     @Autowired
-    private CommentService service;
+    private CommentService1 service;
 
     @MockBean
     private AuthenticationFacade FACADE;

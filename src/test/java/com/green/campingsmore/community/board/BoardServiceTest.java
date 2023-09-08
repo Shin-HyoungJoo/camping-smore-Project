@@ -1,36 +1,25 @@
 package com.green.campingsmore.community.board;
 
-import com.green.campingsmore.community.board.model.*;
 import com.green.campingsmore.community.board.utils.FileUtils;
-import com.green.campingsmore.community.comment.CommentService;
-import com.green.campingsmore.community.comment.model.CommentPageDto;
-import com.green.campingsmore.community.comment.model.CommentRes;
+import com.green.campingsmore.community.comment.CommentService1;
 import com.green.campingsmore.config.security.AuthenticationFacade;
-import com.green.campingsmore.config.security.model.MyUserDetails;
+import com.green.campingsmore.user.community.board.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.InstanceOfAssertFactories.list;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -39,7 +28,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@Import({BoardService.class, AuthenticationFacade.class, FileUtils.class})
+@Import({BoardService1.class, AuthenticationFacade.class, FileUtils.class})
 
 class BoardServiceTest {
     @Value("${file.dir}")
@@ -53,10 +42,10 @@ class BoardServiceTest {
     }
 
     @MockBean
-    private BoardMapper mapper;
+    private BoardMapper1 mapper;
 
     @Autowired
-    private BoardService service;
+    private BoardService1 service;
 
     @MockBean
     private List<MultipartFile> testPics;
@@ -64,7 +53,7 @@ class BoardServiceTest {
     @MockBean
     private AuthenticationFacade FACADE;
     @Autowired
-    private CommentService commentService;
+    private CommentService1 commentService;
 
 //        @BeforeEach
 //    void beforeEach() {
@@ -249,7 +238,7 @@ class BoardServiceTest {
         when(mapper.maxBoard()).thenReturn(20L);
 
         // When
-        BoardRes result = service.selBoardList(dto);
+        BoardRes1 result = service.selBoardList(dto);
 
         // Then
         assertNotNull(result);
@@ -272,7 +261,7 @@ class BoardServiceTest {
         when(mapper.maxBoard()).thenReturn(20L);
 
         // When
-        BoardRes result = service.categoryBoardList(dto);
+        BoardRes1 result = service.categoryBoardList(dto);
 
         // Then
         assertNotNull(result);
