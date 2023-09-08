@@ -69,6 +69,8 @@ public class SecurityConfiguration {
                                         ).permitAll()
 //                            .requestMatchers(HttpMethod.GET, "").permitAll()
                                         .requestMatchers("**exception**").permitAll()
+                                        .requestMatchers("/api/payment/kakao/**").permitAll()
+                                        .requestMatchers("/api/payment/kakao/**/**").permitAll()
                                         .requestMatchers("/api/admin/oauth/authorize").permitAll()
                                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                         .anyRequest().hasAnyRole("USER") // 로그인한 사람만 수락
