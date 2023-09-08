@@ -439,7 +439,7 @@ public class BoardService1 {
     public List<CategoryList> getCategory(){
         return mapper.getCategory();
     }
-//    public List<BoardListVo> admin(LocalDate startDate, LocalDate endDate,String title, Long icategory){
-//        return mapper.admin(startDate, endDate, title, icategory);
-//    }
+    public List<BoardListVo> admin(LocalDate startDate, LocalDate endDate,String title, Long icategory){
+        return mapper.admin(startDate, endDate, title, icategory);
+    }
 }
