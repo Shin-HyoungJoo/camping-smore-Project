@@ -181,15 +181,16 @@
         inner join board_category C
         on A.icategory = C.icategory
         <where>
+            <if test="startDate != null and endDate != null">
+                and A.created_at BETWEEN #{startDate} AND DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+            </if>
             <if test="icategory != null">
                 and C.icategory =#{icategory}
             </if>
             <if test="title != null">
                 and A.title Like concat('%', #{title}, '%') and title !=''
             </if>
-            <if test="startDate != null and endDate != null">
-                and A.created_at BETWEEN #{startDate} AND #{endDate}
-            </if>
+
         </where>
         order by A.icategory asc,A.iboard desc
     </select>
