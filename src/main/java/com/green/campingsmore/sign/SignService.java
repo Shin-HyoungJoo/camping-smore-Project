@@ -47,11 +47,6 @@ public class SignService {
     private final MailApi mail;
     @Value("${file.dir}")
     private String fileDir;
-    //    rest api키 = 58abeedd61fb371489a99bb736791694
-//    인가코드가 리다이렉트된 url = http://localhost:8080/login/oauth2/code/kakao
-    private final String KAKAO_REST_API_KEY = "58abeedd61fb371489a99bb736791694";
-    private final String KAKA0_REDIRECT_URI = "http://localhost:8080/login/oauth2/code/kakao";
-    private final String authorize_code = "vKG9N4oFXwwt9ACGZfWGyc7GA81SYtYqCvUZClRTP8Mv9S9mgbTUFj64lzObN1GuVUoh6gorDR8AAAGKb1iOVA";
 
     public void test() {
         log.info("service-test-iuser : {}", FACADE.getLoginUserPk());
@@ -62,7 +57,10 @@ public class SignService {
     }
 
     public KakaoToken kakaoLogin(KakaoAuthenticCodeVo kakaoAuthenticCodeVo){
-        kakaoAuthenticCodeVo.getAuthorize_code(); //인가코드
+
+        String KAKAO_REST_API_KEY = "58abeedd61fb371489a99bb736791694"; // 상윤씨 rest-api
+        String KAKA0_REDIRECT_URI = "http://localhost:8080/kakaoauth"; // 프론트 리다이렉트
+        String authorize_code = kakaoAuthenticCodeVo.getAuthorize_code(); //인가코드
         // 이제 인가코드로 사용자의 정보를 얻어야한다.
         WebClient client = WebClient.builder()
                 .baseUrl("https://kauth.kakao.com")
@@ -71,7 +69,7 @@ public class SignService {
 
         // post으로 토큰 요청
         return client.post()
-                .uri("/oauth/token?grant_type=authorization_code&client_id="+KAKAO_REST_API_KEY+"&redirect_uri="+KAKA0_REDIRECT_URI+"&code="+authorize_code)
+                .uri("/oauth/token?grant_type=authorization_code&client_id="+KAKAO_REST_API_KEY+"&redirect_uri="+KAKA0_REDIRECT_URI+"&code="+authorize_code)//+"&scope=account_email,gender"
                 .retrieve()
                 .bodyToMono(KakaoToken.class).block();
     }

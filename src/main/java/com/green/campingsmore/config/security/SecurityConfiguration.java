@@ -47,7 +47,6 @@ public class SecurityConfiguration {
                                                 , "/*/oauth2/code/*"
                                                 , "/oauth2/**"
                                                 , "/oauth/**"
-                                                , "/main"
 
                                                 ,"/api/notuser" // 비회원 방문 카운트 증가
                                                 ,"/api/oauth/authorize" //로그인
@@ -57,8 +56,6 @@ public class SecurityConfiguration {
                                                 , "/api/search/pw"  // 비밀번호 찾기
                                                 ,"/api/oauth/token" // 리프레쉬 토큰...
                                                 ,"/api/admin/oauth/authorize" // 관리자 로그인
-                                                ,"/api/oauth/redirect" // SocialLogin
-                                                ,"/api/user/signin" // SocialLogin
                                                 ,"/api/dataset/naver" // 네이버 검색 api
                                                 ,"/api/dataset/kakao" // 카카오 맵
                                                 ,"/api/community/title" // 게시판
@@ -66,19 +63,16 @@ public class SecurityConfiguration {
                                                 ,"/api/community/iboard" // 게시판
                                                 ,"/api/community/comunity" // 게시판
                                                 ,"/api/community/boardDetail/**" // 게시판
-                                                ,"/api/item/**/**" // 아이템
+                                                ,"/api/item/**" // 아이템
                                                 ,"/api/review/**/detail" // 리뷰 리스트
-                                                ,"/api/review/**/**" // 리뷰 리스트
-                                                ,"/api/camp/**/**" // 캠프 예약
-                                                ,"/api/refund/**/**" // 환불
                                                 , "/api/exception"
                                         ).permitAll()
 //                            .requestMatchers(HttpMethod.GET, "").permitAll()
                                         .requestMatchers("**exception**").permitAll()
                                         .requestMatchers("/api/admin/oauth/authorize").permitAll()
-                                        .requestMatchers("/api/admin/manage").hasRole("ADMIN")
-//                                        .anyRequest().hasAnyRole("USER", "ADMIN") // 로그인한 사람만 수락
-                                        .anyRequest().permitAll()// 모든 권한 수락
+                                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                                        .anyRequest().hasAnyRole("USER") // 로그인한 사람만 수락
+//                                        .anyRequest().permitAll()// 모든 권한 수락
                 ) //사용 권한 체크
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //세션 사용 X
                 .httpBasic(http -> http.disable()) //UI 있는 시큐리티 설정을 비활성화
