@@ -56,8 +56,22 @@ public class SignService {
         return MAPPER.IncreaseCount();
     }
 
-    public void kakaoLogin(KakaoAuthenticCodeVo kakaoAuthenticCodeVo){
+    public KakaoToken kakaoLogin(KakaoAuthenticCodeVo kakaoAuthenticCodeVo){
 
+        String KAKAO_REST_API_KEY = "58abeedd61fb371489a99bb736791694"; // 상윤씨 rest-api
+        String KAKA0_REDIRECT_URI = "http://localhost:3000/kakaoauth"; // 프론트 리다이렉트
+        String authorize_code = kakaoAuthenticCodeVo.getAuthorize_code(); //인가코드
+        // 이제 인가코드로 사용자의 정보를 얻어야한다.
+        WebClient client = WebClient.builder()
+                .baseUrl("https://kauth.kakao.com")
+                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                .build();
+
+        // post으로 토큰 요청
+        return client.post()
+                .uri("/oauth/token?grant_type=authorization_code&client_id="+KAKAO_REST_API_KEY+"&redirect_uri="+KAKA0_REDIRECT_URI+"&code="+authorize_code)//+"&scope=account_email,gender"
+                .retrieve()
+                .bodyToMono(KakaoToken.class).block();
     }
 
 //    public void kakaoAuthenticationCode(String code){

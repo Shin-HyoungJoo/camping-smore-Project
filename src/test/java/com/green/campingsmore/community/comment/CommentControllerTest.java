@@ -2,10 +2,10 @@ package com.green.campingsmore.community.comment;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.green.campingsmore.MockMvcConfig;
-import com.green.campingsmore.community.comment.model.CommentDelDto;
-import com.green.campingsmore.community.comment.model.CommentEntity2;
-import com.green.campingsmore.community.comment.model.CommentInsDto;
-import com.green.campingsmore.community.comment.model.CommentUpdDto;
+import com.green.campingsmore.user.community.comment.model.CommentDelDto;
+import com.green.campingsmore.user.community.comment.model.CommentEntity2;
+import com.green.campingsmore.user.community.comment.model.CommentInsDto;
+import com.green.campingsmore.user.community.comment.model.CommentUpdDto;
 import com.green.campingsmore.config.security.AuthenticationFacade;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,9 +27,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @ExtendWith(SpringExtension.class)
 @MockMvcConfig
-@WebMvcTest(CommentController.class)// 내 컨트롤러
+@WebMvcTest(CommentController1.class)// 내 컨트롤러
 @AutoConfigureMockMvc(addFilters = false)
-@Import({CommentController.class})
+@Import({CommentController1.class})
 class CommentControllerTest {
     @Autowired
     private MockMvc mvc;
@@ -57,7 +57,7 @@ class CommentControllerTest {
 //        return userDetails;
 //    }
     @MockBean
-    private CommentService service;
+    private CommentService1 service;
 
     @Test
     void insComment() throws Exception {

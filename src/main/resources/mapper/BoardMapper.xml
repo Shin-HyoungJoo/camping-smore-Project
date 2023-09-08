@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.green.campingsmore.community.board.BoardMapper">
+<mapper namespace="com.green.campingsmore.community.board.BoardMapper1">
     <insert id="insBoard" useGeneratedKeys="true" keyProperty="iboard">
         insert into board
         (iuser,icategory,title, ctnt)
@@ -84,6 +84,22 @@
         order by A.iboard desc
         limit #{startIdx},#{row}
     </select>
+    <select id="noticeList">
+        select iboard, icategory, title,ctnt,created_at createdat,board_view boardview
+        from board
+        where icategory=1
+        order by iboard desc
+    </select>
+    <select id="selNoticeCount1">
+        SELECT COUNT(*)
+        FROM board
+        WHERE icategory =#{icategory} and del_yn = 1
+    </select>
+    <select id="selNoticeCount">
+        SELECT COUNT(*)
+        FROM board
+        where icategory = #{icategory}
+    </select>
     <select id="selBoard">
         select A.iboard,C.icategory, C.name category, A.title, B.name, A.created_at createdat, A.board_view boardview
         from board A
@@ -148,4 +164,9 @@
         INSERT INTO board_category
         SET name = #{name}
     </insert>
+    <update id="delAdminBoard">
+        update board
+        set del_yn=0
+        where iboard=#{iboard}
+    </update>
 </mapper>

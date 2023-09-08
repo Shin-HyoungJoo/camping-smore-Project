@@ -7,5 +7,4 @@ import lombok.Data;
 @Builder
 public class KakaoAuthenticCodeVo {
     private String authorize_code;
-    private String accessToken;
 }

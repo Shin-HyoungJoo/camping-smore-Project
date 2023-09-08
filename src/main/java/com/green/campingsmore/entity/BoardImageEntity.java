@@ -21,8 +21,9 @@ public class BoardImageEntity extends BaseEntity {
     @Column(name = "iboard_pic",updatable = false, nullable = false, columnDefinition = "BIGINT UNSIGNED")
     private Long iboardPic;
 
-    @JoinColumn(name = "iboard",nullable = false)
+    @JoinColumn(name = "iboard")
     @ManyToOne
+    @ToString.Exclude
     private BoardEntity boardEntity;
 
     @Column(nullable = false)
