@@ -409,9 +409,9 @@ public class BoardService1 {
             return 0L;
         }
     }
-}
 
-//    public Long insCategory(String name) {
+
+    //    public Long insCategory(String name) {
 //        return mapper.insCategory(name);
 //    }
 //    public List<BoardNoticeList> noticeList(){
@@ -437,9 +437,10 @@ public class BoardService1 {
 //            return 0L; // 예시로 간단히 null 반환
 //        }
 //    }//게시글 삭제
-//    public List<CategoryList> getCategory(){
-//        return mapper.getCategory();
-//    }
+    public List<CategoryList> getCategory() {
+        return mapper.getCategory();
+    }
+}
 //    public List<BoardListVo> admin(LocalDate startDate, LocalDate endDate,String title, Long icategory){
 //        return mapper.admin(startDate, endDate, title, icategory);
 //    }
