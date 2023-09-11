@@ -1,4 +1,4 @@
-package com.green.campingsmore.wishlist.model;
+package com.green.campingsmore.user.mypage.model;
 
 import lombok.Data;
 

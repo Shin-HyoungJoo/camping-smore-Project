@@ -5,7 +5,7 @@
 //import com.green.campingsmore.dataset.NaverApi;
 //import com.green.campingsmore.item.model.*;
 //import com.green.campingsmore.review.ReviewService2;
-//import com.green.campingsmore.review.model.ReviewPageDto;
+//import com.green.campingsmore.user.review.model.ReviewPageDto;
 //import com.green.campingsmore.user.review.model.ReviewRes;
 //import com.green.campingsmore.user.review.model.ReviewUpdDto;
 //import lombok.RequiredArgsConstructor;

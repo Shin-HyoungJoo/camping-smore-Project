@@ -1,6 +1,5 @@
 package com.green.campingsmore.user.item;
 
-import com.green.campingsmore.admin.item.model.AdminItemCateDetailVo;
 import com.green.campingsmore.admin.item.model.AdminItemCateVo;
 import com.green.campingsmore.admin.item.model.AdminItemVo;
 import com.green.campingsmore.admin.item.model.ItemVo;
@@ -8,10 +7,11 @@ import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.entity.*;
 import com.green.campingsmore.item.model.ItemSelDetailVo;
 import com.green.campingsmore.user.item.model.ItemSelCateVo;
+import com.green.campingsmore.user.mypage.model.ReviewMypageVo;
+import com.green.campingsmore.user.mypage.model.WishMypageVo;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.*;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.DateTemplate;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.jpa.JPAExpressions;
@@ -22,14 +22,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.jdbc.support.SQLErrorCodes;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -38,7 +36,7 @@ import static java.time.LocalDate.now;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ItemDao {
+public class ItemQdsl {
     private final JPAQueryFactory jpaQueryFactory;
     private final QItemEntity i = QItemEntity.itemEntity;
     private final QItemCategoryEntity c = QItemCategoryEntity.itemCategoryEntity;
@@ -101,7 +99,8 @@ public class ItemDao {
                          ))
                 .from(i)
                 .join(i.itemCategoryEntity, c)
-                .where(findCate(cate),
+                .where(i.status.between(1,2),
+                        findCate(cate),
                         findDate(date),
                         findName(text),
                         findSearchDate(searchStartDate,searchEndDate)
@@ -194,7 +193,7 @@ public class ItemDao {
                 ))
                 .from(i)
                 .join(i.itemCategoryEntity, c)
-                .where(searchBuilder.and(i.status.eq(1)))
+                .where(i.status.eq(1),searchBuilder)
                 .orderBy(getAllOrderSpecifiers(page))
                 .offset(page.getOffset())
                 .limit(page.getPageSize());
@@ -271,6 +270,19 @@ public class ItemDao {
         return query.fetch();
     }
 
+    //////////////////////////////////////////////////////////////////////////////////////////////////////
+    // 유저 마이페이지 위시 리스트----------------------------------------------------------------------------
+    public List<WishMypageVo> selReviewlist(Long iuser) {
+        JPQLQuery<WishMypageVo> query = jpaQueryFactory.select(Projections.bean(WishMypageVo.class,
+                        w.iwish ,i.iitem, i.name.as("itemNm")
+                ))
+                .from(w)
+                .join(w.itemEntity, i)
+                .where(w.userEntity.iuser.eq(iuser))
+                .orderBy(w.iwish.desc());
+
+        return query.fetch();
+    }
 }
 
 
