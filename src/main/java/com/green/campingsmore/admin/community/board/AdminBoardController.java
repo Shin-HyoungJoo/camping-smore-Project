@@ -1,6 +1,5 @@
-package com.green.campingsmore.admin.community.Board;
+package com.green.campingsmore.admin.community.board;
 
-import com.green.campingsmore.community.board.BoardService1;
 import com.green.campingsmore.user.community.board.model.BoardListVo;
 import com.green.campingsmore.user.community.board.model.BoardNoticeList;
 import io.swagger.v3.oas.annotations.Operation;

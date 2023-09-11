@@ -1,8 +1,7 @@
-package com.green.campingsmore.admin.community.Board;
+package com.green.campingsmore.admin.community.board;
 
 import com.green.campingsmore.community.board.BoardMapper1;
 import com.green.campingsmore.community.board.utils.FileUtils;
-import com.green.campingsmore.community.comment.CommentService1;
 import com.green.campingsmore.user.community.board.model.BoardListVo;
 import com.green.campingsmore.user.community.board.model.BoardNoticeList;
 import com.green.campingsmore.user.community.board.model.CategoryList;
