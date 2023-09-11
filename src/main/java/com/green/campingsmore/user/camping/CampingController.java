@@ -85,12 +85,12 @@ public class CampingController {
     public ResponseEntity<List<CampingList>> getCampingAll() {
         return ResponseEntity.ok(SERVICE.getCampingAll());
     }
-
-    @GetMapping("/detail-camping")
-    @Operation(summary = "캠핑장 상세보기")
-    public ResponseEntity<List<CampingDetailList>> getDeCamping(@RequestParam Long icamp){
-        return ResponseEntity.ok(SERVICE.getDeCamping(icamp));
-    }
+//
+//    @GetMapping("/detail-camping")
+//    @Operation(summary = "캠핑장 상세보기")
+//    public ResponseEntity<List<CampingDetailList>> getDeCamping(@RequestParam Long icamp){
+//        return ResponseEntity.ok(SERVICE.getDeCamping(icamp));
+//    }
     @GetMapping("/my-reserve")
     @Operation(summary = "내 예약 리스트")
     public ResponseEntity<List<CampingMyList>> getMyList(){
@@ -123,4 +123,14 @@ public class CampingController {
 //    public ResponseEntity<CampingDetaillist2> getCamp(Long icamp){
 //        return ResponseEntity.ok(SERVICE.campingdetail2(icamp));
 //    }
+//    @GetMapping("/admincamp")
+//    public ResponseEntity<List<CampingDetailList1>> selcamp(Long icamp){
+//        return ResponseEntity.ok(SERVICE.getAdminCamp(icamp));
+//    }
+
+    @GetMapping("/{icamp}")
+    @Operation(summary = "캠핑장 상세보기")
+    public ResponseEntity<CampingDetailList1> selCamping(@PathVariable Long icamp) {
+        return ResponseEntity.ok(SERVICE.selCampingPic(icamp));
+    }
 }
