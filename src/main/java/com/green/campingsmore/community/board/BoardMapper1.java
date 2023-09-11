@@ -58,6 +58,10 @@ public interface BoardMapper1 {
     Long delAdminBoard(Long iboard);
     List<CategoryList> getCategory();
     List<BoardListVo> admin(LocalDate startDate, LocalDate endDate, String title, Long icategory);
+    List<BoardListVo> adminToday();
+    List<BoardListVo> adminWeek();
+    List<BoardListVo> adminthree();
+    List<BoardListVo> adminMonth();
 
 
 }

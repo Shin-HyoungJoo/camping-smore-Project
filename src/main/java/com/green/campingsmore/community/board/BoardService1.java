@@ -90,20 +90,20 @@ public class BoardService1 {
 //    }
 
     public Long postboard() throws NullPointerException {
-            try {
-                BoardEntity2 entity = new BoardEntity2();
-                if (FACADE.isLogin()) {
-                }
-                entity.setIuser(FACADE.getLoginUserPk());
-                entity.setIcategory(1L);
-                entity.setTitle("");
-                entity.setCtnt("");
-                mapper.insBoard(entity);
-                Long iboard = entity.getIboard();
-                return iboard;
-            }catch (NullPointerException e){
-                throw new NullPointerException("로그인 안됨");
+        try {
+            BoardEntity2 entity = new BoardEntity2();
+            if (FACADE.isLogin()) {
             }
+            entity.setIuser(FACADE.getLoginUserPk());
+            entity.setIcategory(1L);
+            entity.setTitle("");
+            entity.setCtnt("");
+            mapper.insBoard(entity);
+            Long iboard = entity.getIboard();
+            return iboard;
+        } catch (NullPointerException e) {
+            throw new NullPointerException("로그인 안됨");
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -220,7 +220,7 @@ public class BoardService1 {
 //            }
 //        }
 
-        //        return result; // 파일이 없을 경우 게시글 정보 업데이트 결과 리턴
+    //        return result; // 파일이 없을 경우 게시글 정보 업데이트 결과 리턴
 //    }
 
 
@@ -409,37 +409,38 @@ public class BoardService1 {
             return 0L;
         }
     }
-
-    public Long insCategory(String name) {
-        return mapper.insCategory(name);
-    }
-    public List<BoardNoticeList> noticeList(){
-        return mapper.noticeList();
-    }
-    public String noticeCount(Long icategory){
-        Long result = mapper.selNoticeCount1(icategory);
-        Long result1 = mapper.selNoticeCount(icategory);
-        String format = String.format(result +"/"+ result1);
-        return format;
-    }
-    public Long delAdminBoard(Long iboard) {
-        try {
-            mapper.delBoardPic(iboard);
-
-            String centerPath = String.format("boardPics/%d", iboard);
-            FileUtils.delFolder(fileDir + centerPath);
-            return mapper.delAdminBoard(iboard);
-        } catch (Exception e) {
-            // 예외 처리 로직
-            e.printStackTrace(); // 예외 정보 출력
-            // 예외 처리 후 반환할 값이나 로직을 작성
-            return 0L; // 예시로 간단히 null 반환
-        }
-    }//게시글 삭제
-    public List<CategoryList> getCategory(){
-        return mapper.getCategory();
-    }
-    public List<BoardListVo> admin(LocalDate startDate, LocalDate endDate,String title, Long icategory){
-        return mapper.admin(startDate, endDate, title, icategory);
-    }
 }
+
+//    public Long insCategory(String name) {
+//        return mapper.insCategory(name);
+//    }
+//    public List<BoardNoticeList> noticeList(){
+//        return mapper.noticeList();
+//    }
+//    public String noticeCount(Long icategory){
+//        Long result = mapper.selNoticeCount1(icategory);
+//        Long result1 = mapper.selNoticeCount(icategory);
+//        String format = String.format(result +"/"+ result1);
+//        return format;
+//    }
+//    public Long delAdminBoard(Long iboard) {
+//        try {
+//            mapper.delBoardPic(iboard);
+//
+//            String centerPath = String.format("boardPics/%d", iboard);
+//            FileUtils.delFolder(fileDir + centerPath);
+//            return mapper.delAdminBoard(iboard);
+//        } catch (Exception e) {
+//            // 예외 처리 로직
+//            e.printStackTrace(); // 예외 정보 출력
+//            // 예외 처리 후 반환할 값이나 로직을 작성
+//            return 0L; // 예시로 간단히 null 반환
+//        }
+//    }//게시글 삭제
+//    public List<CategoryList> getCategory(){
+//        return mapper.getCategory();
+//    }
+//    public List<BoardListVo> admin(LocalDate startDate, LocalDate endDate,String title, Long icategory){
+//        return mapper.admin(startDate, endDate, title, icategory);
+//    }
+//}
