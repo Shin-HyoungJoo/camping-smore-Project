@@ -210,6 +210,12 @@ public class AdminItemService {
         adminBestItemRep.save(entity);
         return null;
     }
+
+    public List<ItemVo> selBestItem() {
+        List<ItemVo> list = itemQdsl.selBestItem();
+        return list;
+    }
+
     public ItemBestVo updBestItem(AdminItemUpdBestDto dto) {
         Optional<BestItemEntity> optEntity = adminBestItemRep.findById(dto.getIbestItem());
 
