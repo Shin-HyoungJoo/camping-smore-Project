@@ -158,6 +158,13 @@ public class AdminItemController {
         return ResponseEntity.ok(vo);
     }
 
+    @GetMapping("/bestitem")
+    @Operation(summary = "추천 아이템 리스트"
+            , description = "" )
+    public ResponseEntity<List<ItemVo>> getBestItem() {
+        return ResponseEntity.ok(service.selBestItem());
+    }
+
     @PutMapping("/bestitem")
     @Operation(summary = "추천 아이템 수정"
             , description = "" +

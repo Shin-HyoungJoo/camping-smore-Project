@@ -73,6 +73,15 @@ public class ReviewController {
         return ResponseEntity.ok(service.updReview(dto, pic));
     }
 
+    @PutMapping("/like")
+    @Operation(summary = "리뷰 좋아요"
+            , description = "" +
+            "\"ireview\": [-] 리뷰 PK,<br>")
+    public ResponseEntity<Integer> reviewLike(@RequestParam Long ireview) {
+
+        return ResponseEntity.ok(service.reviewLike(ireview));
+    }
+
     @DeleteMapping
     @Operation(summary = "리뷰 삭제"
             , description = "" +
