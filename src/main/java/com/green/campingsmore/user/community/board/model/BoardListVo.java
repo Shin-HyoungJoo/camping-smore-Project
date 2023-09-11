@@ -14,4 +14,5 @@ public class BoardListVo {
     private String ctnt;
     private LocalDate createdat;
     private Long boardview;
+    private String categoryName;
 }
