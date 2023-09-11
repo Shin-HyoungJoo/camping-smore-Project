@@ -5,8 +5,7 @@ import com.green.campingsmore.entity.BestItemEntity;
 import com.green.campingsmore.entity.ItemCategoryEntity;
 import com.green.campingsmore.entity.ItemDetailPicEntity;
 import com.green.campingsmore.entity.ItemEntity;
-import com.green.campingsmore.item.model.ItemSelDetailRes;
-import com.green.campingsmore.user.item.ItemDao;
+import com.green.campingsmore.user.item.ItemQdsl;
 import com.green.campingsmore.user.review.ReviewService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +27,7 @@ public class AdminItemService {
     private final AdminItemDetailPicRepository adminItemDetailPicRep;
     private final AdminBestItemRepository adminBestItemRep;
     private final ReviewService reviewService;
-    private final ItemDao itemDao;
+    private final ItemQdsl itemQdsl;
 
 
     // 카테고리 ------------------------------------------------------------------------------------------------------
@@ -48,12 +47,12 @@ public class AdminItemService {
     }
 
     public List<AdminItemCateVo> selAdminCategory() {
-        List<AdminItemCateVo> list = itemDao.selAdminCategory();
+        List<AdminItemCateVo> list = itemQdsl.selAdminCategory();
         return list;
     }
 
     public AdminItemCateDetailVo selAdminCategoryDetail(Long iitemcategory) {
-        AdminItemCateVo vo = itemDao.selAdminCategoryDetail(iitemcategory);
+        AdminItemCateVo vo = itemQdsl.selAdminCategoryDetail(iitemcategory);
         String url = "http://주소들어갈예정/" + iitemcategory.toString();
         return AdminItemCateDetailVo.builder()
                 .iitemCategory(vo.getIitemCategory())
@@ -117,9 +116,9 @@ public class AdminItemService {
     }
 
     public AdminItemSelDetailRes searchAdminItem(Pageable page, Long cate, String text, Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
-        List<AdminItemVo> list = itemDao.searchAdminItem(page, cate, text, date,searchStartDate,searchEndDate);
+        List<AdminItemVo> list = itemQdsl.searchAdminItem(page, cate, text, date,searchStartDate,searchEndDate);
         Integer startIdx = page.getPageNumber() * page.getPageSize();
-        Integer count = itemDao.itemCount();
+        Integer count = itemQdsl.itemCount();
         Integer maxPage = (int)Math.ceil((double) count / page.getPageSize());
         Integer isMore = maxPage > page.getPageNumber()+1 ? 1 : 0;
 

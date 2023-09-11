@@ -29,7 +29,7 @@ public class ReviewService {
     private final OrderRepository orderRep;
     private final ItemRepository itemRep;
     private final MyFileUtils myFileUtils;
-    private final ReviewDao reviewDao;
+    private final ReviewQdsl reviewQdsl;
 
 
     public ReviewVo saveReview(ReviewInsDto dto, MultipartFile pic){
@@ -67,9 +67,9 @@ public class ReviewService {
     }
 
     public ReviewRes selectItemReview(Pageable page, Long iitem) {
-        List<ReviewSelRes> list = reviewDao.selReview(page, iitem);
+        List<ReviewSelRes> list = reviewQdsl.selReview(page, iitem);
         Integer startIdx = page.getPageNumber() * page.getPageSize();
-        Integer count = reviewDao.reviewCount(iitem);
+        Integer count = reviewQdsl.reviewCount(iitem);
         Integer maxPage = (int)Math.ceil((double) count / page.getPageSize());
         Integer isMore = maxPage > page.getPageNumber()+1 ? 1 : 0;
 
@@ -86,7 +86,7 @@ public class ReviewService {
 
     public String updReview(ReviewUpdDto dto, MultipartFile pic) {
         UserEntity userEntity = signRep.getReferenceById(facade.getLoginUserPk());
-        if(reviewDao.reviewUser(userEntity.getIuser())) {
+        if(reviewQdsl.reviewUser(userEntity.getIuser())) {
             ReviewEntity entity = reviewRep.getReferenceById(dto.getIreview());
             entity.setReviewCtnt(dto.getReviewCtnt());
             entity.setStarRating(dto.getStarRating());
@@ -106,12 +106,19 @@ public class ReviewService {
         return "유저를 확인해주세요";
     }
 
+    public Integer reviewLike(Long ireview) {
+        ReviewEntity reviewEntity = reviewRep.getReferenceById(ireview);
+        reviewEntity.setReviewLike(reviewEntity.getReviewLike()+1);
+        reviewRep.save(reviewEntity);
+        return reviewEntity.getReviewLike();
+    }
+
     public Integer delReview(Long ireview) {
 
         ReviewEntity reviewEntity = reviewRep.getReferenceById(ireview);
         reviewEntity.setDelYn(0);
         reviewRep.save(reviewEntity);
-        return 1;
+        return reviewEntity.getReviewLike();
     }
 
 

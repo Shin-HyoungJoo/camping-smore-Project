@@ -5,11 +5,9 @@ import com.green.campingsmore.item.model.ItemDetailReviewVo;
 import com.green.campingsmore.item.model.ItemSelDetailRes;
 import com.green.campingsmore.item.model.ItemSelDetailVo;
 import com.green.campingsmore.user.item.model.ItemDetailVo;
-import com.green.campingsmore.user.item.model.ItemSelAllParam;
 import com.green.campingsmore.user.item.model.ItemSelCateVo;
 import com.green.campingsmore.user.review.ReviewService;
 import com.green.campingsmore.user.review.model.ReviewRes;
-import com.green.campingsmore.user.review.model.ReviewSelRes;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +22,7 @@ import java.util.List;
 @Transactional
 public class ItemService {
     private final ItemRepository itemRep;
-    private final ItemDao itemDao;
+    private final ItemQdsl itemQdsl;
     private final ItemCategoryRepository itemCategoryRep;
     private final ReviewService reviewService;
 
@@ -33,7 +31,7 @@ public class ItemService {
 
     public List<ItemSelCateVo> selCategory() {
         try {
-            List<ItemSelCateVo> list = itemDao.selCategory();
+            List<ItemSelCateVo> list = itemQdsl.selCategory();
             return list;
         } catch (Exception e) {
             return null;
@@ -42,9 +40,9 @@ public class ItemService {
 
     // 아이템 ------------------------------------------------------------------------------------------------------
     public ItemSelDetailRes searchItem(Pageable page, Long cate, String text) {
-        List<ItemVo> list = itemDao.searchItem(page, cate, text);
+        List<ItemVo> list = itemQdsl.searchItem(page, cate, text);
         Integer startIdx = page.getPageNumber() * page.getPageSize();
-        Integer count = itemDao.itemCount();
+        Integer count = itemQdsl.itemCount();
         Integer maxPage = (int)Math.ceil((double) count / page.getPageSize());
         Integer isMore = maxPage > page.getPageNumber()+1 ? 1 : 0;
 
@@ -61,8 +59,8 @@ public class ItemService {
 
 
     public ItemDetailReviewVo selDetail(Pageable page, Long iitem) {
-        ItemSelDetailVo itemSelDetailVo = itemDao.selItemDetail(iitem);
-        List<String> picList = itemDao.selItemDetailPicList(iitem);
+        ItemSelDetailVo itemSelDetailVo = itemQdsl.selItemDetail(iitem);
+        List<String> picList = itemQdsl.selItemDetailPicList(iitem);
         ItemDetailVo detailVo = ItemDetailVo.builder()
                 .itemSelDetailVo(itemSelDetailVo)
                 .picList(picList)
@@ -80,7 +78,7 @@ public class ItemService {
     // 추천 아이템 ------------------------------------------------------------------------------------------------------
 
     public List<ItemVo> selBestItem() {
-        List<ItemVo> list = itemDao.selBestItem();
+        List<ItemVo> list = itemQdsl.selBestItem();
         return list;
     }
 }
