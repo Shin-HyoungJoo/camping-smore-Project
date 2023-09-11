@@ -360,6 +360,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                             orderItemEntity.price,
                             orderItemEntity.totalPrice,
                             itemEntity.pic,
+                            orderItemEntity.iorderitem,
                             orderEntity.createdAt.as("paymentDate"),
                             ExpressionUtils.as(
                                     JPAExpressions
@@ -373,7 +374,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                     .where(orderEntity.iorder.eq(list.getIorder()).and(orderItemEntity.delYn.eq(1)))
                     .fetch();
 
-            SelPaymentDetailDto item = SelPaymentDetailDto.builder()    //조립
+            SelPaymentDetailDto item = SelPaymentDetailDto.builder()//조립
                     .iorder(list.getIorder())
                     .shipping(list.getShipping())
                     .itemList(dto)

@@ -5,6 +5,11 @@ import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.entity.*;
 import com.green.campingsmore.sign.SignRepository;
 import com.green.campingsmore.user.camping.model.*;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.javassist.NotFoundException;
@@ -34,6 +39,7 @@ public class CampingService {
     private final AuthenticationFacade FACADE;
     private final SignRepository USERREP;
     private final DayRepository DAYREP;
+    private final JPAQueryFactory jpaQueryFactory;
 
 
     @Value("${file.dir}")
@@ -240,11 +246,11 @@ public class CampingService {
 
     public Long delPic(CampingPicDelDto dto) {
         Optional<CampPicEntity> opt = PICREP.findById(dto.getIcampPic());
+
         if (!opt.isPresent()) {
             return null;
         }
         CampPicEntity entity = opt.get();
-
         // 파일을 삭제할 디렉토리 경로
         String centerPath = String.format("campPics/%d", dto.getIcamp());
         String targetPath = String.format("%s/%s", FileUtils.getAbsolutePath(fileDir), centerPath);
@@ -267,13 +273,14 @@ public class CampingService {
             return null;
         }
     }
-    public DailyRes InsReserveCamp(DailyDto dto){
+
+    public DailyRes InsReserveCamp(DailyDto dto) {
         Optional<CampEntity> opt = REP.findById(dto.getIcamp());
         if (!opt.isPresent()) {
             return null;
         }
         CampEntity entity = opt.get();
-        ReserveDayEntity reserveDayEntity= ReserveDayEntity.builder()
+        ReserveDayEntity reserveDayEntity = ReserveDayEntity.builder()
                 .date(dto.getDate())
                 .dayQuantity(dto.getDayQuantity())
                 .campEntity(entity)
@@ -342,6 +349,7 @@ public class CampingService {
         }
         return null;
     }
+
     public ReserveRes cancelReserve(ReserveCancelDto dto) throws Exception {
         Optional<ReserveEntity> opt = RESREP.findById(dto.getIreserve());
         if (!opt.isPresent()) {
@@ -381,6 +389,7 @@ public class CampingService {
                 .ireserve(reserveEntity.getIreserve())
                 .build();
     }
+
     public ReserveRes updReserve(ReserveUpdDto dto) throws NotFoundException {
         Optional<ReserveEntity> opt = RESREP.findById(dto.getIreserve());
         if (!opt.isPresent()) {
@@ -404,14 +413,17 @@ public class CampingService {
                 .phone(reserveEntity.getPhone())
                 .build();
     }
+
     public List<CampingList> getCamping(Long inationwide) {
-        List<CampingList> list = REP.selCamping(inationwide,1); // 오늘 날짜 정보를 파라미터로 전달
+        List<CampingList> list = REP.selCamping(inationwide, 1); // 오늘 날짜 정보를 파라미터로 전달
         return list;
     }
-    public List<CampingList> getCampingAll(){
+
+    public List<CampingList> getCampingAll() {
         List<CampingList> list = REP.selCampingAll(1);
         return list;
     }
+
     public List<CampingDetailList> getDeCamping(Long icamp) {
         List<CampingDetailList> results = REP.selDeCamping(icamp);
 
@@ -435,14 +447,41 @@ public class CampingService {
 
         return uniqueResults;
     }
-    public List<CampingMyList> getMyList(){
+
+//    public CampingDetaillist2 campingdetail2(Long icamp) {
+//        QCampEntity camp = QCampEntity.campEntity;
+//        QCampPicEntity camppic = QCampPicEntity.campPicEntity;
+//        CampingDetaillist2 campingDetailList2 =
+//                jpaQueryFactory.select(Projections.constructor(CampingDetaillist2.class,
+//                                camp.icamp, camp.name, camp.campPhone, camp.address, camp.price,
+//                                camp.capacity, camp.quantity, camp.note, ExpressionUtils.as(JPAExpressions.select(camppic.pic).from(camppic)
+//                                        .where(camppic.campEntity.icamp.eq(icamp)), "pic")))
+//                        .from(camp)
+//                        .leftJoin(camppic).on(camppic.campEntity.icamp.eq(camp.icamp))
+//                        .where(camp.icamp.eq(icamp))
+//                        .fetchOne();
+//
+//        List<CampingDetailList> categoryList = new ArrayList<>();
+//
+//            for (String categoryId : campingDetailList2.getPic()) {
+//                CampingDetaillist2 campingDetaillist2 = new CampingDetaillist2();
+//                campingDetaillist2.set
+//            }
+//
+//
+//        return campingDetailList2;
+//    }
+
+    public List<CampingMyList> getMyList() {
         List<CampingMyList> list = REP.selMyList(FACADE.getLoginUserPk());
         return list;
     }
-    public List<CampingList> getCampingTitle(String name){
-        List<CampingList> list = REP.selTitleCamping(name,1);
+
+    public List<CampingList> getCampingTitle(String name) {
+        List<CampingList> list = REP.selTitleCamping(name, 1);
         return list;
     }
+
     public List<List<DailyList>> selIday() {
         // 현재 날짜를 구합니다.
         LocalDate currentDate = LocalDate.now();
@@ -464,6 +503,7 @@ public class CampingService {
 
         return dailyLists;
     }
+
     public List<DailyList> selIcampDay(Long icamp) {
         // 현재 날짜를 구합니다.
         LocalDate currentDate = LocalDate.now();
@@ -486,8 +526,6 @@ public class CampingService {
     }
 
 
-
-
     public List<DailyRes> InsMainCamp() {
         List<DailyRes> reservations = new ArrayList<>();
         List<CampEntity> campgrounds = REP.findAll(); // 모든 캠핑장 불러오기
@@ -502,7 +540,7 @@ public class CampingService {
                         .campEntity(campground)
                         .build();
                 DAYREP.save(reserveDayEntity);
-                log.info("{}",DAYREP.save(reserveDayEntity));
+                log.info("{}", DAYREP.save(reserveDayEntity));
 
                 reservations.add(DailyRes.builder()
                         .iday(reserveDayEntity.getIday())
@@ -514,7 +552,8 @@ public class CampingService {
         }
         return reservations;
     }
-//    @Scheduled(cron = "*/10 * * * * *")
+
+    //    @Scheduled(cron = "*/10 * * * * *")
 //    @Transactional
 //    public void run() {
 //        log.info("Scheduler is running...");
@@ -531,7 +570,7 @@ public class CampingService {
 //            log.info("Saved ReserveDayEntity with iday: {}", savedEntity.getIday());
 //        }
 //    }
-    @Transactional(transactionManager="baseTransactionManager")
+    @Transactional(transactionManager = "baseTransactionManager")
     @Scheduled(cron = "0 0 0 * * ?")
     public void run() {
         log.info("Scheduler is running...");

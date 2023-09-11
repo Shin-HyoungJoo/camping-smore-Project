@@ -10,12 +10,12 @@
         (#{iuser}, #{icategory}, #{title},#{ctnt})
     </insert>
 
-    <insert id = "insBoardPic">
+    <insert id="insBoardPic">
         insert into board_image
         (iboard, pic)
         values
         <foreach collection="list" item="item" separator=",">
-           (#{item.iboard}, #{item.pic})
+            (#{item.iboard}, #{item.pic})
         </foreach>
     </insert>
     <insert id="insBoardOnePic">
@@ -113,7 +113,7 @@
     </select>
 
     <select id="deBoard">
-        SELECT A.iboard,A.iuser,C.name, D.name category, A.title, A.ctnt,  A.created_at createdat,A.board_view boardview
+        SELECT A.iboard,A.iuser,C.name, D.name category, A.title, A.ctnt, A.created_at createdat,A.board_view boardview
         FROM board A
         LEFT JOIN user C
         ON A.iuser = C.iuser
@@ -169,4 +169,66 @@
         set del_yn=0
         where iboard=#{iboard}
     </update>
+    <select id="getCategory">
+        select icategory, name
+        from board_category
+    </select>
+    <select id="admin">
+        select A.iboard,C.icategory, C.name category, A.title, B.name, A.created_at createdat, A.board_view boardview,
+        A.del_yn delyn
+        from board A
+        inner join user B
+        on A.iuser = B.iuser
+        inner join board_category C
+        on A.icategory = C.icategory
+        <where>
+            <if test="startDate != null and endDate != null">
+                and A.created_at BETWEEN #{startDate} AND DATE_ADD(#{endDate}, INTERVAL 1 DAY)
+            </if>
+            <if test="icategory != null">
+                and C.icategory =#{icategory}
+            </if>
+            <if test="title != null">
+                and A.title Like concat('%', #{title}, '%') and title !=''
+            </if>
+
+        </where>
+        order by A.icategory asc,A.iboard desc
+    </select>
+    <select id="adminToday">
+        select A.iboard,C.icategory, C.name category, A.title, B.name, A.created_at createdat, A.board_view boardview,
+        A.del_yn delyn
+        from board A
+        inner join user B
+        on A.iuser = B.iuser
+        inner join board_category C
+        on A.icategory = C.icategory
+        WHERE DATE(A.created_at) = CURDATE()
+        order by A.iboard desc
+    </select>
+    <select id="adminWeek">
+    SELECT A.iboard, C.icategory, C.name AS category, A.title, B.name, A.created_at AS createdat, A.board_view AS boardview, A.del_yn AS delyn
+    FROM board A
+    INNER JOIN user B ON A.iuser = B.iuser
+    INNER JOIN board_category C ON A.icategory = C.icategory
+    WHERE DATE(A.created_at) BETWEEN CURDATE() - INTERVAL 7 DAY AND CURDATE()
+        order by A.iboard desc
+    </select>
+    <select id="adminthree">
+        SELECT A.iboard, C.icategory, C.name AS category, A.title, B.name, A.created_at AS createdat, A.board_view AS boardview, A.del_yn AS delyn
+        FROM board A
+        INNER JOIN user B ON A.iuser = B.iuser
+        INNER JOIN board_category C ON A.icategory = C.icategory
+        WHERE DATE(A.created_at) BETWEEN CURDATE() - INTERVAL 3 DAY AND CURDATE()
+        order by A.iboard desc
+    </select>
+    <select id="adminMonth">
+        SELECT A.iboard, C.icategory, C.name AS category, A.title, B.name, A.created_at AS createdat, A.board_view AS boardview, A.del_yn AS delyn
+        FROM board A
+        INNER JOIN user B ON A.iuser = B.iuser
+        INNER JOIN board_category C ON A.icategory = C.icategory
+        WHERE DATE(A.created_at) BETWEEN CURDATE() - INTERVAL 1 MONTH AND CURDATE()
+        order by A.iboard desc
+    </select>
+
 </mapper>

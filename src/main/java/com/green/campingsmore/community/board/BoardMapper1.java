@@ -3,6 +3,7 @@ package com.green.campingsmore.community.board;
 import com.green.campingsmore.user.community.board.model.*;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Mapper
@@ -55,4 +56,12 @@ public interface BoardMapper1 {
     Long selNoticeCount1(Long icategory);
     Long selNoticeCount(Long icategory);
     Long delAdminBoard(Long iboard);
+    List<CategoryList> getCategory();
+    List<BoardListVo> admin(LocalDate startDate, LocalDate endDate, String title, Long icategory);
+    List<BoardListVo> adminToday();
+    List<BoardListVo> adminWeek();
+    List<BoardListVo> adminthree();
+    List<BoardListVo> adminMonth();
+
+
 }

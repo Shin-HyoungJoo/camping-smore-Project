@@ -2,6 +2,7 @@ package com.green.campingsmore.user.community.board.model;
 
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -11,6 +12,6 @@ public class BoardListVo {
     private String name;
     private String title;
     private String ctnt;
-    private LocalDateTime createdat;
+    private LocalDate createdat;
     private Long boardview;
 }

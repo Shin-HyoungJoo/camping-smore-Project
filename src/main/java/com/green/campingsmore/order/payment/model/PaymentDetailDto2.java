@@ -14,6 +14,7 @@ public class PaymentDetailDto2 {
     private Integer price;
     private Integer totalPrice;
     private String pic;
+    private Long iorderitem;
     private LocalDateTime paymentDate;
     private Long reviewYn;
 }

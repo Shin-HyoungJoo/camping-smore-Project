@@ -10,8 +10,4 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface BoardPicRepository extends JpaRepository<BoardImageEntity,Long> {
-
-    @Query("SELECT b FROM BoardImageEntity b WHERE b.boardEntity.iboard = :iboard")
-    List<BoardImageEntity> findByIboard(@Param("iboard") Long iboard);
-
 }

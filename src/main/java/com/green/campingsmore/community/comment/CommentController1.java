@@ -18,13 +18,13 @@ public class CommentController1 {
     private final CommentService1 service;
     private final AuthenticationFacade FACADE;
 
-    @PostMapping
+    @PostMapping("/comment")
     @Operation(summary = "댓글 생성")
     public Long insComment(@RequestBody CommentInsDto dto) {
         return service.insComment(dto);
     }
 
-    @PutMapping
+    @PutMapping("/comment")
     @Operation(summary = "댓글 수정")
     public Long updComment(@RequestBody CommentUpdDto dto){
         CommentEntity2 entity = new CommentEntity2();
@@ -33,7 +33,7 @@ public class CommentController1 {
         return service.updComment(entity);
     }
 
-    @PutMapping("/comment")
+    @PutMapping("/no-comment")
     @Operation(summary = "댓글 삭제")
     public Long delComment(@RequestBody CommentDelDto dto){
         CommentEntity2 entity = new CommentEntity2();

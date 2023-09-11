@@ -6,10 +6,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -21,7 +23,7 @@ public class BoardController1 {
     private final BoardService1 service;
     private final AuthenticationFacade FACADE;
 
-//    @PostMapping( consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    //    @PostMapping( consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 //    @Operation(summary = "게시판 등록")
 //    public Long postBoard(/*@AuthenticationPrincipal MyUserDetails user
 //            ,*/ @RequestPart BoardInsDto dto
@@ -33,34 +35,38 @@ public class BoardController1 {
 //    }
     @GetMapping("/iboard")
     @Operation(summary = "pk값 반환")
-    public Long postboard(){
+    public Long postboard() {
         return service.postboard();
     }
-    @PostMapping(value = "/onepice",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+
+    @PostMapping(value = "/photo", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "사진하나 업로드할때 url 반환")
-    public String postPic(Long iboard,@RequestPart(required = false) MultipartFile pic) throws Exception{
-        return service.postOnePic(iboard,pic);
+    public String postPic(Long iboard, @RequestPart(required = false) MultipartFile pic) throws Exception {
+        return service.postOnePic(iboard, pic);
     }
-    @PostMapping( consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+
+    @PostMapping(value = "/Multiple", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "사진 여러개 업로드 할때 리스트로 url 반환")
-    public List<String> uploadFiles(@RequestPart Long iboard,@RequestPart(required = false) List<MultipartFile> pics) throws Exception {
-        return service.postPic(iboard,pics);
+    public List<String> uploadFiles(@RequestPart Long iboard, @RequestPart(required = false) List<MultipartFile> pics) throws Exception {
+        return service.postPic(iboard, pics);
     }
+
     @PostMapping("/board")
     @Operation(summary = "게시글 작성/수정")
-    public Long updContent(@RequestBody BoardInsDto dto){
+    public Long updContent(@RequestBody BoardInsDto dto) {
         return service.updContent(dto);
     }
 
-    @GetMapping
+    @GetMapping("/my-list")
     @Operation(summary = "내가 작성한글 보기- 마이페이지에서 사용")
     public List<BoardMyVo> selMyBoard() {
-        System.out.println("유저 PK  : {}"+ FACADE.getLoginUserPk());
+        System.out.println("유저 PK  : {}" + FACADE.getLoginUserPk());
         BoardMyDto dto = new BoardMyDto();
         dto.setIuser(FACADE.getLoginUserPk());
         return service.selMyBoard(dto);
     }
-    @DeleteMapping
+
+    @DeleteMapping("/board")
     @Operation(summary = "게시글 작성 취소")
     public Long delWriteBoard(@RequestParam Long iboard) {
         return service.delWriteBoard(iboard);
@@ -75,7 +81,7 @@ public class BoardController1 {
         return service.delBoard(dto);
     }
 
-    @GetMapping("/comunity")
+    @GetMapping("/list")
     @Operation(summary = "게시글 리스트 보기")
     public BoardRes1 selBoardList(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "15") @Min(value = 15) int row) {
         BoardPageDto dto = new BoardPageDto();
@@ -84,10 +90,10 @@ public class BoardController1 {
         return service.selBoardList(dto);
     }
 
-    @GetMapping("/icategory")
+    @GetMapping("/category-list")
     @Operation(summary = "카테고리별 게시글 리스트 보기")
     public BoardRes1 categoryBoardList(@RequestParam Long icategory
-            , @RequestParam(defaultValue = "1",required = false) int page
+            , @RequestParam(defaultValue = "1", required = false) int page
             , @RequestParam(defaultValue = "15") @Min(value = 15) int row) {
         BoardPageDto dto = new BoardPageDto();
         dto.setIcategory(icategory);
@@ -95,55 +101,77 @@ public class BoardController1 {
         dto.setRow(row);
         return service.categoryBoardList(dto);
     }
+
     @GetMapping("/title")
     @Operation(summary = "제목으로 검색")
-    public BoardSelRes selBoard(@RequestParam String title,@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "15") @Min(value = 15)int row){
+    public BoardSelRes selBoard(@RequestParam String title, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "15") @Min(value = 15) int row) {
         BoardSelPageDto dto = new BoardSelPageDto();
         dto.setTitle(title);
         dto.setPage(page);
         dto.setRow(row);
         return service.selBoard(dto);
     }
-    @GetMapping("/boardDetail/{iboard}")
+
+    @GetMapping("/board/{iboard}")
     @Operation(summary = "게시글 디테일 보기"
             , description = "" +
             "\"첫줄iuser 로그인한 유저\"두번째 유저 글쓴 유저pk"
-            )
-    public BoardCmtDeVo deBoard(@PathVariable Long iboard){
+    )
+    public BoardCmtDeVo deBoard(@PathVariable Long iboard) {
         BoardDeDto dto = new BoardDeDto();
         dto.setIboard(iboard);
         return service.deBoard(dto);
     }
-//    @PutMapping(value = "/update",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+
+    //    @PutMapping(value = "/update",consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
 //    @Operation(summary = "게시판 수정x")
 //    public Long updBoard(@RequestPart BoardUpdDto dto,@RequestPart(required = false) List<MultipartFile> pic){
 //        return service.updBoard(pic, dto);
 //    }
-    @DeleteMapping("/delPic")
+    @DeleteMapping("/pic")
     @Operation(summary = "게시글 사진 pk값으로 삭제 폴더에 사진없으면 폴더도 자동삭제")
-    public Long delOnePic(@RequestBody BoardPicDelDto dto){
+    public Long delOnePic(@RequestBody BoardPicDelDto dto) {
         return service.delOnePic(dto);
     }
-
-    @PostMapping("/insCategory")
-    @Operation(summary = "카테고리 생성")
-    public Long insCategory(String name){
-        return service.insCategory(name);
-    }
-
-    @GetMapping("/notice-list")
-    @Operation(summary = "공지 리스트")
-    public List<BoardNoticeList> noticeList(){
-        return service.noticeList();
-    }
-    @GetMapping("/notice-count")
-    @Operation(summary = "공지 개수")
-    public String noticeCount(Long icategory){
-        return service.noticeCount(icategory);
-    }
-    @PutMapping("/{iboard}/admin")
-    @Operation(summary = "게시글 삭제 하기")
-    public Long delAdminBoard(@PathVariable Long iboard) {
-        return service.delAdminBoard(iboard);
-    }
 }
+
+//    @PostMapping("/category")
+//    @Operation(summary = "카테고리 생성")
+//    public Long insCategory(String name) {
+//        return service.insCategory(name);
+//    }
+
+//    @GetMapping("/notice-list")
+//    @Operation(summary = "공지 리스트")
+//    public List<BoardNoticeList> noticeList() {
+//        return service.noticeList();
+//    }
+//
+//    @GetMapping("/notice-count")
+//    @Operation(summary = "공지 개수")
+//    public String noticeCount(Long icategory) {
+//        return service.noticeCount(icategory);
+//    }
+//
+//    @PutMapping("/{iboard}/admin")
+//    @Operation(summary = "게시글 삭제 하기")
+//    public Long delAdminBoard(@PathVariable Long iboard) {
+//        return service.delAdminBoard(iboard);
+//    }
+//
+//    @GetMapping("/selcategory")
+//    @Operation(summary = "카테고리 조회")
+//    public List<CategoryList> getCategory() {
+//        return service.getCategory();
+//    }
+//
+//    @GetMapping("/admin-board")
+//    @Operation(summary = "보드관리자")
+//    public List<BoardListVo> admin(@RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+//                                   @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+//                                   @RequestParam(required = false) Long icategory,
+//                                   @RequestParam(required = false) String title
+//    ) {
+//        return service.admin(startDate, endDate, title, icategory);
+//    }
+//}
