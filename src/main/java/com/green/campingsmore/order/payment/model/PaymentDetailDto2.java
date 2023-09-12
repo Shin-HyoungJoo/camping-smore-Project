@@ -9,12 +9,13 @@ import java.time.LocalDateTime;
 
 @Data
 public class PaymentDetailDto2 {
+    private Long iorderitem;
     private Long iitem;
     private String name;
     private Integer price;
     private Integer totalPrice;
     private String pic;
-    private Long iorderitem;
+    private Integer refund;
     private LocalDateTime paymentDate;
     private Long reviewYn;
 }
