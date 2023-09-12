@@ -134,10 +134,12 @@ public class ItemQdsl {
         return Expressions.allOf(startDateTimeBoolean,endDateTimeBoolean);
     }
 
-    public List<AdminBestItemVo> adminSelBestItem() {
+    public List<AdminBestItemVo> adminSelBestItem(Pageable page) {
 
         JPQLQuery<AdminBestItemVo> query = jpaQueryFactory.select(Projections.fields(AdminBestItemVo.class,
                         bi.ibestItem,i.iitem, i.name.as("itemNm"),
+                        i.pic,
+                        i.price,
                         bi.monthLike,
                         bi.createdAt, bi.updatedAt
                 ))
@@ -145,6 +147,14 @@ public class ItemQdsl {
                 .join(bi.itemEntity, i);
 
         return query.fetch();
+    }
+
+    public Integer bestItemCount() {
+        return Math.toIntExact(jpaQueryFactory
+                .select(bi.ibestItem.count())
+                .from(bi)
+                .fetchOne());
+
     }
 
 

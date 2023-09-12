@@ -13,6 +13,8 @@ public class AdminBestItemVo {
     private Long ibestItem;
     private Long iitem;
     private String itemNm;
+    private String pic;
+    private Integer price;
     private LocalDate monthLike;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

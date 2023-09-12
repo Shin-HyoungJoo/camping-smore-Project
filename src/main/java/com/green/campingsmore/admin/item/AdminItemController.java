@@ -161,8 +161,9 @@ public class AdminItemController {
     @GetMapping("/bestitem")
     @Operation(summary = "추천 아이템 리스트"
             , description = "" )
-    public ResponseEntity<List<AdminBestItemVo>> getBestItem() {
-        return ResponseEntity.ok(service.adminSelBestItem());
+    public ResponseEntity<AdminBestItemRes> getBestItem(@ParameterObject @PageableDefault(sort = "iitem", direction = Sort.Direction.DESC, size = 20) Pageable page) {
+        AdminBestItemRes res = service.adminSelBestItem(page);
+        return ResponseEntity.ok(res);
     }
 
     @PutMapping("/bestitem")

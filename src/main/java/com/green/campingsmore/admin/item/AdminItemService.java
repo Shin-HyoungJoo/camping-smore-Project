@@ -211,9 +211,19 @@ public class AdminItemService {
         return null;
     }
 
-    public List<AdminBestItemVo> adminSelBestItem() {
-        List<AdminBestItemVo> list = itemQdsl.adminSelBestItem();
-        return list;
+    public AdminBestItemRes adminSelBestItem(Pageable page) {
+        List<AdminBestItemVo> list = itemQdsl.adminSelBestItem(page);
+        Integer count = itemQdsl.bestItemCount();
+        Integer maxPage = (int)Math.ceil((double) count / page.getPageSize());
+        Integer isMore = maxPage > page.getPageNumber()+1 ? 1 : 0;
+
+        return AdminBestItemRes.builder()
+                .maxPage(maxPage)
+                .isMore(isMore)
+                .page(page.getPageNumber())
+                .row(page.getPageSize())
+                .list(list)
+                .build();
     }
 
     public ItemBestVo updBestItem(AdminItemUpdBestDto dto) {
