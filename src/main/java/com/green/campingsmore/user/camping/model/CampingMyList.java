@@ -9,11 +9,13 @@ public class CampingMyList {
     private Long ireserve;
     private Long iuser;
     private String name;
+    private Long iday;
 
-    public CampingMyList(Long ireserve, Long iuser, String name, String mainPic, String campPhone) {
+    public CampingMyList(Long ireserve, Long iuser, String name, Long iday, String mainPic, String campPhone) {
         this.ireserve = ireserve;
         this.iuser = iuser;
         this.name = name;
+        this.iday = iday;
         this.mainPic = mainPic;
         this.campPhone = campPhone;
     }

@@ -47,7 +47,7 @@
         from board A
         join board_category B
         on A.icategory = B.icategory
-        where iuser = #{iuser}
+        where iuser = #{iuser} and A.created_at != A.updated_at
         and del_yn = 1
     </select>
     <update id="delBoard">
@@ -61,7 +61,7 @@
         INNER JOIN user B ON A.iuser = B.iuser
         join board_category C
         on A.icategory = C.icategory
-        WHERE A.del_yn = 1
+        WHERE A.del_yn = 1 and A.created_at != A.updated_at
         ORDER BY A.icategory = 1 DESC, A.iboard DESC
         LIMIT #{startIdx}, #{row}
     </select>
@@ -85,7 +85,7 @@
         on A.iuser = B.iuser
         join board_category C
         on A.icategory = C.icategory
-        where A.icategory=#{icategory}
+        where A.icategory=#{icategory} and A.created_at != A.updated_at
         order by A.iboard desc
         limit #{startIdx},#{row}
     </select>
@@ -112,7 +112,7 @@
         on A.iuser = B.iuser
         inner join board_category C
         on A.icategory = C.icategory
-        where A.title LIKE CONCAT('%', #{title}, '%') and A.del_yn = 1
+        where A.title LIKE CONCAT('%', #{title}, '%') and A.del_yn = 1 and A.created_at != A.updated_at
         order by A.icategory asc,A.iboard desc
         limit #{startIdx},#{row}
     </select>
@@ -234,5 +234,9 @@
         WHERE DATE(A.created_at) BETWEEN CURDATE() - INTERVAL 1 MONTH AND CURDATE()
         order by A.iboard desc
     </select>
-
+    <update id="updSchedule">
+        UPDATE board
+        SET del_yn = 0
+        WHERE created_at = updated_at AND created_at  <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 24 HOUR)
+    </update>
 </mapper>

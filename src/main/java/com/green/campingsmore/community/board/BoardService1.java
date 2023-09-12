@@ -1,6 +1,8 @@
 package com.green.campingsmore.community.board;
 
 import com.green.campingsmore.community.comment.CommentService1;
+import com.green.campingsmore.entity.CampEntity;
+import com.green.campingsmore.entity.ReserveDayEntity;
 import com.green.campingsmore.user.community.comment.model.CommentPageDto;
 import com.green.campingsmore.user.community.comment.model.CommentRes;
 import com.green.campingsmore.config.security.AuthenticationFacade;
@@ -10,6 +12,7 @@ import com.green.campingsmore.community.board.utils.FileUtils;
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -439,6 +442,11 @@ public class BoardService1 {
 //    }//게시글 삭제
     public List<CategoryList> getCategory() {
         return mapper.getCategory();
+    }
+    @Transactional(transactionManager = "baseTransactionManager")
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void schedule(){
+        mapper.updSchedule();
     }
 }
 //    public List<BoardListVo> admin(LocalDate startDate, LocalDate endDate,String title, Long icategory){
