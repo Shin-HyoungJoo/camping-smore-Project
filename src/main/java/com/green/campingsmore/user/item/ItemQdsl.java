@@ -134,6 +134,23 @@ public class ItemQdsl {
         return Expressions.allOf(startDateTimeBoolean,endDateTimeBoolean);
     }
 
+
+    public Integer adminItemCount(Long cate, String text, Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
+
+        return Math.toIntExact(jpaQueryFactory
+                .select(i.iitem.count())
+                .from(i)
+                .where(i.status.between(1,2),
+                        findCate(cate),
+                        findDate(date),
+                        findName(text),
+                        findSearchDate(searchStartDate,searchEndDate))
+                .fetchOne());
+
+    }
+
+    // 어드민 베스트 아이템  ------------------------------------------------------------------
+
     public List<AdminBestItemVo> adminSelBestItem(Pageable page) {
 
         JPQLQuery<AdminBestItemVo> query = jpaQueryFactory.select(Projections.fields(AdminBestItemVo.class,
@@ -238,11 +255,19 @@ public class ItemQdsl {
         return query.fetch();
     }
 
-    public Integer itemCount() {
+    public Integer itemCount(Long cate, String text) {
+        BooleanBuilder searchBuilder = new BooleanBuilder();
+        if(cate != null && text == null) {
+            searchBuilder.and(c.iitemCategory.eq(cate));
+        } else if (text != null && cate == null) {
+            searchBuilder.and(i.name.contains(text));
+        } else if (text != null && cate != null){
+            searchBuilder.and(c.iitemCategory.eq(cate)).and(i.name.contains(text));
+        }
         return Math.toIntExact(jpaQueryFactory
                 .select(i.iitem.count())
                 .from(i)
-                .where(i.status.eq(1))
+                .where(i.status.eq(1),searchBuilder)
                 .fetchOne());
 
     }

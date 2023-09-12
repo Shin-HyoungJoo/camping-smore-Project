@@ -118,13 +118,14 @@ public class AdminItemService {
     public AdminItemSelDetailRes searchAdminItem(Pageable page, Long cate, String text, Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
         List<AdminItemVo> list = itemQdsl.searchAdminItem(page, cate, text, date,searchStartDate,searchEndDate);
         Integer startIdx = page.getPageNumber() * page.getPageSize();
-        Integer count = itemQdsl.itemCount();
+        Integer count = itemQdsl.adminItemCount(cate, text, date,searchStartDate,searchEndDate);
         Integer maxPage = (int)Math.ceil((double) count / page.getPageSize());
         Integer isMore = maxPage > page.getPageNumber()+1 ? 1 : 0;
 
         return AdminItemSelDetailRes.builder()
                 .iitemCategory(cate)
                 .text(text)
+                .maxPage(maxPage)
                 .startIdx(startIdx)
                 .isMore(isMore)
                 .page(page.getPageNumber())

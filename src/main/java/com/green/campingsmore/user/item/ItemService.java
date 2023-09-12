@@ -42,13 +42,14 @@ public class ItemService {
     public ItemSelDetailRes searchItem(Pageable page, Long cate, String text) {
         List<ItemVo> list = itemQdsl.searchItem(page, cate, text);
         Integer startIdx = page.getPageNumber() * page.getPageSize();
-        Integer count = itemQdsl.itemCount();
+        Integer count = itemQdsl.itemCount(cate, text);
         Integer maxPage = (int)Math.ceil((double) count / page.getPageSize());
         Integer isMore = maxPage > page.getPageNumber()+1 ? 1 : 0;
 
         return ItemSelDetailRes.builder()
                 .iitemCategory(cate)
                 .text(text)
+                .maxPage(maxPage)
                 .startIdx(startIdx)
                 .isMore(isMore)
                 .page(page.getPageNumber())
