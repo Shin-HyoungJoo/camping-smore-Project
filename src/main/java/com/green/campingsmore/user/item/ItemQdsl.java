@@ -1,5 +1,6 @@
 package com.green.campingsmore.user.item;
 
+import com.green.campingsmore.admin.item.model.AdminBestItemVo;
 import com.green.campingsmore.admin.item.model.AdminItemCateVo;
 import com.green.campingsmore.admin.item.model.AdminItemVo;
 import com.green.campingsmore.admin.item.model.ItemVo;
@@ -73,26 +74,8 @@ public class ItemQdsl {
         return query.fetchOne();
     }
 
-    public List<AdminItemVo> searchAdminItem(Pageable page, Long cate, String text, Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
-        //검색날짜
-
-/*        BooleanBuilder DateBuilder = new BooleanBuilder();
-        if(date != null) {
-            LocalDateTime addDate = LocalDateTime.now().minus(date, ChronoUnit.DAYS);
-            if(date == 0) {
-                DateBuilder.and(createDate.eq(nowDate));
-            } else if(date == 3 || date ==7 || date ==30 || date ==90 || date ==360){
-                DateBuilder.and(i.createdAt.between(addDate,LocalDateTime.now()));
-            }
-        }else if(searchStartDate != null && searchStartDate != null) {
-            LocalDateTime searchStartDateTime = searchStartDate.atStartOfDay();
-            LocalDateTime searchEndDateTime = searchEndDate.atTime(LocalTime.MAX);
-
-            DateBuilder.and(i.createdAt.between(searchStartDateTime,searchEndDateTime));
-            log.info("date---------------------------------:{}",date);
-
-        }*/
-
+    public List<AdminItemVo> searchAdminItem(Pageable page, Long cate, String text, Integer date,
+                                             LocalDate searchStartDate, LocalDate searchEndDate) {
 
         JPQLQuery<AdminItemVo> query = jpaQueryFactory.select(Projections.bean(AdminItemVo.class,
                         c.name.as("categoryName"), i.iitem, i.name, i.pic, i.price, i.createdAt, i.status
@@ -144,8 +127,6 @@ public class ItemQdsl {
         if(searchStartDate == null || searchEndDate == null ||(searchStartDate == null && searchEndDate == null)) {
             return null;
         }
-        LocalDateTime searchStartDateTime = searchStartDate.atStartOfDay();
-        LocalDateTime searchEndDateTime = searchEndDate.atTime(LocalTime.MAX);
 
         BooleanExpression startDateTimeBoolean = i.createdAt.goe(LocalDateTime.of(searchStartDate, LocalTime.MIN));
         BooleanExpression endDateTimeBoolean = i.createdAt.loe(LocalDateTime.of(searchEndDate, LocalTime.MAX).withNano(0));
@@ -153,7 +134,18 @@ public class ItemQdsl {
         return Expressions.allOf(startDateTimeBoolean,endDateTimeBoolean);
     }
 
+    public List<AdminBestItemVo> adminSelBestItem() {
 
+        JPQLQuery<AdminBestItemVo> query = jpaQueryFactory.select(Projections.fields(AdminBestItemVo.class,
+                        bi.ibestItem,i.iitem, i.name.as("itemNm"),
+                        bi.monthLike,
+                        bi.createdAt, bi.updatedAt
+                ))
+                .from(bi)
+                .join(bi.itemEntity, i);
+
+        return query.fetch();
+    }
 
 
 ///// 유저 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

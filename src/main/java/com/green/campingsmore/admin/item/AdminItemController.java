@@ -161,8 +161,8 @@ public class AdminItemController {
     @GetMapping("/bestitem")
     @Operation(summary = "추천 아이템 리스트"
             , description = "" )
-    public ResponseEntity<List<ItemVo>> getBestItem() {
-        return ResponseEntity.ok(service.selBestItem());
+    public ResponseEntity<List<AdminBestItemVo>> getBestItem() {
+        return ResponseEntity.ok(service.adminSelBestItem());
     }
 
     @PutMapping("/bestitem")

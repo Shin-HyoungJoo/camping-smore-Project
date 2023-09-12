@@ -211,8 +211,8 @@ public class AdminItemService {
         return null;
     }
 
-    public List<ItemVo> selBestItem() {
-        List<ItemVo> list = itemQdsl.selBestItem();
+    public List<AdminBestItemVo> adminSelBestItem() {
+        List<AdminBestItemVo> list = itemQdsl.adminSelBestItem();
         return list;
     }
 
