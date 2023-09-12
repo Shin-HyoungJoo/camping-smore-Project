@@ -23,8 +23,8 @@ public interface CampingRepository extends JpaRepository<CampEntity,Long>{
             " from CampEntity c join CampPicEntity b on b.campEntity.icamp = c.icamp" + " where c.icamp = :icamp")
     List<CampingDetailList> selDeCamping(@Param("icamp") Long icamp);
 
-    @Query("select new com.green.campingsmore.user.camping.model.CampingMyList(b.ireserve, a.iuser, c.name, c.mainPic, c.campPhone)"+
-            " from ReserveEntity b join b.userEntity a join b.campEntity c " + " where a.iuser = :iuser")
+    @Query("select new com.green.campingsmore.user.camping.model.CampingMyList(b.ireserve, a.iuser, c.name, d.iday, c.mainPic, c.campPhone)"+
+            " from ReserveEntity b join b.userEntity a join b.campEntity c join ReserveDayEntity d on c.icamp=d.campEntity.icamp" + " where a.iuser = :iuser")
     List<CampingMyList> selMyList(@Param("iuser") Long iuser);
 
     @Query("select new com.green.campingsmore.user.camping.model.CampingList(c.icamp,c.name, c.address, c.campPhone,c.mainPic,n.city,c.delyn)"+
