@@ -62,6 +62,7 @@ public interface BoardMapper1 {
     List<BoardListVo> adminWeek();
     List<BoardListVo> adminthree();
     List<BoardListVo> adminMonth();
+    void updSchedule();
 
 
 }

@@ -63,4 +63,5 @@ public class AdminCampController {
     public ResponseEntity<CampingDetailList1> adminCamp(@PathVariable Long icamp) {
         return ResponseEntity.ok(SERVICE.selCampingPic(icamp));
     }
+
 }

@@ -11,4 +11,5 @@ public class BoardMyVo {
     private String title;
     private LocalDateTime createdat;
     private Long boardview;
+    private String name;
 }
