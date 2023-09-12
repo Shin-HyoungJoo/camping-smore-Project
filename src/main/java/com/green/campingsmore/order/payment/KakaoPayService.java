@@ -26,7 +26,7 @@ public class KakaoPayService {
     private String admin_Key; // 공개 조심! 본인 애플리케이션의 어드민 키를 넣어주세요
     private KakaoReadyResponseDto kakaoReady;
     private final ItemRepository itemRepo;
-    private InsPayInfoDto insPayInfoDto;
+    private static InsPayInfoDto insPayInfoDto;
     private final PayService SERVICE;
 
     public KakaoReadyResponseDto kakaoPayReady(InsPayInfoDto dto) {
@@ -72,7 +72,6 @@ public class KakaoPayService {
                 requestEntity,
                 KakaoReadyResponseDto.class);
         log.info("3");
-        this.kakaoReady = kakaoReady;
         return kakaoReady;
     }
 
