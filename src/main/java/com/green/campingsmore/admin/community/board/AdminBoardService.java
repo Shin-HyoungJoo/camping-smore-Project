@@ -63,5 +63,9 @@ public class AdminBoardService {
     }
     public List<BoardListVo> adminMonth(){
         return mapper.adminMonth();
+
+    }
+    public List<BoardListVo> selAdminBoard(){
+        return mapper.selAdminBoard();
     }
 }

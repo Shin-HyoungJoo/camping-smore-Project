@@ -63,6 +63,6 @@ public interface BoardMapper1 {
     List<BoardListVo> adminthree();
     List<BoardListVo> adminMonth();
     void updSchedule();
-
+    List<BoardListVo> selAdminBoard();
 
 }

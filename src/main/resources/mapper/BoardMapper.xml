@@ -239,4 +239,13 @@
         SET del_yn = 0
         WHERE created_at = updated_at AND created_at  <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 24 HOUR)
     </update>
+    <select id="selAdminBoard">
+    SELECT A.iboard, A.icategory, B.name, A.title, A.ctnt, A.created_at AS createdat, A.board_view AS boardview, C.name categoryName
+    FROM board A
+    INNER JOIN user B ON A.iuser = B.iuser
+    join board_category C
+    on A.icategory = C.icategory
+    WHERE A.created_at != A.updated_at
+    ORDER BY A.iboard DESC
+    </select>
 </mapper>

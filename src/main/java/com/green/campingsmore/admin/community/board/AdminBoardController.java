@@ -2,6 +2,7 @@ package com.green.campingsmore.admin.community.board;
 
 import com.green.campingsmore.user.community.board.model.BoardListVo;
 import com.green.campingsmore.user.community.board.model.BoardNoticeList;
+import com.green.campingsmore.user.community.board.model.CategoryList;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -67,6 +68,16 @@ public class AdminBoardController {
     @Operation(summary = "한달치 게시글 조회")
     public List<BoardListVo> adminMonth(){
         return service.adminMonth();
+    }
+    @GetMapping("/category")
+    @Operation(summary = "카테고리 조회")
+    public List<CategoryList> getCategory() {
+        return service.getCategory();
+    }
+    @GetMapping("/board")
+    @Operation(summary = "게시글 조회")
+    public List<BoardListVo> getBoard(){
+        return service.selAdminBoard();
     }
 
 }
