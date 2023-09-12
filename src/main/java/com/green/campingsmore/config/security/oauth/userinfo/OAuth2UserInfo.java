@@ -14,10 +14,14 @@ public abstract class OAuth2UserInfo {
     }
 
     public abstract String getId();
+    public abstract String getPassword();
+    public abstract String getEmail();
 
     public abstract String getName();
-
-    public abstract String getEmail();
+    public abstract String getBirthDate();
+    public abstract String getPhone();
+    public abstract Integer getGender();
+    public abstract String getUserAddress();
 
     public abstract String getImageUrl();
 }

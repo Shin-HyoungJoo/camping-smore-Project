@@ -13,8 +13,33 @@ public class FacebookOAuth2UserInfo extends OAuth2UserInfo {
     }
 
     @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
     public String getName() {
         return (String) attributes.get("name");
+    }
+
+    @Override
+    public String getBirthDate() {
+        return null;
+    }
+
+    @Override
+    public String getPhone() {
+        return null;
+    }
+
+    @Override
+    public Integer getGender() {
+        return null;
+    }
+
+    @Override
+    public String getUserAddress() {
+        return null;
     }
 
     @Override
@@ -26,4 +51,5 @@ public class FacebookOAuth2UserInfo extends OAuth2UserInfo {
     public String getImageUrl() {
         return (String) attributes.get("imageUrl");
     }
+
 }
