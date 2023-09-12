@@ -20,4 +20,6 @@ public class SignUpDto {
     private String user_address;
     private String user_address_detail;
     private String role;
+//    private Enum provider_type;
+//    private Enum role_type;
 }
