@@ -57,6 +57,11 @@ public class AdminCampController {
     @Operation(summary = "캠핑장 31일치 만들기 터치x")
     public ResponseEntity<List<DailyRes>> InsCampMain(){
         return ResponseEntity.ok(SERVICE.InsMainCamp());
-
     }
+    @GetMapping("/{icamp}")
+    @Operation(summary = "관리자 캠핑 상세보기")
+    public ResponseEntity<CampingDetailList1> adminCamp(@PathVariable Long icamp) {
+        return ResponseEntity.ok(SERVICE.selCampingPic(icamp));
+    }
+
 }

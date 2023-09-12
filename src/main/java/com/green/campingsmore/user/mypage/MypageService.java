@@ -27,17 +27,16 @@ public class MypageService {
     private final WishRepository wishRep;
     private final AuthenticationFacade facade;
 
-    public int insertWishlist(WishDto dto){
-        return MAPPER.insertWishlist(dto);
+    public Integer insertWishlist(WishDto dto){
+        Integer isExist  = MAPPER.selWishitem(dto);
+
+        if(isExist == null){//없을 경우 insert한다
+            return MAPPER.insertWishlist(dto);
+        } else{ // 이미 존재할 경우 del_yn = 0으로 변경시킨다.
+            return MAPPER.updWishItem(dto);
+        }
     }
 
-//    public List<WishDto> getWishlist(int iuser){
-//        return MAPPER.getWishlist(iuser);
-//    }
-
-//    public List<ReviewEntity2> getReviewlist(int iuser){
-//        return MAPPER.getReviewlist(iuser);
-//    }
 
     public List<WishMypageVo> getWishlist(){
         UserEntity userEntity = signRep.getReferenceById(facade.getLoginUserPk());

@@ -8,6 +8,8 @@ import com.green.campingsmore.entity.NationwideEntity;
 import com.green.campingsmore.entity.ReserveDayEntity;
 import com.green.campingsmore.user.camping.*;
 import com.green.campingsmore.user.camping.model.*;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.green.campingsmore.entity.QCampEntity.campEntity;
+import static com.green.campingsmore.entity.QCampPicEntity.campPicEntity;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -31,6 +36,8 @@ public class AdminCampService {
     private final ReserveRepository RESREP;
     private final AuthenticationFacade FACADE;
     private final DayRepository DAYREP;
+    private final JPAQueryFactory queryFactory;
+
     @Value("${file.dir}")
     private String fileDir;
 
@@ -307,4 +314,36 @@ public class AdminCampService {
                 .dayQuantity(reserveDayEntity.getDayQuantity())
                 .build();
     }
+    public CampingDetailList1 selCampingPic(Long icamp) {
+
+        List<CampingPicList> pic = queryFactory
+                .select(Projections.fields(CampingPicList.class,
+                        campPicEntity.icampPic,
+                        campPicEntity.pic
+                ))
+                .from(campPicEntity)
+                .where(campPicEntity.campEntity.icamp.eq(icamp))
+                .fetch();
+
+        CampingDetailList1 result = queryFactory
+                .select(Projections.fields(CampingDetailList1.class,
+                        campEntity.icamp,
+                        campEntity.name,
+                        campEntity.campPhone,
+                        campEntity.address,
+                        campEntity.price,
+                        campEntity.capacity,
+                        campEntity.quantity,
+                        campEntity.note
+                ))
+                .from(campEntity)
+                .where(campEntity.icamp.eq(icamp))
+                .fetchOne();
+
+        result.setPic(pic);
+
+        return result;
+    }
+
+
 }

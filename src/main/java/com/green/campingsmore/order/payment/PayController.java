@@ -304,5 +304,6 @@ public class PayController {
         KakaoApproveResponseDto kakaoApprove = kakaoPayService.approveResponse(pgToken);
 
         return new ResponseEntity<>(kakaoApprove, HttpStatus.OK);
+//        return new ResponseEntity<>(kakaoApprove, HttpStatus.OK);
     }
 }

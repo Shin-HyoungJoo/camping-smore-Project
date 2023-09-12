@@ -133,7 +133,7 @@ public class BoardController1 {
     public Long delOnePic(@RequestBody BoardPicDelDto dto) {
         return service.delOnePic(dto);
     }
-}
+
 
 //    @PostMapping("/category")
 //    @Operation(summary = "카테고리 생성")
@@ -159,11 +159,12 @@ public class BoardController1 {
 //        return service.delAdminBoard(iboard);
 //    }
 //
-//    @GetMapping("/selcategory")
-//    @Operation(summary = "카테고리 조회")
-//    public List<CategoryList> getCategory() {
-//        return service.getCategory();
-//    }
+    @GetMapping("/sel-category")
+    @Operation(summary = "카테고리 조회")
+    public List<CategoryList> getCategory() {
+        return service.getCategory();
+    }
+}
 //
 //    @GetMapping("/admin-board")
 //    @Operation(summary = "보드관리자")

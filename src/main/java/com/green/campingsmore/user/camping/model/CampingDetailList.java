@@ -20,6 +20,7 @@ public class CampingDetailList {
     private Integer quantity;
     private String note;
     private List<String> pic; // pic을 List<String>으로 변경
+    private Long icampPic;
 
     public CampingDetailList(Long icamp, String name, String campPhone, String address, Integer price, Integer capacity, Integer quantity, String note, String pic) {
         this.icamp = icamp;

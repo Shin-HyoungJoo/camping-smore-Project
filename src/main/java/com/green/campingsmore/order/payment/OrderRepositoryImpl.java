@@ -341,7 +341,6 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 .select(Projections.fields(SelPaymentOrderDto.class,
                         orderEntity.iorder,
                         orderEntity.shipping
-
                 ))
                 .from(orderEntity)
                 .where(orderEntity.userEntity.iuser.eq(iuser)
@@ -355,19 +354,21 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
         for (SelPaymentOrderDto list : orderList) {
             List<PaymentDetailDto2> dto = queryFactory
                     .select(Projections.fields(PaymentDetailDto2.class,
+                            orderItemEntity.iorderitem,
                             itemEntity.iitem,
                             itemEntity.name,
                             orderItemEntity.price,
                             orderItemEntity.totalPrice,
                             itemEntity.pic,
-                            orderItemEntity.iorderitem,
+                            orderItemEntity.refund,
                             orderEntity.createdAt.as("paymentDate"),
                             ExpressionUtils.as(
                                     JPAExpressions
                                             .select(reviewEntity.ireview.coalesce(0L))
                                             .from(reviewEntity)
                                             .where(reviewEntity.itemEntity.iitem.eq(itemEntity.iitem)
-                                                    .and(reviewEntity.delYn.eq(1))), "reviewYn")))
+                                                    .and(reviewEntity.delYn.eq(1))
+                                                    .and(reviewEntity.userEntity.iuser.eq(iuser))), "reviewYn")))
                     .from(orderItemEntity)
                     .innerJoin(itemEntity).on(orderItemEntity.itemEntity.iitem.eq(itemEntity.iitem))
                     .innerJoin(orderEntity).on(orderItemEntity.orderEntity.iorder.eq(orderEntity.iorder))

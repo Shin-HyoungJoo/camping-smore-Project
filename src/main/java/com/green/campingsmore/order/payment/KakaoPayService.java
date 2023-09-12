@@ -9,6 +9,7 @@ import com.green.campingsmore.order.payment.model.InsPayInfoDto;
 import com.green.campingsmore.user.item.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
@@ -21,15 +22,18 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 public class KakaoPayService {
     static final String cid = "TC0ONETIME"; // 가맹점 테스트 코드
-    static final String admin_Key = "087a71f9ac5adb8e18338a341208ac5d"; // 공개 조심! 본인 애플리케이션의 어드민 키를 넣어주세요
+    @Value("${kakao-admin-key}")
+    private String admin_Key; // 공개 조심! 본인 애플리케이션의 어드민 키를 넣어주세요
     private KakaoReadyResponseDto kakaoReady;
     private final ItemRepository itemRepo;
-    private InsPayInfoDto insPayInfoDto;
+    private static InsPayInfoDto insPayInfoDto;
     private final PayService SERVICE;
 
     public KakaoReadyResponseDto kakaoPayReady(InsPayInfoDto dto) {
+
         Long iitem = dto.getPurchaseList().get(0).getIitem();
         ItemEntity itemEntity = itemRepo.findById(iitem).get();
+        log.info("{}", admin_Key);
 
         // 카카오페이 요청 양식
         MultiValueMap<String, Object> parameters = new LinkedMultiValueMap<>();
@@ -49,6 +53,9 @@ public class KakaoPayService {
         parameters.add("total_amount", dto.getTotalPrice());  //총금액       ////@@@@@@@@@@@@@@
         parameters.add("vat_amount", 0); //부가세       ////@@@@@@@@@@@@@@
         parameters.add("tax_free_amount", 0); //상품 비과세 금액       ////@@@@@@@@@@@@@@
+//        parameters.add("approval_url", "http://localhost:8080/api/payment/kakao/success"); // 성공 시 redirect url
+//        parameters.add("cancel_url", "http://localhost:8080/payment/cancel"); // 취소 시 redirect url
+//        parameters.add("fail_url", "http://localhost:8080/payment/fail");
         parameters.add("approval_url", "http://192.168.0.144:5005/api/payment/kakao/success"); // 성공 시 redirect url
         parameters.add("cancel_url", "http://192.168.0.144:5005/payment/cancel"); // 취소 시 redirect url
         parameters.add("fail_url", "http://192.168.0.144:5005/payment/fail"); // 실패 시 redirect url
@@ -84,7 +91,7 @@ public class KakaoPayService {
         parameters.add("pg_token", pgToken);
 
         log.info("인서트 전");
-        SERVICE.insPayInfo(this.insPayInfoDto);
+        Long iorder = SERVICE.insPayInfo(this.insPayInfoDto);
         log.info("인서트후");
 
         // 파라미터, 헤더

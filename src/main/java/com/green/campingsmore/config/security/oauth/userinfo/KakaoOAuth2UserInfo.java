@@ -13,6 +13,11 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
     }
 
     @Override
+    public String getPassword() {
+        return null;
+    }
+
+    @Override
     public String getName() {
         Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
 
@@ -21,6 +26,26 @@ public class KakaoOAuth2UserInfo extends OAuth2UserInfo {
         }
 
         return (String) properties.get("nickname");
+    }
+
+    @Override
+    public String getBirthDate() {
+        return null;
+    }
+
+    @Override
+    public String getPhone() {
+        return null;
+    }
+
+    @Override
+    public Integer getGender() {
+        return null;
+    }
+
+    @Override
+    public String getUserAddress() {
+        return null;
     }
 
     @Override

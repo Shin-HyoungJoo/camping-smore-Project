@@ -5,6 +5,7 @@ import com.green.campingsmore.config.security.AuthenticationFacade;
 import com.green.campingsmore.entity.*;
 import com.green.campingsmore.sign.SignRepository;
 import com.green.campingsmore.user.camping.model.*;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Projections;
@@ -26,6 +27,9 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import static com.green.campingsmore.entity.QCampEntity.*;
+import static com.green.campingsmore.entity.QCampPicEntity.*;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -37,6 +41,7 @@ public class CampingService {
     private final ReserveRepository RESREP;
     private final AuthenticationFacade FACADE;
     private final DayRepository DAYREP;
+    private final JPAQueryFactory queryFactory;
 
 
     @Value("${file.dir}")
@@ -421,29 +426,52 @@ public class CampingService {
         return list;
     }
 
-    public List<CampingDetailList> getDeCamping(Long icamp) {
-        List<CampingDetailList> results = REP.selDeCamping(icamp);
-
-        Set<Long> uniqueIcampSet = new HashSet<>();
-        List<CampingDetailList> uniqueResults = new ArrayList<>();
-        for (CampingDetailList result : results) {
-            if (uniqueIcampSet.add(result.getIcamp())) {
-                uniqueResults.add(result);
-            }
-        }
-
-        for (CampingDetailList result : uniqueResults) {
-            List<String> picList = new ArrayList<>();
-            for (CampingDetailList resultWithSameIcamp : results) {
-                if (result.getIcamp().equals(resultWithSameIcamp.getIcamp())) {
-                    picList.addAll(resultWithSameIcamp.getPic());
-                }
-            }
-            result.setPic(picList);
-        }
-
-        return uniqueResults;
-    }
+//    public List<CampingDetailList> getDeCamping(Long icamp) {
+//        List<CampingDetailList> results = REP.selDeCamping(icamp);
+//
+//        Set<Long> uniqueIcampSet = new HashSet<>();
+//        List<CampingDetailList> uniqueResults = new ArrayList<>();
+//        for (CampingDetailList result : results) {
+//            if (uniqueIcampSet.add(result.getIcamp())) {
+//                uniqueResults.add(result);
+//            }
+//        }
+//
+//        for (CampingDetailList result : uniqueResults) {
+//            List<String> picList = new ArrayList<>();
+//            for (CampingDetailList resultWithSameIcamp : results) {
+//                if (result.getIcamp().equals(resultWithSameIcamp.getIcamp())) {
+//                    picList.addAll(resultWithSameIcamp.getPic());
+//                }
+//            }
+//            result.setPic(picList);
+//        }
+//
+//        return uniqueResults;
+//    }
+//    public List<CampingDetailList1> getAdminCamp(Long icamp) {
+//        List<CampingDetailList1> results = REP.selAdminCamp(icamp);
+//
+//        Set<Long> uniqueIcampSet = new HashSet<>();
+//        List<CampingDetailList1> uniqueResults = new ArrayList<>();
+//        for (CampingDetailList1 result : results) {
+//            if (uniqueIcampSet.add(result.getIcamp())) {
+//                uniqueResults.add(result);
+//            }
+//        }
+//
+//        for (CampingDetailList1 result : uniqueResults) {
+//            List<String> picList = new ArrayList<>();
+//            for (CampingDetailList1 resultWithSameIcamp : results) {
+//                if (result.getIcamp().equals(resultWithSameIcamp.getIcamp())) {
+//                    picList.addAll(resultWithSameIcamp.getPic());
+//                }
+//            }
+//            result.setPic(picList);
+//        }
+//
+//        return uniqueResults;
+//    }
 
 //    public CampingDetaillist2 campingdetail2(Long icamp) {
 //        QCampEntity camp = QCampEntity.campEntity;
@@ -499,6 +527,37 @@ public class CampingService {
         }
 
         return dailyLists;
+    }
+
+    public CampingDetailList1 selCampingPic(Long icamp) {
+
+        List<CampingPicList> pic = queryFactory
+                .select(Projections.fields(CampingPicList.class,
+                        campPicEntity.icampPic,
+                        campPicEntity.pic
+                ))
+                .from(campPicEntity)
+                .where(campPicEntity.campEntity.icamp.eq(icamp))
+                .fetch();
+
+        CampingDetailList1 result = queryFactory
+                .select(Projections.fields(CampingDetailList1.class,
+                        campEntity.icamp,
+                        campEntity.name,
+                        campEntity.campPhone,
+                        campEntity.address,
+                        campEntity.price,
+                        campEntity.capacity,
+                        campEntity.quantity,
+                        campEntity.note
+                ))
+                .from(campEntity)
+                .where(campEntity.icamp.eq(icamp))
+                .fetchOne();
+
+        result.setPic(pic);
+
+        return result;
     }
 
     public List<DailyList> selIcampDay(Long icamp) {
@@ -570,7 +629,6 @@ public class CampingService {
     @Transactional(transactionManager = "baseTransactionManager")
     @Scheduled(cron = "0 0 0 * * ?")
     public void run() {
-        log.info("Scheduler is running...");
         List<CampEntity> campgrounds = REP.findAll();
         LocalDate startDate = LocalDate.now().plusDays(31);
         for (int i = 0; i < campgrounds.size(); i++) {
@@ -579,10 +637,7 @@ public class CampingService {
                     .dayQuantity(10)
                     .campEntity(campgrounds.get(i))
                     .build();
-            ReserveDayEntity savedEntity = DAYREP.saveAndFlush(reserveDayEntity);
-            log.info("{}" + reserveDayEntity);
-
-            log.info("Saved ReserveDayEntity with iday: {}", savedEntity);
+            DAYREP.saveAndFlush(reserveDayEntity);
         }
     }
 }

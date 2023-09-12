@@ -107,7 +107,16 @@ public class PayServiceImpl implements PayService {
 
     @Override   //querydsl
     public List<SelPaymentDetailDto> selPaymentDetailAll(Long iuser) {
-        return orderRepo.selPaymentDetailAll(iuser);
+        List<SelPaymentDetailDto> result = orderRepo.selPaymentDetailAll(iuser);
+        for (SelPaymentDetailDto orderList : result) {
+            List<PaymentDetailDto2> itemList = orderList.getItemList();
+            for (PaymentDetailDto2 item : itemList) {
+                Optional<Long> reviewYn = Optional.ofNullable(item.getReviewYn());
+                if (reviewYn.isEmpty())
+                    item.setReviewYn(0L);
+            }
+        }
+        return result;
     }
 
     @Override   //querydsl

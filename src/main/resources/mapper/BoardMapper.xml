@@ -43,9 +43,11 @@
         where iboard =#{iboard} and iuser=#{iuser}
     </update>
     <select id="selMyBoard">
-        select iboard, icategory,title,created_at createdat,board_view boardview
-        from board
-        where iuser = #{iuser}
+        select A.iboard, A.icategory,A.title,A.created_at createdat,A.board_view boardview,B.name
+        from board A
+        join board_category B
+        on A.icategory = B.icategory
+        where iuser = #{iuser} and A.created_at != A.updated_at
         and del_yn = 1
     </select>
     <update id="delBoard">
@@ -54,17 +56,18 @@
         where iuser=#{iuser} and iboard=#{iboard}
     </update>
     <select id="selBoardList">
-        SELECT A.iboard, A.icategory, B.name, A.title, A.ctnt, A.created_at AS createdat, A.board_view AS boardview
+        SELECT A.iboard, A.icategory, B.name, A.title, A.ctnt, A.created_at AS createdat, A.board_view AS boardview, C.name categoryName
         FROM board A
         INNER JOIN user B ON A.iuser = B.iuser
-        WHERE A.del_yn = 1 and A.title != ''
+        join board_category C
+        on A.icategory = C.icategory
+        WHERE A.del_yn = 1 and A.created_at != A.updated_at
         ORDER BY A.icategory = 1 DESC, A.iboard DESC
         LIMIT #{startIdx}, #{row}
     </select>
     <select id="maxBoard">
         select count(iboard)
         from board
-        where title != ''
     </select>
     <select id="maxSelBoard">
         SELECT COUNT(A.iboard)
@@ -76,11 +79,13 @@
         ) A
     </select>
     <select id="categoryBoardList">
-        select A.iboard,A.icategory,B.name,A.title,A.ctnt,A.created_at createdat,A.board_view boardview
+        select A.iboard,A.icategory,B.name,A.title,A.ctnt,A.created_at createdat,A.board_view boardview, C.name categoryName
         from board A
         inner join user B
         on A.iuser = B.iuser
-        where A.icategory=#{icategory}
+        join board_category C
+        on A.icategory = C.icategory
+        where A.icategory=#{icategory} and A.created_at != A.updated_at
         order by A.iboard desc
         limit #{startIdx},#{row}
     </select>
@@ -107,7 +112,7 @@
         on A.iuser = B.iuser
         inner join board_category C
         on A.icategory = C.icategory
-        where A.title LIKE CONCAT('%', #{title}, '%') and A.del_yn = 1 and title !=''
+        where A.title LIKE CONCAT('%', #{title}, '%') and A.del_yn = 1 and A.created_at != A.updated_at
         order by A.icategory asc,A.iboard desc
         limit #{startIdx},#{row}
     </select>
@@ -174,7 +179,7 @@
         from board_category
     </select>
     <select id="admin">
-        SELECT A.iboard, C.icategory, C.name category, A.title, B.name, A.created_at createdat, A.board_view boardview, A.del_yn delyn
+        SELECT A.iboard, C.icategory, A.title, B.name, A.created_at createdat, A.board_view boardview, A.del_yn delyn, C.name categoryName
         FROM board A
         INNER JOIN user B ON A.iuser = B.iuser
         INNER JOIN board_category C ON A.icategory = C.icategory
@@ -195,8 +200,8 @@
         ORDER BY A.icategory ASC, A.iboard DESC
     </select>
     <select id="adminToday">
-        select A.iboard,C.icategory, C.name category, A.title, B.name, A.created_at createdat, A.board_view boardview,
-        A.del_yn delyn
+        select A.iboard,C.icategory, A.title, B.name, A.created_at createdat, A.board_view boardview,
+        A.del_yn delyn, C.name categoryName
         from board A
         inner join user B
         on A.iuser = B.iuser
@@ -206,7 +211,7 @@
         order by A.iboard desc
     </select>
     <select id="adminWeek">
-    SELECT A.iboard, C.icategory, C.name AS category, A.title, B.name, A.created_at AS createdat, A.board_view AS boardview, A.del_yn AS delyn
+    SELECT A.iboard, C.icategory, A.title, B.name, A.created_at AS createdat, A.board_view AS boardview, A.del_yn AS delyn, C.name categoryName
     FROM board A
     INNER JOIN user B ON A.iuser = B.iuser
     INNER JOIN board_category C ON A.icategory = C.icategory
@@ -214,7 +219,7 @@
         order by A.iboard desc
     </select>
     <select id="adminthree">
-        SELECT A.iboard, C.icategory, C.name AS category, A.title, B.name, A.created_at AS createdat, A.board_view AS boardview, A.del_yn AS delyn
+        SELECT A.iboard, C.icategory, A.title, B.name, A.created_at AS createdat, A.board_view AS boardview, A.del_yn AS delyn, C.name categoryName
         FROM board A
         INNER JOIN user B ON A.iuser = B.iuser
         INNER JOIN board_category C ON A.icategory = C.icategory
@@ -222,12 +227,25 @@
         order by A.iboard desc
     </select>
     <select id="adminMonth">
-        SELECT A.iboard, C.icategory, C.name AS category, A.title, B.name, A.created_at AS createdat, A.board_view AS boardview, A.del_yn AS delyn
+        SELECT A.iboard, C.icategory, A.title, B.name, A.created_at AS createdat, A.board_view AS boardview, A.del_yn AS delyn, C.name categoryName
         FROM board A
         INNER JOIN user B ON A.iuser = B.iuser
         INNER JOIN board_category C ON A.icategory = C.icategory
         WHERE DATE(A.created_at) BETWEEN CURDATE() - INTERVAL 1 MONTH AND CURDATE()
         order by A.iboard desc
     </select>
-
+    <update id="updSchedule">
+        UPDATE board
+        SET del_yn = 0
+        WHERE created_at = updated_at AND created_at  <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 24 HOUR)
+    </update>
+    <select id="selAdminBoard">
+    SELECT A.iboard, A.icategory, B.name, A.title, A.ctnt, A.created_at AS createdat, A.board_view AS boardview, C.name categoryName
+    FROM board A
+    INNER JOIN user B ON A.iuser = B.iuser
+    join board_category C
+    on A.icategory = C.icategory
+    WHERE A.created_at != A.updated_at
+    ORDER BY A.iboard DESC
+    </select>
 </mapper>

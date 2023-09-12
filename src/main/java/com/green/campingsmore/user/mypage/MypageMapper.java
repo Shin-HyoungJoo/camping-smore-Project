@@ -8,8 +8,8 @@ import java.util.List;
 
 @Mapper
 public interface MypageMapper {
-    int insertWishlist(WishDto dto);
+    Integer insertWishlist(WishDto dto);
     List<WishDto> getWishlist(int iuser);
-//    List<ReviewEntity2> getReviewlist(int iuser);
-//    List<ReviewEntity> getOrderlist(int iuser);
+    Integer selWishitem(WishDto dto);
+    Integer updWishItem(WishDto dto);
 }

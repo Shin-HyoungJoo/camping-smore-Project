@@ -31,6 +31,8 @@
         , user_address = #{user_address}
         , user_address_detail = #{user_address_detail}
         , role = #{role}
+        , provider_type = "LOCAL"
+        , role_type = "USER"
     </insert>
 
     <select id="getByUid">

@@ -8,6 +8,21 @@
         , iitem = #{iitem}
     </insert>
 
+    <select id="selWishitem" resultType="Integer">
+        SELECT * FROM wishlist
+        WHERE iuser = #{iuser} AND iitem = #{iitem}
+    </select>
+
+    <update id="updWishItem">
+        <selectKey keyProperty="delYn" resultType="Integer" order="BEFORE">
+            SELECT del_yn delYn FROM wishlist
+            WHERE iuser = #{iuser} AND iitem = #{iitem}
+        </selectKey>
+        UPDATE wishlist
+        SET del_yn = 1 - del_yn
+        WHERE iuser = #{iuser} AND iitem = #{iitem}
+    </update>
+
     <select id="getWishlist">
         SELECT * FROM wishlist
         WHERE iuser = #{iuser};

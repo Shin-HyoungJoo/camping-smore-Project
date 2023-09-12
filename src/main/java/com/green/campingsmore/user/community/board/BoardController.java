@@ -3,6 +3,7 @@ package com.green.campingsmore.user.community.board;
 import com.green.campingsmore.user.community.board.model.BoardInsDto;
 import com.green.campingsmore.user.community.board.model.BoardPicRes;
 import com.green.campingsmore.user.community.board.model.BoardRes;
+import com.green.campingsmore.user.community.board.model.CategoryList;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
