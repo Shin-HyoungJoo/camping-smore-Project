@@ -96,6 +96,9 @@ spring:
               - profile_nickname
               - profile_image
               - account_email
+              - gender
+              - age_range
+              - birthday
             clientName: Kakao
         provider:
           naver:
