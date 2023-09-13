@@ -368,7 +368,7 @@ public class CampingService {
         LocalDate currentDate = LocalDate.now();
         long daysUntilReservation = ChronoUnit.DAYS.between(currentDate, reservationDate);
 
-        if (daysUntilReservation <= 1) {
+        if (daysUntilReservation < 1) {
             throw new Exception("예약 날짜가 1일 이내이므로 취소가 불가능합니다.");
         }
 
@@ -386,6 +386,7 @@ public class CampingService {
                     .build();
             RESREP.save(reserve);
         }
+
 
         return ReserveRes.builder()
                 .ireserve(reserveEntity.getIreserve())
@@ -498,7 +499,7 @@ public class CampingService {
 //    }
 
     public List<CampingMyList> getMyList() {
-        List<CampingMyList> list = REP.selMyList(FACADE.getLoginUserPk());
+        List<CampingMyList> list = REP.selMyList(FACADE.getLoginUserPk(),PayStatus.OK);
         return list;
     }
 
@@ -629,7 +630,6 @@ public class CampingService {
     @Transactional(transactionManager = "baseTransactionManager")
     @Scheduled(cron = "0 0 0 * * ?")
     public void run() {
-        log.info("Scheduler is running...");
         List<CampEntity> campgrounds = REP.findAll();
         LocalDate startDate = LocalDate.now().plusDays(31);
         for (int i = 0; i < campgrounds.size(); i++) {
@@ -638,10 +638,7 @@ public class CampingService {
                     .dayQuantity(10)
                     .campEntity(campgrounds.get(i))
                     .build();
-            ReserveDayEntity savedEntity = DAYREP.saveAndFlush(reserveDayEntity);
-            log.info("{}" + reserveDayEntity);
-
-            log.info("Saved ReserveDayEntity with iday: {}", savedEntity);
+            DAYREP.saveAndFlush(reserveDayEntity);
         }
     }
 }

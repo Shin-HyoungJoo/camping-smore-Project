@@ -1,6 +1,7 @@
 package com.green.campingsmore.user.camping;
 
 import com.green.campingsmore.entity.CampEntity;
+import com.green.campingsmore.entity.PayStatus;
 import com.green.campingsmore.user.camping.model.*;
 import io.lettuce.core.dynamic.annotation.Param;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -23,9 +24,13 @@ public interface CampingRepository extends JpaRepository<CampEntity,Long>{
             " from CampEntity c join CampPicEntity b on b.campEntity.icamp = c.icamp" + " where c.icamp = :icamp")
     List<CampingDetailList> selDeCamping(@Param("icamp") Long icamp);
 
-    @Query("select new com.green.campingsmore.user.camping.model.CampingMyList(b.ireserve, a.iuser, c.name, d.iday, c.mainPic, c.campPhone)"+
-            " from ReserveEntity b join b.userEntity a join b.campEntity c join ReserveDayEntity d on c.icamp=d.campEntity.icamp" + " where a.iuser = :iuser")
-    List<CampingMyList> selMyList(@Param("iuser") Long iuser);
+    @Query("SELECT NEW com.green.campingsmore.user.camping.model.CampingMyList(b.ireserve, a.iuser, c.name, d.iday, d.date, c.mainPic, c.campPhone) " +
+            "FROM ReserveEntity b " +
+            "JOIN b.userEntity a " +
+            "JOIN b.campEntity c " +
+            "JOIN ReserveDayEntity d ON c.icamp = d.campEntity.icamp " +
+            "WHERE a.iuser = :iuser AND DATE(b.reservation) = DATE(d.date) and b.payStatus = :PayStatus")
+    List<CampingMyList> selMyList(@Param("iuser") Long iuser, @Param("PayStatus")PayStatus PayStatus);
 
     @Query("select new com.green.campingsmore.user.camping.model.CampingList(c.icamp,c.name, c.address, c.campPhone,c.mainPic,n.city,c.delyn)"+
             " from CampEntity c join c.nationwideEntity n " + " where c.name LIKE CONCAT('%', :name, '%') and c.delyn = :delyn")

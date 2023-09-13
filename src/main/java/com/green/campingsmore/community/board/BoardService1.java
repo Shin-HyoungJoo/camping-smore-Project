@@ -444,7 +444,7 @@ public class BoardService1 {
         return mapper.getCategory();
     }
     @Transactional(transactionManager = "baseTransactionManager")
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 */6 * * ?")
     public void schedule(){
         mapper.updSchedule();
     }
