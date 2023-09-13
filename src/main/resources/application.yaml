@@ -40,11 +40,11 @@ spring:
     multipart:
       max-file-size: 50MB
       max-request-size: 100MB
-#    datasource:
-#      driver-class-name: org.mariadb.jdbc.Driver
-#      jdbc-url: jdbc:mariadb://127.0.0.1:3306/team_e_test2
-#      username: root
-#      password: green502
+  #    datasource:
+  #      driver-class-name: org.mariadb.jdbc.Driver
+  #      jdbc-url: jdbc:mariadb://127.0.0.1:3306/team_e_test2
+  #      username: root
+  #      password: green502
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     jdbc-url: jdbc:mariadb://192.168.0.144:3306/team_e

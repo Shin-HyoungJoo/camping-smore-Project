@@ -1,5 +1,6 @@
 package com.green.campingsmore.user.item;
 
+import com.green.campingsmore.admin.item.model.AdminBestItemVo;
 import com.green.campingsmore.admin.item.model.AdminItemCateVo;
 import com.green.campingsmore.admin.item.model.AdminItemVo;
 import com.green.campingsmore.admin.item.model.ItemVo;
@@ -73,26 +74,8 @@ public class ItemQdsl {
         return query.fetchOne();
     }
 
-    public List<AdminItemVo> searchAdminItem(Pageable page, Long cate, String text, Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
-        //검색날짜
-
-/*        BooleanBuilder DateBuilder = new BooleanBuilder();
-        if(date != null) {
-            LocalDateTime addDate = LocalDateTime.now().minus(date, ChronoUnit.DAYS);
-            if(date == 0) {
-                DateBuilder.and(createDate.eq(nowDate));
-            } else if(date == 3 || date ==7 || date ==30 || date ==90 || date ==360){
-                DateBuilder.and(i.createdAt.between(addDate,LocalDateTime.now()));
-            }
-        }else if(searchStartDate != null && searchStartDate != null) {
-            LocalDateTime searchStartDateTime = searchStartDate.atStartOfDay();
-            LocalDateTime searchEndDateTime = searchEndDate.atTime(LocalTime.MAX);
-
-            DateBuilder.and(i.createdAt.between(searchStartDateTime,searchEndDateTime));
-            log.info("date---------------------------------:{}",date);
-
-        }*/
-
+    public List<AdminItemVo> searchAdminItem(Pageable page, Long cate, String text, Integer date,
+                                             LocalDate searchStartDate, LocalDate searchEndDate) {
 
         JPQLQuery<AdminItemVo> query = jpaQueryFactory.select(Projections.bean(AdminItemVo.class,
                         c.name.as("categoryName"), i.iitem, i.name, i.pic, i.price, i.createdAt, i.status
@@ -144,8 +127,6 @@ public class ItemQdsl {
         if(searchStartDate == null || searchEndDate == null ||(searchStartDate == null && searchEndDate == null)) {
             return null;
         }
-        LocalDateTime searchStartDateTime = searchStartDate.atStartOfDay();
-        LocalDateTime searchEndDateTime = searchEndDate.atTime(LocalTime.MAX);
 
         BooleanExpression startDateTimeBoolean = i.createdAt.goe(LocalDateTime.of(searchStartDate, LocalTime.MIN));
         BooleanExpression endDateTimeBoolean = i.createdAt.loe(LocalDateTime.of(searchEndDate, LocalTime.MAX).withNano(0));
@@ -154,6 +135,44 @@ public class ItemQdsl {
     }
 
 
+    public Integer adminItemCount(Long cate, String text, Integer date, LocalDate searchStartDate, LocalDate searchEndDate) {
+
+        return Math.toIntExact(jpaQueryFactory
+                .select(i.iitem.count())
+                .from(i)
+                .where(i.status.between(1,2),
+                        findCate(cate),
+                        findDate(date),
+                        findName(text),
+                        findSearchDate(searchStartDate,searchEndDate))
+                .fetchOne());
+
+    }
+
+    // 어드민 베스트 아이템  ------------------------------------------------------------------
+
+    public List<AdminBestItemVo> adminSelBestItem(Pageable page) {
+
+        JPQLQuery<AdminBestItemVo> query = jpaQueryFactory.select(Projections.fields(AdminBestItemVo.class,
+                        bi.ibestItem,i.iitem, i.name.as("itemNm"),
+                        i.pic,
+                        i.price,
+                        bi.monthLike,
+                        bi.createdAt, bi.updatedAt
+                ))
+                .from(bi)
+                .join(bi.itemEntity, i);
+
+        return query.fetch();
+    }
+
+    public Integer bestItemCount() {
+        return Math.toIntExact(jpaQueryFactory
+                .select(bi.ibestItem.count())
+                .from(bi)
+                .fetchOne());
+
+    }
 
 
 ///// 유저 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -236,11 +255,19 @@ public class ItemQdsl {
         return query.fetch();
     }
 
-    public Integer itemCount() {
+    public Integer itemCount(Long cate, String text) {
+        BooleanBuilder searchBuilder = new BooleanBuilder();
+        if(cate != null && text == null) {
+            searchBuilder.and(c.iitemCategory.eq(cate));
+        } else if (text != null && cate == null) {
+            searchBuilder.and(i.name.contains(text));
+        } else if (text != null && cate != null){
+            searchBuilder.and(c.iitemCategory.eq(cate)).and(i.name.contains(text));
+        }
         return Math.toIntExact(jpaQueryFactory
                 .select(i.iitem.count())
                 .from(i)
-                .where(i.status.eq(1))
+                .where(i.status.eq(1),searchBuilder)
                 .fetchOne());
 
     }

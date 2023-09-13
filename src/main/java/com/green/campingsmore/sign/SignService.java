@@ -12,6 +12,8 @@ import com.green.campingsmore.config.security.model.*;
 import com.green.campingsmore.config.security.redis.RedisService;
 import com.green.campingsmore.config.security.redis.model.RedisJwtVo;
 import com.green.campingsmore.entity.UserEntity;
+import com.green.campingsmore.security.ProviderType;
+import com.green.campingsmore.security.RoleType;
 import com.green.campingsmore.sign.model.*;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
