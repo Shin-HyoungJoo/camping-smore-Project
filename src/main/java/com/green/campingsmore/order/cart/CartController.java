@@ -26,6 +26,7 @@ public class CartController {
             summary = "장바구니 목록 보기",
             description = "<h3>==========================\n" +
             "<h3>icart : 카트PK\n" +
+            "<h3>iitem : 아이템PK\n" +
             "<h3>pic : 사진\n" +
             "<h3>name : 아이템 이름\n" +
             "<h3>price : 아이템 가격\n" +
