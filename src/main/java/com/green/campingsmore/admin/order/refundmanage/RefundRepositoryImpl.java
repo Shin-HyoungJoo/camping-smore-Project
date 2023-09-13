@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.green.campingsmore.entity.QOrderEntity.orderEntity;
+import static com.green.campingsmore.entity.QOrderItemEntity.orderItemEntity;
 import static com.green.campingsmore.entity.QRefundEntity.*;
 import static com.green.campingsmore.entity.QUserEntity.*;
 
@@ -86,6 +88,16 @@ public class RefundRepositoryImpl implements RefundRepositoryCustom {
                 .from(userEntity)
                 .where(userEntity.iuser.eq(iuser))
                 .fetchOne();
+    }
+
+    @Override
+    public List<Long> orderItemList(Long iorder) {
+        List<Long> result = queryFactory
+                .select(orderItemEntity.iorderitem)
+                .from(orderItemEntity)
+                .where(orderItemEntity.orderEntity.iorder.eq(iorder))
+                .fetch();
+        return result;
     }
 
     public BooleanExpression refundCreatedAtRange(LocalDate startDate, LocalDate endDate) {

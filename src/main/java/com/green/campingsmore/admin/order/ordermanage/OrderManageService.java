@@ -2,8 +2,12 @@ package com.green.campingsmore.admin.order.ordermanage;
 
 import com.green.campingsmore.admin.order.ordermanage.model.SelOrderManageVo;
 import com.green.campingsmore.admin.order.ordermanage.model.PatchShipping;
+import com.green.campingsmore.admin.order.refundmanage.RefundRepository;
 import com.green.campingsmore.admin.order.refundmanage.model.ShippingRes;
 import com.green.campingsmore.entity.OrderEntity;
+import com.green.campingsmore.entity.OrderItemEntity;
+import com.green.campingsmore.entity.RefundEntity;
+import com.green.campingsmore.order.payment.OrderItemRepository;
 import com.green.campingsmore.order.payment.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +24,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderManageService {
     private final OrderRepository orderRepo;
+    private final RefundRepository refundRepo;
+    private final OrderItemRepository orderitemRepo;
 
 
     @Transactional(rollbackFor = {Exception.class})
@@ -61,6 +68,27 @@ public class OrderManageService {
             throw new Exception("배송완료(2)일땐 변경 불가능");
         } else if (entity.get().getShipping() == 3) {
             throw new Exception("배송취소(3)일땐 변경 불가능");
+        }
+
+        if (dto.getShipping() == 3) {
+            List<Long> iorderitemList = refundRepo.orderItemList(result.getIorder());
+            for (Long iorderitem : iorderitemList) {
+                OrderItemEntity opt = orderitemRepo.findById(iorderitem).get();
+                opt.setRefund(2);
+                orderitemRepo.save(opt);
+
+                RefundEntity addRefund = RefundEntity.builder()
+                        .delYn(1)
+                        .quantity(opt.getQuantity())
+                        .refundStartDate(LocalDateTime.now())
+                        .refundEndDate(LocalDateTime.now())
+                        .refundStatus(2)
+                        .totalPrice(opt.getTotalPrice())
+                        .orderItemEntity(opt)
+                        .build();
+
+                refundRepo.save(addRefund);
+            }
         }
 
         result.setShipping(dto.getShipping());

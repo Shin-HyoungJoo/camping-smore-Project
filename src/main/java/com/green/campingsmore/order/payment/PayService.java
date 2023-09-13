@@ -22,4 +22,6 @@ public interface PayService {
     ShippingListSelVo selOneAddress(SelUserAddressDto dto);
     Long delAddress(Long iaddress);
     refundRequestRes refundRequest(Long iorderitem, Long iuser) throws Exception;
+
+    Long cancelRequest(Long iorder, Long iuser) throws Exception;
 }

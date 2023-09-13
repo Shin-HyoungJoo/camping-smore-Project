@@ -27,7 +27,7 @@ public class PayController {
     @PostMapping    //Check, if문 분기(카카오, 예약시) 필요
     @Operation(summary = "결제 정보 저장하기",
             description =
-                            "<h3> address : 배송지\n" +
+                    "<h3> address : 배송지\n" +
                             "<h3> addressDetail : 상세 배송지\n" +
                             "<h3> totalPrice : 총 결제 금액\n" +
                             "<h3> shippingPrice : 배송비\n" +
@@ -257,9 +257,20 @@ public class PayController {
                     "<h3>  └3 : 환불 불가 \n" +
                     "<h3>  ## refund가 1이 되면 관리자 측에 환불 정보가 넘어감 "
     )
-    public refundRequestRes refundRequest (@AuthenticationPrincipal MyUserDetails user,
-                               @PathVariable Long iorderitem) throws Exception {
+    public refundRequestRes refundRequest(@AuthenticationPrincipal MyUserDetails user,
+                                          @PathVariable Long iorderitem) throws Exception {
         return SERVICE.refundRequest(iorderitem, user.getIuser());
+    }
+
+    @PatchMapping("/payment-list/{iorder}")
+    @Operation(summary = "배송 준비중일때 취소요청",
+            description = "<h3> iorder : 주문 PK\n" +
+                    "<h3>-----------------------------------\n" +
+                    "<h3>Code 1 : 취소 성공, (환불 테이블 데이터생성) PK\n"
+    )
+    public Long cancelRequest (@AuthenticationPrincipal MyUserDetails user,
+                               @PathVariable Long iorder) throws Exception {
+        return SERVICE.cancelRequest(iorder, user.getIuser());
     }
 
 

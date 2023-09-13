@@ -8,4 +8,6 @@ import java.util.Optional;
 
 public interface OrderItemRepositoryCustom {
     OrderItemEntity selByIorderitem(Long iorderitem);
+
+    List<Long> orderItemList(Long iorder);
 }

@@ -10,5 +10,5 @@ public interface RefundRepositoryCustom {
     List<SelRefundVo> selRefund(Long iuser);
     List<SelRefundManageVo> selRefundManageList(LocalDate startDate, LocalDate endDate, Integer listBox, Object keyword);
     String selUserName(Long iuser);
-
+    List<Long> orderItemList(Long iorder);
 }
