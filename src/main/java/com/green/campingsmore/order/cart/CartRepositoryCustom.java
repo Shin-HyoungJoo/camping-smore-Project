@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface CartRepositoryCustom {
     Optional<List<SelCartVo>> selCart(Long iuser);
+    Long selIcart(Long iuser, Long iitem);
 }

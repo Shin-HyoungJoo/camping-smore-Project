@@ -234,11 +234,11 @@
         WHERE DATE(A.created_at) BETWEEN CURDATE() - INTERVAL 1 MONTH AND CURDATE()
         order by A.iboard desc
     </select>
-    <update id="updSchedule">
-        UPDATE board
-        SET del_yn = 0
-        WHERE created_at = updated_at AND created_at  <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 24 HOUR)
-    </update>
+    <delete id="updSchedule">
+        delete
+        from board
+        WHERE created_at  <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 2 HOUR) AND TRIM(title) = "";
+    </delete>
     <select id="selAdminBoard">
     SELECT A.iboard, A.icategory, B.name, A.title, A.ctnt, A.created_at AS createdat, A.board_view AS boardview, C.name categoryName
     FROM board A

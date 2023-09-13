@@ -387,6 +387,7 @@ public class CampingService {
             RESREP.save(reserve);
         }
 
+
         return ReserveRes.builder()
                 .ireserve(reserveEntity.getIreserve())
                 .build();
@@ -498,7 +499,7 @@ public class CampingService {
 //    }
 
     public List<CampingMyList> getMyList() {
-        List<CampingMyList> list = REP.selMyList(FACADE.getLoginUserPk());
+        List<CampingMyList> list = REP.selMyList(FACADE.getLoginUserPk(),PayStatus.OK);
         return list;
     }
 

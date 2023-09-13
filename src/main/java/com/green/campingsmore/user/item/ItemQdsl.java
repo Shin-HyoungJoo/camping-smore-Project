@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedList;
 import java.util.List;
@@ -78,7 +79,7 @@ public class ItemQdsl {
                                              LocalDate searchStartDate, LocalDate searchEndDate) {
 
         JPQLQuery<AdminItemVo> query = jpaQueryFactory.select(Projections.bean(AdminItemVo.class,
-                        c.name.as("categoryName"), i.iitem, i.name, i.pic, i.price, i.createdAt, i.status
+                        c.name.as("categoryName"), i.iitem, i.name, i.pic, i.price, i.createdAt, i.stock, i.status
                          ))
                 .from(i)
                 .join(i.itemCategoryEntity, c)
@@ -282,8 +283,9 @@ public class ItemQdsl {
             userBuilder.and(u.iuser.eq(0L));
         }
 
-        StringExpression likeDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m')", bi.monthLike);
-        StringExpression nowDate = Expressions.stringTemplate("FUNCTION('DATE_FORMAT', {0}, '%Y-%m')", now());
+        YearMonth now = YearMonth.now();
+        LocalDate eventStart = now.atDay(1);
+        LocalDate eventEnd = now.atEndOfMonth();
 
         JPQLQuery<ItemVo> query = jpaQueryFactory.select(Projections.bean(ItemVo.class,
                         i.iitem, i.name, i.pic, i.price,i.createdAt,
@@ -291,7 +293,7 @@ public class ItemQdsl {
                 ))
                 .from(bi)
                 .join(bi.itemEntity, i)
-                .where(likeDate.eq(nowDate))
+                .where(bi.monthLike.between(eventStart, eventEnd))
                 .orderBy();
 
         return query.fetch();

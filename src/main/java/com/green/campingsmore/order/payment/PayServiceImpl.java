@@ -293,4 +293,36 @@ public class PayServiceImpl implements PayService {
                 .refund(entity.getRefund())
                 .build();
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Long cancelRequest(Long iorder, Long iuser) throws Exception {
+        OrderEntity orderEntity = orderRepo.findById(iorder).get();
+        orderItemRepo.selByIorderitem(iorder);
+
+        if (orderEntity.getShipping() == 0) {
+            orderEntity.setShipping(3);
+            List<Long> list = orderItemRepo.orderItemList(iorder);
+
+            for (Long iorderitem : list) {
+                OrderItemEntity orderItem = orderItemRepo.findById(iorderitem).get();
+                orderItem.setRefund(2);
+                orderItemRepo.save(orderItem);
+
+                RefundEntity addRefund = RefundEntity.builder()
+                        .delYn(1)
+                        .quantity(orderItem.getQuantity())
+                        .refundStartDate(LocalDateTime.now())
+                        .refundEndDate(LocalDateTime.now())
+                        .refundStatus(2)
+                        .totalPrice(orderItem.getTotalPrice())
+                        .orderItemEntity(orderItem)
+                        .build();
+
+                refundRepo.save(addRefund);
+            }
+            return 1L;
+        }
+        throw new Exception("배송준비중이 아닙니다.");
+    }
 }

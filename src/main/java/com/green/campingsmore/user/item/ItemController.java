@@ -42,7 +42,7 @@ public class ItemController {
             "\"text\": [-] 검색어,<br>" +
             "\"page\": [-] 리스트 페이지,<br>" +
             "\"row\": [고정] 아이템 개수,<br>" +
-            "\"sort\": [1] 판매순 랭킹( iitem,DESC : 최신순(default), iitem,ASC: 오래된순, price,DESC: 높은가격순, price,ASC: 낮은가격순)  <br>"
+            "\"sort\": [1] 판매순 랭킹( iitem,DESC : 최신순(default), iitem, ASC: 오래된순, price,DESC: 높은가격순, price,ASC: 낮은가격순)  <br>"
     )
     public ResponseEntity<ItemSelDetailRes> getSearchItem(@RequestParam(value = "cate",required=false)Long cate,
                                                           @RequestParam(value = "text",required=false)String text,

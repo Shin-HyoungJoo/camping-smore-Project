@@ -7,6 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 public class SelCartVo {
     private Long icart;
+    private Long iitem;
     private String pic;
     private String name;
     private Integer price;
