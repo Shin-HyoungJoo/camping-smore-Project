@@ -368,7 +368,7 @@ public class CampingService {
         LocalDate currentDate = LocalDate.now();
         long daysUntilReservation = ChronoUnit.DAYS.between(currentDate, reservationDate);
 
-        if (daysUntilReservation <= 1) {
+        if (daysUntilReservation < 1) {
             throw new Exception("예약 날짜가 1일 이내이므로 취소가 불가능합니다.");
         }
 
