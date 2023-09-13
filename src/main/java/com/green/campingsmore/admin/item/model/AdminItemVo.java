@@ -15,6 +15,7 @@ public class AdminItemVo {
     private String pic;
     private Integer price;
     private LocalDateTime createdAt;
+    private Integer stock;
     private Integer status;
 
 }

@@ -78,7 +78,7 @@ public class ItemQdsl {
                                              LocalDate searchStartDate, LocalDate searchEndDate) {
 
         JPQLQuery<AdminItemVo> query = jpaQueryFactory.select(Projections.bean(AdminItemVo.class,
-                        c.name.as("categoryName"), i.iitem, i.name, i.pic, i.price, i.createdAt, i.status
+                        c.name.as("categoryName"), i.iitem, i.name, i.pic, i.price, i.createdAt, i.stock, i.status
                          ))
                 .from(i)
                 .join(i.itemCategoryEntity, c)
