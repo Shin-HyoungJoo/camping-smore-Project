@@ -47,9 +47,6 @@ public class ItemController {
     public ResponseEntity<ItemSelDetailRes> getSearchItem(@RequestParam(value = "cate",required=false)Long cate,
                                                           @RequestParam(value = "text",required=false)String text,
                                                           @ParameterObject @PageableDefault(sort = "iitem", direction = Sort.Direction.DESC, size = 15) Pageable page) {
-
-
-
         return ResponseEntity.ok(service.searchItem(page, cate, text));
     }
 

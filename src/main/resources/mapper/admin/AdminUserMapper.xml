@@ -7,7 +7,21 @@
     <select id="selectUser">
         SELECT iuser,user_id,name,birth_date,phone,gender,role
         FROM user
-        WHERE iuser = #{iuser}
+<!--        만약 밑에 조건이 하나만 있어도 되도록 쿼리짜기-->
+        <where>
+            <if test="name != null">
+               name = #{name}
+            </if>
+            <if test="gender != null">
+                OR gender = #{gender}
+            </if>
+            <if test="user_id != null">
+                OR user_id = #{user_id}
+            </if>
+            <if test="phone != null">
+                OR phone = #{phone}
+            </if>
+        </where>
     </select>
 
     <select id="getAdminUser">

@@ -3,6 +3,7 @@ package com.green.campingsmore.admin.user;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.green.campingsmore.CommonRes;
+import com.green.campingsmore.admin.user.model.AdminUserSearch;
 import com.green.campingsmore.admin.user.model.ChatDto;
 import com.green.campingsmore.admin.user.model.UserDto;
 import com.green.campingsmore.config.security.AuthenticationFacade;
@@ -43,8 +44,8 @@ public class AdminUserService {
         return adminUserMapper.selectAllusers();
     }
 
-    public UserDto selectUser(Long iuser){
-        return adminUserMapper.selectUser(iuser);
+    public List<UserDto> selectUser(AdminUserSearch adminUserSearch){
+        return adminUserMapper.selectUser(adminUserSearch);
     }
 
     public SignInResultDto adminSignIn(UserLogin userLogin, String ip){

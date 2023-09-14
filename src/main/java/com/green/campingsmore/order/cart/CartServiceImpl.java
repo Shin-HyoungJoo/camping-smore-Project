@@ -20,20 +20,36 @@ public class CartServiceImpl implements CartService {
 
     @Override   //jpa
     public Optional<CartRes> insCart(InsCartDto dto) {
+        Optional<Long> optList = Optional.ofNullable(dslRepo.selIcart(dto.getIuser(), dto.getIitem()));
 
-        CartEntity entity = CartEntity.builder()
-                .userEntity(UserEntity.builder().iuser(dto.getIuser()).build())
-                .itemEntity(ItemEntity.builder().iitem(dto.getIitem()).build())
-                .quantity(dto.getQuantity())
-                .build();
+        if (optList.isEmpty()) {
+            CartEntity entity = CartEntity.builder()
+                    .userEntity(UserEntity.builder().iuser(dto.getIuser()).build())
+                    .itemEntity(ItemEntity.builder().iitem(dto.getIitem()).build())
+                    .quantity(dto.getQuantity())
+                    .build();
 
-        repo.save(entity);
+            repo.save(entity);
+
+            return Optional.ofNullable(CartRes.builder()
+                    .icart(entity.getIcart())
+                    .iuser(dto.getIuser())
+                    .iitem(entity.getItemEntity().getIitem())
+                    .quantity(entity.getQuantity())
+                    .build());
+        }
+
+        Long icart = optList.get();
+
+        CartEntity result = repo.findById(icart).get();
+        result.setQuantity(result.getQuantity() + dto.getQuantity());
+        repo.save(result);
 
         return Optional.ofNullable(CartRes.builder()
-                .icart(entity.getIcart())
+                .icart(result.getIcart())
                 .iuser(dto.getIuser())
-                .iitem(entity.getItemEntity().getIitem())
-                .quantity(entity.getQuantity())
+                .iitem(result.getItemEntity().getIitem())
+                .quantity(result.getQuantity())
                 .build());
     }
 

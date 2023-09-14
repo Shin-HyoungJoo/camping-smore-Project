@@ -1,5 +1,6 @@
 package com.green.campingsmore.admin.user;
 
+import com.green.campingsmore.admin.user.model.AdminUserSearch;
 import com.green.campingsmore.admin.user.model.ChatDto;
 import com.green.campingsmore.admin.user.model.UserDto;
 import com.green.campingsmore.sign.model.SignInResultDto;
@@ -45,12 +46,23 @@ public class AdminUserController {
         return SERVICE.selectAllusers();
     }
 
-    @GetMapping("/manage/users/{iuser}")
+    @GetMapping("/manage/users/user")
     @Operation(summary = "관리자 - 유저 한 명 검색하기",
             description = "Try it out -> Execute 눌러주세요 \n\n "
     )
-    public UserDto selectUser(@PathVariable Long iuser){
-        return SERVICE.selectUser(iuser);
+    public List<UserDto> selectUser(
+            @RequestParam(value = "name",required = false) String name,
+            @RequestParam(value = "gender",required = false) Integer gender,
+            @RequestParam(value = "user_id",required = false) String user_id,
+            @RequestParam(value = "phone",required = false) String phone
+    ){
+        AdminUserSearch adminUserSearch = AdminUserSearch.builder()
+                .name(name)
+                .gender(gender)
+                .user_id(user_id)
+                .phone(phone)
+                .build();
+        return SERVICE.selectUser(adminUserSearch);
     }
 
     @GetMapping("/manage/chart")
