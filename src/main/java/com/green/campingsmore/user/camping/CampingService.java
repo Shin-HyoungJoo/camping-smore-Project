@@ -428,6 +428,9 @@ public class CampingService {
     }
 
 //    public List<CampingDetailList> getDeCamping(Long icamp) {
+////        long start = System.currentTimeMillis();
+//
+//
 //        List<CampingDetailList> results = REP.selDeCamping(icamp);
 //
 //        Set<Long> uniqueIcampSet = new HashSet<>();
@@ -446,9 +449,12 @@ public class CampingService {
 //                }
 //            }
 //            result.setPic(picList);
-//        }
+//
+//        }long end = System.currentTimeMillis();
+////        log.info("speed: {}", (end - start));
 //
 //        return uniqueResults;
+//
 //    }
 //    public List<CampingDetailList1> getAdminCamp(Long icamp) {
 //        List<CampingDetailList1> results = REP.selAdminCamp(icamp);
@@ -531,6 +537,7 @@ public class CampingService {
     }
 
     public CampingDetailList1 selCampingPic(Long icamp) {
+//        long start = System.currentTimeMillis();
 
         List<CampingPicList> pic = queryFactory
                 .select(Projections.fields(CampingPicList.class,
@@ -557,6 +564,8 @@ public class CampingService {
                 .fetchOne();
 
         result.setPic(pic);
+//        long end = System.currentTimeMillis();
+//        log.info("speed: {}", (end - start));
 
         return result;
     }

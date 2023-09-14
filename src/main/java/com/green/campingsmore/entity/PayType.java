@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum PayType {
-    KAKAO,
-    CARD
+    CARD,
+    KAKAO
+
 }
