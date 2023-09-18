@@ -1,0 +1,3 @@
+[submodule "campingsmore-submodule"]
+	path = campingsmore-submodule
+	url = https://github.com/Shin-HyoungJoo/campingsmore-submodule.git
