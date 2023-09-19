@@ -1,4 +1,4 @@
-# camping-smore (캠핑 스모어)
+# Camping'Smore (캠핑 스모어)
 <h3>캠핑스모어 3차 유저 영상<h3/>
 https://youtu.be/t1SAFgNBxOI?feature=shared
 <br/>
@@ -7,6 +7,13 @@ https://youtu.be/XOTXBfH54jA?feature=shared
 <br/>
 <br/>
 
+# 특이사항
+- 카카오 QR 결제
+- AWS 배포
+- KakaoMap Api, 네이버 쇼핑 Api 사용
+- 관리자 페이지
+- 쇼핑몰 CRUD
+- 웹 에디터 사용해서 글쓰기 기능
   
 ![3](https://github.com/Shin-HyoungJoo/camping-smore/assets/83711644/e3cbb155-bf37-4782-93af-7d940a8c08b4)
 ![프로젝트 개요 (2)](https://github.com/Shin-HyoungJoo/camping-smore/assets/83711644/6d398d0e-2419-4c8b-bdc7-b058619df62e)
